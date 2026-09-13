@@ -59,17 +59,26 @@ header {
     z-index: 100;
 }
 
-.logo {
-    font-family: "Playfair Display", serif;
-    font-size: 24px;
-    font-weight: 700;
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.logo img {
+    width: 45px;
+    height: auto;
+    display: block;
 }
 
 .logo span {
-    font-family: "DM Sans", sans-serif;
-    font-size: 13px;
-    letter-spacing: 3px;
-    margin-left: 4px;
+    font-family: "Playfair Display", serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-left: 0;
+    white-space: nowrap;
 }
 
 nav {
@@ -127,10 +136,9 @@ nav a:hover {
 .small-title,
 .section-heading p,
 .offer p,
-.instagram > p,
-.about > div > p {
+.instagram > p {
     letter-spacing: 3px;
-    font-size: 11px;
+    font-size: 30px;
     font-weight: 700;
 }
 
@@ -201,19 +209,19 @@ nav a:hover {
 }
 
 .daily {
-    background-image: url("https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=700&q=80");
+    background-image: url("images/dailywear.jpg");
 }
 
 .threepiece {
-    background-image: url("https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=700&q=80");
+    background-image: url("images/3-piece-sets.jpg");
 }
 
 .kurtis {
-    background-image: url("https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=700&q=80");
+    background-image: url("images/kurti.jpg");
 }
 
 .frocks {
-    background-image: url("https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=700&q=80");
+    background-image: url("images/frocks.jpg");
 }
 
 .category-card h3 {
@@ -421,27 +429,27 @@ nav a:hover {
 }
 
 .insta-grid div:nth-child(1) {
-    background-image: url("https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=500&q=80");
+    background-image: url("images/a.jpg");
 }
 
 .insta-grid div:nth-child(2) {
-    background-image: url("https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=500&q=80");
+    background-image: url("images/b.jpg");
 }
 
 .insta-grid div:nth-child(3) {
-    background-image: url("https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=500&q=80");
+    background-image: url("images/c.jpg");
 }
 
 .insta-grid div:nth-child(4) {
-    background-image: url("https://images.unsplash.com/photo-1506629905607-d9b1a5f4a7b3?auto=format&fit=crop&w=500&q=80");
+    background-image: url("images/d.jpg");
 }
 
 .insta-grid div:nth-child(5) {
-    background-image: url("https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=500&q=80");
+    background-image: url("images/e.jpg");
 }
 
 .insta-grid div:nth-child(6) {
-    background-image: url("https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=500&q=80");
+    background-image: url("images/f.jpg");
 }
 
 
@@ -520,6 +528,11 @@ footer {
 .footer-logo {
     font-family: "Playfair Display", serif;
     font-size: 25px;
+}
+.footer-logo img {
+    width: 180px;
+    height: auto;
+   display: block; 
 }
 
 .footer-logo small {
@@ -671,4 +684,201 @@ footer a {
     footer {
         grid-template-columns: 1fr;
     }
+}
+/* ================================
+   PRODUCT CARDS
+================================ */
+
+.product-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.product-image-wrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.product-image-wrap img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    display: block;
+}
+
+.wishlist-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    color: #333;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.wishlist-btn:hover {
+    background: #111;
+    color: white;
+}
+
+
+/* ================================
+   WISHLIST & CART POPUPS
+================================ */
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 420px;
+    height: 100vh;
+    background: white;
+    z-index: 9999;
+    overflow-y: auto;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.popup.active {
+    display: block;
+}
+
+.popup-content {
+    background: white;
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+    font-family: "DM Sans", sans-serif;
+
+}
+
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    border: none;
+    background: none;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+
+/* ================================
+   PRODUCT POPUP ITEMS
+================================ */
+
+.popup-item {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.popup-item img {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.popup-item h4 {
+    margin: 0 0 5px;
+}
+
+.popup-item p {
+    margin: 4px 0;
+}
+
+
+/* ================================
+   LOGO
+================================ */
+
+.logo img {
+    max-height: 48px;
+    width: auto;
+    display: block;
+}
+
+
+/* ================================
+   HERO IMAGE
+================================ */
+
+.hero {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 768px) {
+
+    .product-image-wrap img {
+        height: 300px;
+    }
+
+    .popup-content {
+        padding: 22px;
+    }
+
+    .popup-item img {
+        width: 65px;
+        height: 85px;
+    }
+
+}
+/* ================================
+   IMAGE VIEWER
+================================ */
+
+#imageModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+#imageModal.active {
+    display: flex;
+}
+
+#imageModal .popup-content {
+    width: auto;
+    min-height: auto;
+    max-width: 90%;
+    max-height: 90vh;
+    padding: 20px;
+    position: relative;
+}
+
+#imageModalImg {
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain;
+}
+
+#imageModalImg {
+    touch-action: pinch-zoom;
+    cursor: zoom-in;
 }
