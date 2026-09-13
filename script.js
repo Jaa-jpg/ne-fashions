@@ -1,181 +1,355 @@
+// ==========================================
+// NE FASHIONS PRODUCTS
+// ==========================================
+
 const products = [
+
     {
         id: 1,
-        name: "Beige Everyday Kurti",
-        category: "Kurtis",
-        price: 899,
-        oldPrice: 1199,
-        rating: 4.8,
-        image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=700&q=80"
+        name: "Elegant Blue Floral Printed Frock",
+        price: 699,
+        category: "Frocks",
+        fabric: "Georgette",
+        colour: "Blue",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/frock-1.jpg",
     },
 
     {
         id: 2,
-        name: "Floral Comfort Kurti",
-        category: "Daily Wear",
-        price: 799,
-        oldPrice: 999,
-        rating: 4.7,
-        image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=700&q=80"
+        name: "Elegant Mustard Embroidered Frock",
+        price: 699,
+        category: "Frocks",
+        fabric: "Mangalagiri",
+        colour: "Mustard",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/frock-2.jpg",
     },
 
     {
         id: 3,
-        name: "Rose Printed 3 Piece Set",
-        category: "3 Piece Sets",
-        price: 1499,
-        oldPrice: 1799,
-        rating: 4.9,
-        image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=700&q=80"
+        name: "Elegant White Printed Frock",
+        price: 699,
+        category: "Frocks",
+        fabric: "Dhabu cotton",
+        colour: "White",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/frock-3.jpg",
     },
 
     {
         id: 4,
-        name: "Classic Black Dress",
-        category: "Daily Wear",
-        price: 999,
-        oldPrice: 1299,
-        rating: 4.6,
-        image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=700&q=80"
+        name: "Elegant Rust Orange Embroidered Suit Set",
+        price: 899,
+        category: "3 Piece Sets",
+        fabric: "Roman silk",
+        colour: "Rust orange",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/3-piece-1.jpg",
     },
 
     {
         id: 5,
-        name: "Ivory Office Wear Dress",
-        category: "Designer Wear",
-        price: 1299,
-        oldPrice: 1599,
-        rating: 4.8,
-        image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=700&q=80"
+        name: "Elegant Deep Purple Embroidered Suit Set",
+        price: 899,
+        category: "3 piece sets",
+        fabric: "Roman silk",
+        colour: "Deep Purple",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/3-piece-2.jpg",
     },
 
     {
         id: 6,
-        name: "Soft Pink Designer Kurti",
-        category: "Designer Wear",
-        price: 1199,
-        oldPrice: 1499,
-        rating: 4.9,
-        image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=700&q=80"
+        name: "Elegant Navy Blue Embroidered Suit Set",
+        price: 750,
+        category: "Kurtis",
+        fabric: "Rayon-cotton",
+        colour: "Navy Blue",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/kurti-2.jpg",
     },
 
     {
         id: 7,
-        name: "Elegant Printed Frock",
-        category: "Frocks",
-        price: 1099,
-        oldPrice: 1399,
-        rating: 4.7,
-        image: "https://images.unsplash.com/photo-1506629905607-d9b1a5f4a7b3?auto=format&fit=crop&w=700&q=80"
+        name: "Elegant Navy Blue Printed Kurti",
+        price: 899,
+        category: "Kurtis",
+        fabric: "Rayon-cotton",
+        colour: "Navy Blue",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/kurti-1.jpg",
     },
 
     {
         id: 8,
-        name: "Minimal Beige Designer Set",
-        category: "3 Piece Sets",
-        price: 1799,
-        oldPrice: 1999,
-        rating: 4.9,
-        image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=80"
-    }
+        name: "Elegant Grey Blue Peacock Suit Set",
+        price: 899,
+        category: "Daily wear",
+        fabric: "Rayon",
+        colour: "Grey Blue",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/daily-wear-1.jpg",
+    },
+
+    {
+        id: 9,
+        name: "Elegant Yellow Floral Suit Set",
+        price: 899,
+        category: "Daily wear",
+        fabric: "Rayon",
+        colour: "Yellow",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/daily-wear-2.jpg",
+    },
+
+    {
+        id: 10,
+        name: "Graceful Mustard Floral Suit Set",
+        price: 899,
+        category: "Daily Wear",
+        fabric: "Rayon",
+        colour: "Mustard yellow",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/daily-wear-3.jpg",
+    },
+
+    {
+        id: 11,
+        name: "Elegant Olive Beige Floral Suit Set",
+        price: 1100,
+        category: "Sets",
+        fabric: "Jamdani",
+        colour: "Olive Beige",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/set-1.jpg",
+    },
+
+    {
+        id: 12,
+        name: "Elegant Blue Grey Floral Peacock Suit Set",
+        price: 1100,
+        category: "Sets",
+        fabric: "Jamdani",
+        colour: "Blue Grey",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/set-2.jpg",
+    },
+
+    {
+        id: 13,
+        name: "Elegant Rust Red Floral Suit Set",
+        price: 999,
+        category: "Sets",
+        fabric: "Rayon",
+        colour: "Rust Red",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/set-3.jpg",
+    },
+
+    {
+        id: 14,
+        name: "Elegant Deep Plum Floral Suit Set",
+        price: 999,
+        category: "Sets",
+        fabric: "Rayon",
+        colour: "Deep Plum",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/set-4.jpg",
+    },
+
+    {
+        id: 15,
+        name: "Elegant Maroon Floral Suit Set",
+        price: 999,
+        category: "Sets",
+        fabric: "Rayon",
+        colour: "Maroon",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/set-5.jpg",
+    },
+
+    {
+        id: 16,
+        name: "Elegant Rani Pink Floral Suit Set",
+        price: 699,
+        category: "Sets",
+        fabric: "Rayon",
+        colour: "Rani Pink",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/set-6.jpg",
+    },
+
+    {
+        id: 17,
+        name: "Elegant Mauve Floral Suit Set",
+        price: 899,
+        category: "Sets",
+        fabric: "Rayon",
+        colour: "Mauve",
+        sizes: ["M", "L", "XL", "XXL"],
+        image: "images/set-7.jpg",
+    },
 ];
 
 
-let cart = [];
-let wishlist = [];
+// ==========================================
+// CART & WISHLIST
+// ==========================================
+
+let cart = JSON.parse(localStorage.getItem("neCart")) || [];
+
+let wishlist = JSON.parse(localStorage.getItem("neWishlist")) || [];
 
 
-function displayProducts(list = products) {
+// ==========================================
+// DISPLAY PRODUCTS
+// ==========================================
 
-    const grid = document.getElementById("productGrid");
+function displayProducts() {
 
-    if (!grid) return;
+    const productGrid =
+        document.getElementById("productGrid");
 
-    grid.innerHTML = "";
+    const category =
+        document.getElementById("categoryFilter").value;
 
-    if (list.length === 0) {
+    const sort =
+        document.getElementById("sortFilter").value;
 
-        grid.innerHTML = `
-            <p style="grid-column:1/-1;text-align:center;">
-                No products found.
-            </p>
-        `;
+    const search =
+        document.getElementById("searchInput").value
+        .toLowerCase();
 
-        return;
+
+    let filteredProducts = products.filter(product => {
+
+        const matchesCategory =
+            category === "All" ||
+            product.category === category;
+
+        const matchesSearch =
+            product.name.toLowerCase().includes(search) ||
+            product.colour.toLowerCase().includes(search) ||
+            product.fabric.toLowerCase().includes(search);
+
+        return matchesCategory && matchesSearch;
+
+    });
+
+
+    if (sort === "low") {
+
+        filteredProducts.sort(
+            (a, b) => a.price - b.price
+        );
+
+    }
+
+    if (sort === "high") {
+
+        filteredProducts.sort(
+            (a, b) => b.price - a.price
+        );
+
     }
 
 
-    list.forEach(product => {
-
-        const discount =
-            Math.round(
-                ((product.oldPrice - product.price) /
-                product.oldPrice) * 100
-            );
+    productGrid.innerHTML = "";
 
 
-        grid.innerHTML += `
+    filteredProducts.forEach(product => {
 
-            <div class="product-card">
+        const card =
+            document.createElement("div");
 
-                <button
-                    class="wishlist"
-                    onclick="toggleWishlist(${product.id})"
-                >
-                    ${wishlist.includes(product.id) ? "♥" : "♡"}
-                </button>
+        card.className = "product-card";
+
+
+        card.innerHTML = `
+
+            <div class="product-image-wrap">
 
                 <img
-                    class="product-image"
                     src="${product.image}"
                     alt="${product.name}"
+                    style="cursor: pointer;"
                 >
 
-                <div class="product-info">
+                <button
+                    class="wishlist-btn"
+                    onclick="toggleWishlist(${product.id})"
+                >
+                    ${wishlist.includes(product.id) ? "♥️" : "♡"}
+                </button>
 
-                    <h3>${product.name}</h3>
+            </div>
 
-                    <div class="rating">
-                        ★★★★★ ${product.rating}
-                    </div>
 
-                    <p class="price">
+            <div class="product-info">
 
-                        <span class="old-price">
-                            ₹${product.oldPrice}
-                        </span>
+                <h3>
+                    ${product.name}
+                </h3>
 
-                        ₹${product.price}
+                <h4>
+                    ₹${product.price.toLocaleString("en-IN")}
+                </h4>
 
-                        <small>
-                            (${discount}% OFF)
-                        </small>
+                <p>
+                    ${product.colour} • ${product.fabric}
+                </p>
 
-                    </p>
+                <p>
+                    Sizes:
+                    ${product.sizes.join(", ")}
+                </p>
 
-                    <button
-                        class="add"
-                        onclick="addToCart(${product.id})"
-                    >
-                        ADD TO CART
-                    </button>
-
-                </div>
+                <button
+                    class="primary-btn"
+                    onclick="addToCart(${product.id})"
+                >
+                    ADD TO CART
+                </button>
 
             </div>
 
         `;
+
+
+        // PRODUCT IMAGE CLICK
+        const productImage =
+            card.querySelector(".product-image-wrap img");
+
+        productImage.addEventListener("click", function () {
+
+            openImageModal(
+                this.src,
+                this.alt
+            );
+
+        });
+
+
+        productGrid.appendChild(card);
+
     });
+
+
+    updateCounts();
+
 }
 
 
-function addToCart(id) {
+// ==========================================
+// ADD TO CART
+// ==========================================
 
-    const product = products.find(item => item.id === id);
+function addToCart(productId) {
 
-    if (!product) return;
+    const existing =
+        cart.find(item => item.id === productId);
 
-    const existing = cart.find(item => item.id === id);
 
     if (existing) {
 
@@ -184,263 +358,447 @@ function addToCart(id) {
     } else {
 
         cart.push({
-            ...product,
+            id: productId,
             quantity: 1
         });
 
     }
 
-    updateCartCount();
 
-    alert(`${product.name} added to cart!`);
+    saveCart();
+
+    updateCounts();
+
 }
 
 
-function updateCartCount() {
+// ==========================================
+// REMOVE FROM CART
+// ==========================================
 
-    const count = cart.reduce(
-        (total, item) => total + item.quantity,
-        0
-    );
+function removeFromCart(productId) {
 
-    document.getElementById("cartCount").textContent = count;
+    cart =
+        cart.filter(item => item.id !== productId);
+
+    saveCart();
+
+    updateCounts();
+
+    showCart();
+
 }
 
 
-function toggleWishlist(id) {
+// ==========================================
+// WISHLIST
+// ==========================================
 
-    if (wishlist.includes(id)) {
+function toggleWishlist(productId) {
 
-        wishlist = wishlist.filter(item => item !== id);
+    if (wishlist.includes(productId)) {
+
+        wishlist =
+            wishlist.filter(id => id !== productId);
 
     } else {
 
-        wishlist.push(id);
+        wishlist.push(productId);
 
     }
 
+
+    localStorage.setItem(
+        "neWishlist",
+        JSON.stringify(wishlist)
+    );
+
+
     displayProducts();
+
+    showWishlist();
+
 }
 
+
+// ==========================================
+// SHOW WISHLIST
+// ==========================================
 
 function showWishlist() {
 
+    const modal =
+        document.getElementById("wishlistModal");
+
+    const container =
+        document.getElementById("wishlistItems");
+
+
     if (wishlist.length === 0) {
 
-        alert("Your wishlist is empty.");
+        container.innerHTML =
+            "<p>Your wishlist is empty.</p>";
 
-        return;
+    } else {
+
+        container.innerHTML = "";
+
+
+        wishlist.forEach(id => {
+
+            const product =
+                products.find(p => p.id === id);
+
+
+            if (!product) return;
+
+
+            container.innerHTML += `
+
+                <div class="popup-item">
+
+                    <img
+                        src="${product.image}"
+                        alt="${product.name}"
+                        style="cursor: pointer;"
+                    >
+
+                    <div>
+
+                        <h3>
+                            ${product.name}
+                        </h3>
+
+                        <p>
+                            ₹${product.price.toLocaleString("en-IN")}
+                        </p>
+
+                        <button
+                            onclick="addToCart(${product.id})"
+                        >
+                            Add to Cart
+                        </button>
+
+                        <button
+                            onclick="toggleWishlist(${product.id})"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+        // WISHLIST IMAGE CLICK
+        const wishlistImages =
+            container.querySelectorAll(".popup-item img");
+
+        wishlistImages.forEach(img => {
+
+            img.addEventListener("click", function () {
+
+                openImageModal(
+                    this.src,
+                    this.alt
+                );
+
+            });
+
+        });
+
     }
 
-    const items = wishlist.map(id => {
 
-        const product =
-            products.find(item => item.id === id);
+    modal.classList.add("active");
 
-        return product.name;
-
-    });
-
-    alert(
-        "Your Wishlist:\n\n" +
-        items.join("\n")
-    );
 }
 
 
+// ==========================================
+// CLOSE WISHLIST
+// ==========================================
+
+function closeWishlist() {
+
+    document
+        .getElementById("wishlistModal")
+        .classList.remove("active");
+
+}
+
+
+// ==========================================
+// SHOW CART
+// ==========================================
+
 function showCart() {
+
+    const modal =
+        document.getElementById("cartModal");
+
+    const container =
+        document.getElementById("cartItems");
+
+    const totalElement =
+        document.getElementById("cartTotal");
+
+
+    if (cart.length === 0) {
+
+        container.innerHTML =
+            "<p>Your cart is empty.</p>";
+
+        totalElement.innerText =
+            "Total: ₹0";
+
+    } else {
+
+        container.innerHTML = "";
+
+        let total = 0;
+
+
+        cart.forEach(item => {
+
+            const product =
+                products.find(p => p.id === item.id);
+
+            if (!product) return;
+
+
+            const itemTotal =
+                product.price * item.quantity;
+
+            total += itemTotal;
+
+
+            container.innerHTML += `
+
+                <div class="popup-item">
+
+                    <img
+                        src="${product.image}"
+                        alt="${product.name}"
+                    >
+
+                    <div>
+
+                        <h3>
+                            ${product.name}
+                        </h3>
+
+                        <p>
+                            ₹${product.price.toLocaleString("en-IN")}
+                        </p>
+
+                        <p>
+                            Quantity:
+                            ${item.quantity}
+                        </p>
+
+                        <button
+                            onclick="removeFromCart(${product.id})"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+        totalElement.innerText =
+            "Total: ₹" +
+            total.toLocaleString("en-IN");
+
+
+        const checkoutBtn =
+            document.createElement("button");
+
+        checkoutBtn.className =
+            "primary-btn checkout-btn";
+
+        checkoutBtn.innerText =
+            "CHECKOUT";
+
+        checkoutBtn.onclick =
+            checkout;
+
+        container.appendChild(checkoutBtn);
+
+    }
+
+
+    modal.classList.add("active");
+
+}
+
+
+// ==========================================
+// CLOSE CART
+// ==========================================
+
+function closeCart() {
+
+    document
+        .getElementById("cartModal")
+        .classList.remove("active");
+
+}
+
+
+// ==========================================
+// CHECKOUT
+// ==========================================
+
+function checkout() {
 
     if (cart.length === 0) {
 
         alert("Your cart is empty.");
 
         return;
+
     }
 
 
-    let message = "YOUR CART\n\n";
-
-    let subtotal = 0;
+    alert("Checkout coming soon!");
 
 
-    cart.forEach(item => {
+    document
+        .getElementById("cartModal")
+        .classList.remove("active");
 
-        const total =
-            item.price * item.quantity;
-
-        subtotal += total;
-
-        message +=
-            `${item.name} × ${item.quantity} = ₹${total}\n`;
-
-    });
-
-
-    message +=
-        `\nSubtotal: ₹${subtotal}`;
-
-    alert(message);
 }
 
 
-function searchProducts() {
+// ==========================================
+// IMAGE MODAL
+// ==========================================
 
-    const input =
-        document.getElementById("searchInput");
+function openImageModal(image, name) {
 
-    const searchTerm =
-        input.value.toLowerCase();
+    const modal =
+        document.getElementById("imageModal");
+
+    const modalImage =
+        document.getElementById("imageModalImg");
 
 
-    const filtered =
-        products.filter(product =>
-            product.name
-                .toLowerCase()
-                .includes(searchTerm)
-        );
+    modalImage.src =
+        image;
 
-    displayProducts(filtered);
+    modalImage.alt =
+        name;
+
+
+    modal.classList.add("active");
+
 }
 
 
-function displayProducts() {
+function closeImageModal() {
 
-    const grid =
-        document.getElementById("productGrid");
+    document
+        .getElementById("imageModal")
+        .classList.remove("active");
 
-    let list = [...products];
-
-
-    const search =
-        document.getElementById("searchInput")?.value
-        .toLowerCase() || "";
-
-
-    const category =
-        document.getElementById("categoryFilter")?.value
-        || "All";
-
-
-    const sort =
-        document.getElementById("sortFilter")?.value
-        || "default";
-
-
-    if (search) {
-
-        list = list.filter(product =>
-            product.name
-                .toLowerCase()
-                .includes(search)
-        );
-
-    }
-
-
-    if (category !== "All") {
-
-        list = list.filter(product =>
-            product.category === category
-        );
-
-    }
-
-
-    if (sort === "low") {
-
-        list.sort((a, b) => a.price - b.price);
-
-    }
-
-
-    if (sort === "high") {
-
-        list.sort((a, b) => b.price - a.price);
-
-    }
-
-
-    grid.innerHTML = "";
-
-
-    list.forEach(product => {
-
-        const discount =
-            Math.round(
-                ((product.oldPrice - product.price) /
-                product.oldPrice) * 100
-            );
-
-
-        grid.innerHTML += `
-
-            <div class="product-card">
-
-                <button
-                    class="wishlist"
-                    onclick="toggleWishlist(${product.id})"
-                >
-                    ${wishlist.includes(product.id) ? "♥" : "♡"}
-                </button>
-
-                <img
-                    class="product-image"
-                    src="${product.image}"
-                    alt="${product.name}"
-                >
-
-                <div class="product-info">
-
-                    <h3>${product.name}</h3>
-
-                    <div class="rating">
-                        ★★★★★ ${product.rating}
-                    </div>
-
-                    <p class="price">
-
-                        <span class="old-price">
-                            ₹${product.oldPrice}
-                        </span>
-
-                        ₹${product.price}
-
-                        <small>
-                            ${discount}% OFF
-                        </small>
-
-                    </p>
-
-                    <button
-                        class="add"
-                        onclick="addToCart(${product.id})"
-                    >
-                        ADD TO CART
-                    </button>
-
-                </div>
-
-            </div>
-
-        `;
-    });
 }
 
+
+// ==========================================
+// COUNTS
+// ==========================================
+
+function updateCounts() {
+
+    const cartCount =
+        document.getElementById("cartCount");
+
+    const wishlistCount =
+        document.getElementById("wishlistCount");
+
+
+    cartCount.innerText =
+        cart.reduce(
+            (total, item) => total + item.quantity,
+            0
+        );
+
+
+    wishlistCount.innerText =
+        wishlist.length;
+
+}
+
+
+// ==========================================
+// SAVE CART
+// ==========================================
+
+function saveCart() {
+
+    localStorage.setItem(
+        "neCart",
+        JSON.stringify(cart)
+    );
+
+}
+
+
+// ==========================================
+// CATEGORY FILTER
+// ==========================================
 
 function filterCategory(category) {
 
-    document.getElementById("categoryFilter").value =
-        category;
+    document.getElementById(
+        "categoryFilter"
+    ).value = category;
+
 
     displayProducts();
+
 
     document
         .getElementById("shop")
         .scrollIntoView({
             behavior: "smooth"
         });
+
 }
 
+
+// ==========================================
+// SEARCH
+// ==========================================
+
+function searchProducts() {
+
+    document
+        .getElementById("shop")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+
+    displayProducts();
+
+}
+
+
+// ==========================================
+// SCROLL TO SHOP
+// ==========================================
 
 function scrollToShop() {
 
@@ -453,6 +811,10 @@ function scrollToShop() {
 }
 
 
+// ==========================================
+// MOBILE MENU
+// ==========================================
+
 function toggleMenu() {
 
     document
@@ -461,6 +823,10 @@ function toggleMenu() {
 
 }
 
+
+// ==========================================
+// CONTACT FORM
+// ==========================================
 
 function sendMessage(event) {
 
@@ -473,4 +839,37 @@ function sendMessage(event) {
 }
 
 
-displayProducts();
+// ==========================================
+// CLOSE POPUPS WHEN CLICKING OUTSIDE
+// ==========================================
+
+window.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            event.target.classList.contains("popup")
+        ) {
+
+            event.target.classList.remove("active");
+
+        }
+
+    }
+);
+
+
+// ==========================================
+// LOAD PRODUCTS WHEN WEBSITE OPENS
+// ==========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        displayProducts();
+
+        updateCounts();
+
+    }
+);
