@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,36 +22,83 @@
     ✨ New Arrivals | Worldwide Shipping Available
 </div>
 
+
 <!-- HEADER -->
 <header>
-    <div class="logo">NE <span>FASHIONS</span></div>
 
-    <nav id="navMenu">
-        <a href="#home">Home</a>
-        <a href="#shop">Shop</a>
-        <a href="#categories">Collections</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-    </nav>
+    <!-- YOUR LOGO -->
+    <!-- Put your logo here:
+         images/logo.png
+    -->
 
-    <div class="header-icons">
-        <button onclick="searchProducts()">⌕</button>
-        <button onclick="showWishlist()">♡</button>
-        <button onclick="showCart()">🛒 <span id="cartCount">0</span></button>
+    <div class="logo">
+        <a href="#home">
+            <img src="images/logo.png" alt="NE Fashions"> 
+            <span>NE FASHIONS</span>
+        </a>
     </div>
 
-    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <nav id="navMenu">
+
+        <a href="#home">Home</a>
+
+        <a href="#shop">Shop</a>
+
+        <a href="#categories">Collections</a>
+
+        <a href="#about">About</a>
+
+        <a href="#contact">Contact</a>
+
+    </nav>
+
+
+    <div class="header-icons">
+
+        <button onclick="searchProducts()" aria-label="Search">
+            ⌕
+        </button>
+
+        <button onclick="showWishlist()" aria-label="Wishlist">
+            ♡
+            <span id="wishlistCount">0</span>
+        </button>
+
+        <button onclick="showCart()" aria-label="Cart">
+            🛒
+            <span id="cartCount">0</span>
+        </button>
+
+    </div>
+
+
+    <button class="menu-btn" onclick="toggleMenu()">
+        ☰
+    </button>
+
 </header>
 
 
+
 <!-- HERO -->
-<section class="hero" id="home">
+
+<section
+    class="hero"
+    id="home"
+    style="background-image: url('images/hero.jpg');"
+>
 
     <div class="hero-content">
 
-        <p class="small-title">NE FASHIONS</p>
+        <p class="small-title">
+            NE FASHIONS
+        </p>
 
-        <h1>Elegance in<br>Every Thread</h1>
+        <h1>
+            Elegance in<br>
+            Every Thread
+        </h1>
 
         <p>
             Simple, elegant and affordable styles
@@ -66,38 +114,81 @@
 </section>
 
 
+
 <!-- CATEGORIES -->
+
 <section class="section" id="categories">
 
     <div class="section-heading">
+
         <p>EXPLORE</p>
-        <h2>Shop By Category</h2>
+
+        <h2>
+            Shop By Category
+        </h2>
+
     </div>
+
 
     <div class="category-grid">
 
         <div class="category-card">
+
             <div class="category-image daily"></div>
-            <h3>Daily Wear</h3>
-            <button onclick="filterCategory('Daily Wear')">Explore</button>
+
+            <h3>
+                Daily Wear
+            </h3>
+
+            <button onclick="filterCategory('Daily Wear')">
+                Explore
+            </button>
+
         </div>
 
+
         <div class="category-card">
+
             <div class="category-image threepiece"></div>
-            <h3>3 Piece Sets</h3>
-            <button onclick="filterCategory('3 Piece Sets')">Explore</button>
+
+            <h3>
+                3 Piece Sets
+            </h3>
+
+            <button onclick="filterCategory('3 Piece Sets')">
+                Explore
+            </button>
+
         </div>
 
+
         <div class="category-card">
+
             <div class="category-image kurtis"></div>
-            <h3>Kurtis</h3>
-            <button onclick="filterCategory('Kurtis')">Explore</button>
+
+            <h3>
+                Kurtis
+            </h3>
+
+            <button onclick="filterCategory('Kurtis')">
+                Explore
+            </button>
+
         </div>
 
+
         <div class="category-card">
+
             <div class="category-image frocks"></div>
-            <h3>Frocks</h3>
-            <button onclick="filterCategory('Frocks')">Explore</button>
+
+            <h3>
+                Frocks
+            </h3>
+
+            <button onclick="filterCategory('Frocks')">
+                Explore
+            </button>
+
         </div>
 
     </div>
@@ -105,13 +196,21 @@
 </section>
 
 
+
 <!-- PRODUCTS -->
+
 <section class="section products-section" id="shop">
 
     <div class="section-heading">
+
         <p>OUR COLLECTION</p>
-        <h2>New Arrivals</h2>
+
+        <h2>
+            New Arrivals
+        </h2>
+
     </div>
+
 
     <div class="filters">
 
@@ -122,33 +221,81 @@
             onkeyup="searchProducts()"
         >
 
-        <select id="categoryFilter" onchange="displayProducts()">
-            <option value="All">All Categories</option>
-            <option value="Daily Wear">Daily Wear</option>
-            <option value="3 Piece Sets">3 Piece Sets</option>
-            <option value="Kurtis">Kurtis</option>
-            <option value="Frocks">Frocks</option>
-            <option value="Designer Wear">Designer Wear</option>
+
+        <select
+            id="categoryFilter"
+            onchange="displayProducts()"
+        >
+
+            <option value="All">
+                All Categories
+            </option>
+
+            <option value="Daily Wear">
+                Daily Wear
+            </option>
+
+            <option value="3 Piece Sets">
+                3 Piece Sets
+            </option>
+
+            <option value="Kurtis">
+                Kurtis
+            </option>
+
+            <option value="Frocks">
+                Frocks
+            </option>
+
+            <option value="Designer Wear">
+                Designer Wear
+            </option>
+
         </select>
 
-        <select id="sortFilter" onchange="displayProducts()">
-            <option value="default">Sort By</option>
-            <option value="low">Price: Low to High</option>
-            <option value="high">Price: High to Low</option>
+
+        <select
+            id="sortFilter"
+            onchange="displayProducts()"
+        >
+
+            <option value="default">
+                Sort By
+            </option>
+
+            <option value="low">
+                Price: Low to High
+            </option>
+
+            <option value="high">
+                Price: High to Low
+            </option>
+
         </select>
 
     </div>
 
-    <div class="product-grid" id="productGrid"></div>
+
+    <!-- PRODUCTS WILL APPEAR HERE -->
+
+    <div
+        class="product-grid"
+        id="productGrid"
+    ></div>
 
 </section>
 
 
+
 <!-- OFFER -->
+
 <section class="offer">
 
     <div>
-        <p>LIMITED TIME OFFER</p>
+
+        <p>
+            LIMITED TIME OFFER
+        </p>
 
         <h2>
             Everyday Elegance,<br>
@@ -160,47 +307,96 @@
         </span>
 
         <p class="coupon">
-            Use Code: <strong>NE10</strong>
+            Use Code:
+            <strong>NE10</strong>
         </p>
 
-        <button onclick="scrollToShop()">SHOP NOW</button>
+        <button onclick="scrollToShop()">
+            SHOP NOW
+        </button>
+
     </div>
 
 </section>
 
 
+
 <!-- WHY US -->
+
 <section class="section why">
 
     <div class="section-heading">
-        <p>WHY NE FASHIONS</p>
-        <h2>Made For Your Everyday</h2>
+
+        <p>
+            WHY NE FASHIONS
+        </p>
+
+        <h2>
+            Made For Your Everyday
+        </h2>
+
     </div>
+
 
     <div class="why-grid">
 
         <div>
+
             <span>01</span>
-            <h3>Affordable Fashion</h3>
-            <p>Beautiful styles without stretching your budget.</p>
+
+            <h3>
+                Affordable Fashion
+            </h3>
+
+            <p>
+                Beautiful styles without stretching your budget.
+            </p>
+
         </div>
 
+
         <div>
+
             <span>02</span>
-            <h3>Comfort First</h3>
-            <p>Easy-to-wear styles for college and work days.</p>
+
+            <h3>
+                Comfort First
+            </h3>
+
+            <p>
+                Easy-to-wear styles for college and work days.
+            </p>
+
         </div>
 
+
         <div>
+
             <span>03</span>
-            <h3>Worldwide Delivery</h3>
-            <p>We deliver your favourite styles across the world.</p>
+
+            <h3>
+                Worldwide Delivery
+            </h3>
+
+            <p>
+                We deliver your favourite styles across the world.
+            </p>
+
         </div>
 
+
         <div>
+
             <span>04</span>
-            <h3>Easy Ordering</h3>
-            <p>Order directly through WhatsApp with ease.</p>
+
+            <h3>
+                Easy Ordering
+            </h3>
+
+            <p>
+                Order directly through WhatsApp with ease.
+            </p>
+
         </div>
 
     </div>
@@ -208,40 +404,71 @@
 </section>
 
 
+
 <!-- REVIEWS -->
+
 <section class="section reviews">
 
     <div class="section-heading">
-        <p>LOVE FROM OUR CUSTOMERS</p>
-        <h2>What They Say</h2>
+
+        <p>
+            LOVE FROM OUR CUSTOMERS
+        </p>
+
+        <h2>
+            What They Say
+        </h2>
+
     </div>
+
 
     <div class="review-grid">
 
         <div class="review">
+
             <div>★★★★★</div>
+
             <p>
                 "Beautiful quality and exactly what I expected.
                 Perfect for everyday wear."
             </p>
-            <strong>— Priya</strong>
+
+            <strong>
+                — Priya
+            </strong>
+
         </div>
 
+
         <div class="review">
+
             <div>★★★★★</div>
+
             <p>
                 "Very comfortable and elegant.
                 The price is also really good."
             </p>
-            <strong>— Ananya</strong>
+
+            <strong>
+                — Ananya
+            </strong>
+
         </div>
 
+
         <div class="review">
+
             <div>★★★★★</div>
+
             <p>
-                "Loved the collection. Perfect for office wear."
+                "Loved the collection.
+                Perfect for office wear."
             </p>
-            <strong>— Sneha</strong>
+
+            <strong>
+                — Sneha
+            </strong>
+
         </div>
 
     </div>
@@ -249,11 +476,19 @@
 </section>
 
 
+
 <!-- INSTAGRAM -->
+
 <section class="instagram">
 
-    <p>FOLLOW US</p>
-    <h2>@ne__fashions</h2>
+    <p>
+        FOLLOW US
+    </p>
+
+    <h2>
+        @ne__fashions
+    </h2>
+
 
     <div class="insta-grid">
 
@@ -269,14 +504,23 @@
 </section>
 
 
+
 <!-- ABOUT -->
-<section class="section about" id="about">
+
+<section
+    class="section about"
+    id="about"
+>
 
     <div>
 
-        <p>OUR STORY</p>
+        <p>
+            OUR STORY
+        </p>
 
-        <h2>Elegance in Every Thread</h2>
+        <h2>
+            Elegance in Every Thread
+        </h2>
 
         <p>
             At NE Fashions, we believe everyday fashion should
@@ -292,34 +536,74 @@
 </section>
 
 
+
 <!-- CONTACT -->
-<section class="section contact" id="contact">
+
+<section
+    class="section contact"
+    id="contact"
+>
 
     <div class="section-heading">
-        <p>GET IN TOUCH</p>
-        <h2>Contact NE Fashions</h2>
+
+        <p>
+            GET IN TOUCH
+        </p>
+
+        <h2>
+            Contact NE Fashions
+        </h2>
+
     </div>
+
 
     <div class="contact-box">
 
         <div>
-            <h3>NE FASHIONS</h3>
 
-            <p>Hyderabad, Telangana, India</p>
-            <p>+91 90000 00000</p>
-            <p>hello@nefashions.example</p>
-            <p>@ne__fashions</p>
+            <h3>
+                NE FASHIONS
+            </h3>
+
+            <p>
+                Hyderabad, Telangana, India
+            </p>
+
+            <!-- CHANGE THESE LATER -->
+            <p>
+                +91 9392888728
+            </p>
+
+            <p>            
+                @ne__fashions
+            </p>
+
         </div>
+
 
         <form onsubmit="sendMessage(event)">
 
-            <input type="text" placeholder="Your Name" required>
+            <input
+                type="text"
+                placeholder="Your Name"
+                required
+            >
 
-            <input type="email" placeholder="Your Email" required>
+            <input
+                type="email"
+                placeholder="Your Email"
+                required
+            >
 
-            <textarea placeholder="Your Message" required></textarea>
+            <textarea
+                placeholder="Your Message"
+                required
+            ></textarea>
 
-            <button type="submit" class="primary-btn">
+            <button
+                type="submit"
+                class="primary-btn"
+            >
                 SEND MESSAGE
             </button>
 
@@ -330,48 +614,187 @@
 </section>
 
 
+
 <!-- FOOTER -->
+
 <footer>
 
     <div class="footer-logo">
-        NE FASHIONS
-        <small>Elegance in Every Thread</small>
+
+        <img
+            src="images/logo.png"
+            alt="NE Fashions"
+        >
+
     </div>
 
-    <div>
-        <h4>Quick Links</h4>
-        <a href="#home">Home</a>
-        <a href="#shop">Shop</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-    </div>
 
     <div>
-        <h4>Customer Care</h4>
-        <a href="#">Shipping Policy</a>
-        <a href="#">Returns</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Size Guide</a>
+
+        <h4>
+            Quick Links
+        </h4>
+
+        <a href="#home">
+            Home
+        </a>
+
+        <a href="#shop">
+            Shop
+        </a>
+
+        <a href="#about">
+            About
+        </a>
+
+        <a href="#contact">
+            Contact
+        </a>
+
     </div>
 
+
     <div>
-        <h4>Follow Us</h4>
-        <a href="https://instagram.com/ne__fashions" target="_blank">
+
+        <h4>
+            Customer Care
+        </h4>
+
+        <a href="#">
+            Shipping Policy
+        </a>
+
+        <a href="#">
+            Returns
+        </a>
+
+        <a href="#">
+            Privacy Policy
+        </a>
+
+        <a href="#">
+            Size Guide
+        </a>
+
+    </div>
+
+
+    <div>
+
+        <h4>
+            Follow Us
+        </h4>
+
+        <a
+            href="https://instagram.com/ne__fashions"
+            target="_blank"
+        >
             Instagram
         </a>
-        <a href="https://wa.me/919000000000" target="_blank">
+
+        <a
+            href="https://wa.me/919392888728"
+            target="_blank"
+        >
             WhatsApp
         </a>
+
     </div>
 
 </footer>
 
+
 <div class="copyright">
-    © 2026 NE Fashions. All rights reserved.
+
+    © 2026 NE Fashions.
+    All rights reserved.
+
 </div>
 
 
-<!-- JAVASCRIPT -->
+
+<!-- WISHLIST POPUP -->
+
+<div
+    id="wishlistModal"
+    class="popup"
+>
+
+    <div class="popup-content">
+
+        <button
+            class="close-popup"
+            onclick="closeWishlist()"
+        >
+            ×
+        </button>
+
+        <h2>
+            My Wishlist
+        </h2>
+
+        <div id="wishlistItems"></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- CART POPUP -->
+
+<div
+    id="cartModal"
+    class="popup"
+>
+
+    <div class="popup-content">
+
+        <button
+            class="close-popup"
+            onclick="closeCart()"
+        >
+            ×
+        </button>
+
+        <h2>
+            My Cart
+        </h2>
+
+        <div id="cartItems"></div>
+
+        <h3 id="cartTotal">
+            Total: ₹0
+        </h3>
+
+    </div>
+
+</div>
+
+<!-- IMAGE MODAL -->
+
+<div id="imageModal" class="popup">
+
+    <div class="popup-content">
+
+        <button
+            class="close-popup"
+            onclick="closeImageModal()"
+        >
+            ×
+        </button>
+
+        <img
+            id="imageModalImg"
+            src=""
+            alt=""
+            style="width: 100%; height: auto; display: block;"
+        >
+
+    </div>
+
+</div>
+
 <script src="script.js"></script>
 
 </body>
