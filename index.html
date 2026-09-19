@@ -2,798 +2,1223 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NE Fashions | Elegance in Every Thread</title>
+  <title>NE Fashions | Elegance in Every Thread</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <!-- ANNOUNCEMENT -->
 <div class="announcement">
-    ✨ New Arrivals | Worldwide Shipping Available
+  ✨ New Arrivals | Worldwide Shipping Available
 </div>
 
 
 <!-- HEADER -->
-<header>
+<header class="header">
 
-    <!-- YOUR LOGO -->
-    <!-- Put your logo here:
-         images/logo.png
-    -->
+  <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+    ☰
+  </button>
 
-    <div class="logo">
-        <a href="#home">
-            <img src="images/logo.png" alt="NE Fashions"> 
-            <span>NE FASHIONS</span>
-        </a>
-    </div>
+  <div class="brand">
+    <a href="#home">
+      <img src="images/logo.png" alt="NE Fashions">
+      <div class="brand-text">
+        <h1>NE FASHIONS</h1>
+        <span>Elegance in Every Thread</span>
+      </div>
+    </a>
+  </div>
 
+  <nav class="desktop-nav">
+    <a href="#home">Home</a>
+    <a href="#shop">Shop</a>
+    <a href="#categories">Collections</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
 
-    <nav id="navMenu">
+  <div class="header-actions">
 
-        <a href="#home">Home</a>
-
-        <a href="#shop">Shop</a>
-
-        <a href="#categories">Collections</a>
-
-        <a href="#about">About</a>
-
-        <a href="#contact">Contact</a>
-
-    </nav>
-
-
-    <div class="header-icons">
-
-        <button onclick="searchProducts()" aria-label="Search">
-            ⌕
-        </button>
-
-        <button onclick="showWishlist()" aria-label="Wishlist">
-            ♡
-            <span id="wishlistCount">0</span>
-        </button>
-
-        <button onclick="showCart()" aria-label="Cart">
-            🛒
-            <span id="cartCount">0</span>
-        </button>
-
-    </div>
-
-
-    <button class="menu-btn" onclick="toggleMenu()">
-        ☰
+    <button onclick="focusSearch()" aria-label="Search">
+      ⌕
     </button>
+
+    <button onclick="openWishlist()" aria-label="Wishlist">
+      ♡
+      <span id="wishlistCount" class="icon-badge">0</span>
+    </button>
+
+    <button onclick="openCart()" aria-label="Cart">
+      🛒
+      <span id="cartCount" class="icon-badge">0</span>
+    </button>
+
+  </div>
 
 </header>
 
 
+<!-- MOBILE MENU -->
+<nav id="mobileMenu" class="mobile-menu">
+
+  <a href="#home" onclick="closeMenu()">Home</a>
+  <a href="#shop" onclick="closeMenu()">Shop</a>
+  <a href="#categories" onclick="closeMenu()">Collections</a>
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+
+</nav>
+
 
 <!-- HERO -->
+<section class="hero" id="home">
 
-<section
-    class="hero"
-    id="home"
-    style="background-image: url('images/hero.jpg');"
->
+  <div class="hero-content">
 
-    <div class="hero-content">
-
-        <p class="small-title">
-            NE FASHIONS
-        </p>
-
-        <h1>
-            Elegance in<br>
-            Every Thread
-        </h1>
-
-        <p>
-            Simple, elegant and affordable styles
-            made for everyday moments.
-        </p>
-
-        <a href="#shop" class="primary-btn">
-            SHOP COLLECTION
-        </a>
-
-    </div>
-
-</section>
-
-
-
-<!-- CATEGORIES -->
-
-<section class="section" id="categories">
-
-    <div class="section-heading">
-
-        <p>EXPLORE</p>
-
-        <h2>
-            Shop By Category
-        </h2>
-
-    </div>
-
-
-    <div class="category-grid">
-
-        <div class="category-card">
-
-            <div class="category-image daily"></div>
-
-            <h3>
-                Daily Wear
-            </h3>
-
-            <button onclick="filterCategory('Daily Wear')">
-                Explore
-            </button>
-
-        </div>
-
-
-        <div class="category-card">
-
-            <div class="category-image threepiece"></div>
-
-            <h3>
-                3 Piece Sets
-            </h3>
-
-            <button onclick="filterCategory('3 Piece Sets')">
-                Explore
-            </button>
-
-        </div>
-
-
-        <div class="category-card">
-
-            <div class="category-image kurtis"></div>
-
-            <h3>
-                Kurtis
-            </h3>
-
-            <button onclick="filterCategory('Kurtis')">
-                Explore
-            </button>
-
-        </div>
-
-
-        <div class="category-card">
-
-            <div class="category-image frocks"></div>
-
-            <h3>
-                Frocks
-            </h3>
-
-            <button onclick="filterCategory('Frocks')">
-                Explore
-            </button>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- PRODUCTS -->
-
-<section class="section products-section" id="shop">
-
-    <div class="section-heading">
-
-        <p>OUR COLLECTION</p>
-
-        <h2>
-            New Arrivals
-        </h2>
-
-    </div>
-
-
-    <div class="filters">
-
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Search dresses, kurtis..."
-            onkeyup="searchProducts()"
-        >
-
-
-        <select
-            id="categoryFilter"
-            onchange="displayProducts()"
-        >
-
-            <option value="All">
-                All Categories
-            </option>
-
-            <option value="Daily Wear">
-                Daily Wear
-            </option>
-
-            <option value="3 Piece Sets">
-                3 Piece Sets
-            </option>
-
-            <option value="Kurtis">
-                Kurtis
-            </option>
-
-            <option value="Frocks">
-                Frocks
-            </option>
-
-            <option value="Designer Wear">
-                Designer Wear
-            </option>
-
-        </select>
-
-
-        <select
-            id="sortFilter"
-            onchange="displayProducts()"
-        >
-
-            <option value="default">
-                Sort By
-            </option>
-
-            <option value="low">
-                Price: Low to High
-            </option>
-
-            <option value="high">
-                Price: High to Low
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <!-- PRODUCTS WILL APPEAR HERE -->
-
-    <div
-        class="product-grid"
-        id="productGrid"
-    ></div>
-
-</section>
-
-
-
-<!-- OFFER -->
-
-<section class="offer">
-
-    <div>
-
-        <p>
-            LIMITED TIME OFFER
-        </p>
-
-        <h2>
-            Everyday Elegance,<br>
-            Better Prices.
-        </h2>
-
-        <span>
-            Flat 10% OFF on orders above ₹1,499
-        </span>
-
-        <p class="coupon">
-            Use Code:
-            <strong>NE10</strong>
-        </p>
-
-        <button onclick="scrollToShop()">
-            SHOP NOW
-        </button>
-
-    </div>
-
-</section>
-
-
-
-<!-- WHY US -->
-
-<section class="section why">
-
-    <div class="section-heading">
-
-        <p>
-            WHY NE FASHIONS
-        </p>
-
-        <h2>
-            Made For Your Everyday
-        </h2>
-
-    </div>
-
-
-    <div class="why-grid">
-
-        <div>
-
-            <span>01</span>
-
-            <h3>
-                Affordable Fashion
-            </h3>
-
-            <p>
-                Beautiful styles without stretching your budget.
-            </p>
-
-        </div>
-
-
-        <div>
-
-            <span>02</span>
-
-            <h3>
-                Comfort First
-            </h3>
-
-            <p>
-                Easy-to-wear styles for college and work days.
-            </p>
-
-        </div>
-
-
-        <div>
-
-            <span>03</span>
-
-            <h3>
-                Worldwide Delivery
-            </h3>
-
-            <p>
-                We deliver your favourite styles across the world.
-            </p>
-
-        </div>
-
-
-        <div>
-
-            <span>04</span>
-
-            <h3>
-                Easy Ordering
-            </h3>
-
-            <p>
-                Order directly through WhatsApp with ease.
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- REVIEWS -->
-
-<section class="section reviews">
-
-    <div class="section-heading">
-
-        <p>
-            LOVE FROM OUR CUSTOMERS
-        </p>
-
-        <h2>
-            What They Say
-        </h2>
-
-    </div>
-
-
-    <div class="review-grid">
-
-        <div class="review">
-
-            <div>★★★★★</div>
-
-            <p>
-                "Beautiful quality and exactly what I expected.
-                Perfect for everyday wear."
-            </p>
-
-            <strong>
-                — Priya
-            </strong>
-
-        </div>
-
-
-        <div class="review">
-
-            <div>★★★★★</div>
-
-            <p>
-                "Very comfortable and elegant.
-                The price is also really good."
-            </p>
-
-            <strong>
-                — Ananya
-            </strong>
-
-        </div>
-
-
-        <div class="review">
-
-            <div>★★★★★</div>
-
-            <p>
-                "Loved the collection.
-                Perfect for office wear."
-            </p>
-
-            <strong>
-                — Sneha
-            </strong>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- INSTAGRAM -->
-
-<section class="instagram">
-
-    <p>
-        FOLLOW US
+    <p class="hero-small">
+      NE FASHIONS
     </p>
 
     <h2>
-        @ne__fashions
+      Elegance in<br>
+      Every Thread
     </h2>
 
+    <p>
+      Simple, elegant and affordable styles made for everyday moments.
+    </p>
 
-    <div class="insta-grid">
+    <button onclick="scrollToShop()">
+      SHOP COLLECTION
+    </button>
 
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-    </div>
+  </div>
 
 </section>
 
 
+<!-- CATEGORIES -->
+<section class="categories" id="categories">
 
-<!-- ABOUT -->
+  <div class="section-heading">
 
-<section
-    class="section about"
-    id="about"
->
+    <span>EXPLORE</span>
+
+    <h2>
+      Shop By Category
+    </h2>
+
+  </div>
+
+  <div class="category-grid">
+
+    <button onclick="filterCategory('Daily Wear')">
+
+      <img
+        src="images/dailywear.jpg"
+        alt="Daily Wear"
+      >
+
+      <span>Daily Wear</span>
+
+    </button>
+
+
+    <button onclick="filterCategory('3 Piece Sets')">
+
+      <img
+        src="images/3-piece-sets.jpg"
+        alt="3 Piece Sets"
+      >
+
+      <span>3 Piece Sets</span>
+
+    </button>
+
+
+    <button onclick="filterCategory('Kurtis')">
+
+      <img
+        src="images/kurti.jpg"
+        alt="Kurtis"
+      >
+
+      <span>Kurtis</span>
+
+    </button>
+
+
+    <button onclick="filterCategory('Frocks')">
+
+      <img
+        src="images/frocks.jpg"
+        alt="Frocks"
+      >
+
+      <span>Frocks</span>
+
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- SEARCH + FILTER -->
+<section class="search-section" id="shop">
+
+  <div class="search-box">
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search your style..."
+      oninput="renderProducts()"
+    >
+
+    <span>⌕</span>
+
+  </div>
+
+
+  <div class="filters">
+
+    <select
+      id="categoryFilter"
+      onchange="renderProducts()"
+    >
+
+      <option value="All">
+        All Categories
+      </option>
+
+      <option value="Daily Wear">
+        Daily Wear
+      </option>
+
+      <option value="3 Piece Sets">
+        3 Piece Sets
+      </option>
+
+      <option value="Kurtis">
+        Kurtis
+      </option>
+
+      <option value="Frocks">
+        Frocks
+      </option>
+
+      <option value="Sets">
+        Sets
+      </option>
+
+    </select>
+
+
+    <select
+      id="sortFilter"
+      onchange="renderProducts()"
+    >
+
+      <option value="default">
+        Sort
+      </option>
+
+      <option value="low">
+        Price: Low to High
+      </option>
+
+      <option value="high">
+        Price: High to Low
+      </option>
+
+      <option value="az">
+        Name: A-Z
+      </option>
+
+    </select>
+
+  </div>
+
+</section>
+
+
+<!-- NEW PRODUCT COLLECTION -->
+<main class="products-section">
+
+  <div class="section-heading collection-heading">
+
+    <span>OUR COLLECTION</span>
+
+    <h2>
+      New Arrivals
+    </h2>
+
+  </div>
+
+  <div
+    id="productGrid"
+    class="product-grid"
+  ></div>
+
+</main>
+
+
+<!-- OLD OFFER -->
+<section class="offer">
+
+  <div>
+
+    <span>
+      LIMITED TIME OFFER
+    </span>
+
+    <h2>
+      Everyday Elegance,<br>
+      Better Prices.
+    </h2>
+
+    <p>
+      Flat 10% OFF on orders above ₹1,499
+    </p>
+
+    <p class="coupon">
+      Use Code:
+      <strong>NE10</strong>
+    </p>
+
+    <button onclick="scrollToShop()">
+      SHOP NOW
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- OLD WHY NE FASHIONS -->
+<section class="why-us">
+
+  <div class="section-heading">
+
+    <span>
+      WHY NE FASHIONS
+    </span>
+
+    <h2>
+      Made For Your Everyday
+    </h2>
+
+  </div>
+
+
+  <div class="why-grid">
 
     <div>
 
-        <p>
-            OUR STORY
-        </p>
+      <div class="why-number">
+        01
+      </div>
 
-        <h2>
-            Elegance in Every Thread
-        </h2>
+      <h3>
+        Affordable Fashion
+      </h3>
 
-        <p>
-            At NE Fashions, we believe everyday fashion should
-            be simple, elegant and affordable.
-
-            Our collections are thoughtfully selected for women
-            who want comfortable styles that fit beautifully into
-            college days, workdays and everyday moments.
-        </p>
+      <p>
+        Beautiful styles without stretching your budget.
+      </p>
 
     </div>
+
+
+    <div>
+
+      <div class="why-number">
+        02
+      </div>
+
+      <h3>
+        Comfort First
+      </h3>
+
+      <p>
+        Easy-to-wear styles for college and work days.
+      </p>
+
+    </div>
+
+
+    <div>
+
+      <div class="why-number">
+        03
+      </div>
+
+      <h3>
+        Worldwide Delivery
+      </h3>
+
+      <p>
+        We deliver your favourite styles across the world.
+      </p>
+
+    </div>
+
+
+    <div>
+
+      <div class="why-number">
+        04
+      </div>
+
+      <h3>
+        Easy Ordering
+      </h3>
+
+      <p>
+        Order directly through WhatsApp with ease.
+      </p>
+
+    </div>
+
+  </div>
 
 </section>
 
 
+<!-- OLD REVIEWS -->
+<section class="reviews">
 
-<!-- CONTACT -->
+  <div class="section-heading">
 
-<section
-    class="section contact"
-    id="contact"
->
+    <span>
+      LOVE FROM OUR CUSTOMERS
+    </span>
 
-    <div class="section-heading">
+    <h2>
+      What They Say
+    </h2>
 
-        <p>
-            GET IN TOUCH
-        </p>
+  </div>
 
-        <h2>
-            Contact NE Fashions
-        </h2>
+
+  <div class="review-grid">
+
+    <div class="review-card">
+
+      <div class="stars">
+        ★★★★★
+      </div>
+
+      <p>
+        "Beautiful quality and exactly what I expected.
+        Perfect for everyday wear."
+      </p>
+
+      <strong>
+        — Priya
+      </strong>
+
+    </div>
+
+
+    <div class="review-card">
+
+      <div class="stars">
+        ★★★★★
+      </div>
+
+      <p>
+        "Very comfortable and elegant.
+        The price is also really good."
+      </p>
+
+      <strong>
+        — Ananya
+      </strong>
 
     </div>
 
 
-    <div class="contact-box">
+    <div class="review-card">
 
-        <div>
+      <div class="stars">
+        ★★★★★
+      </div>
 
-            <h3>
-                NE FASHIONS
-            </h3>
+      <p>
+        "Loved the collection.
+        Perfect for office wear."
+      </p>
 
-            <p>
-                Hyderabad, Telangana, India
-            </p>
-
-            <!-- CHANGE THESE LATER -->
-            <p>
-                +91 9392888728
-            </p>
-
-            <p>            
-                @ne__fashions
-            </p>
-
-        </div>
-
-
-        <form onsubmit="sendMessage(event)">
-
-            <input
-                type="text"
-                placeholder="Your Name"
-                required
-            >
-
-            <input
-                type="email"
-                placeholder="Your Email"
-                required
-            >
-
-            <textarea
-                placeholder="Your Message"
-                required
-            ></textarea>
-
-            <button
-                type="submit"
-                class="primary-btn"
-            >
-                SEND MESSAGE
-            </button>
-
-        </form>
+      <strong>
+        — Sneha
+      </strong>
 
     </div>
+
+  </div>
 
 </section>
 
 
+<!-- OLD INSTAGRAM -->
+<section class="instagram-section">
 
-<!-- FOOTER -->
+  <div class="section-heading">
 
+    <span>
+      FOLLOW US
+    </span>
+
+    <h2>
+      @ne__fashions
+    </h2>
+
+  </div>
+
+
+  <div class="instagram-grid">
+
+    <img src="images/a.jpg" alt="">
+    <img src="images/b.jpg" alt="">
+    <img src="images/c.jpg" alt="">
+    <img src="images/d.jpg" alt="">
+    <img src="images/e.jpg" alt="">
+    <img src="images/f.jpg" alt="">
+
+  </div>
+
+</section>
+
+
+<!-- OLD STORY -->
+<section class="about" id="about">
+
+  <div class="about-content">
+
+    <span>
+      OUR STORY
+    </span>
+
+    <h2>
+      Elegance in Every Thread
+    </h2>
+
+    <p>
+      At NE Fashions, we believe everyday fashion should
+      be simple, elegant and affordable. Our collections are
+      thoughtfully selected for women who want comfortable
+      styles that fit beautifully into college days, workdays
+      and everyday moments.
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- OLD CONTACT -->
+<section class="contact" id="contact">
+
+  <div class="section-heading">
+
+    <span>
+      GET IN TOUCH
+    </span>
+
+    <h2>
+      Contact NE Fashions
+    </h2>
+
+  </div>
+
+
+  <div class="contact-box">
+
+    <div>
+
+      <h3>
+        NE FASHIONS
+      </h3>
+
+      <p>
+        Hyderabad, Telangana, India
+      </p>
+
+      <p>
+        +91 9392888728
+      </p>
+
+      <p>
+        <a
+          href="https://www.instagram.com/ne__fashions/"
+          target="_blank"
+          >
+           @ne__fashions
+          </a>
+      </p>
+
+    </div>
+
+
+    <form onsubmit="sendWhatsApp(event)">
+
+  <input
+    type="text"
+    id="contactName"
+    placeholder="Your Name"
+    required
+  >
+
+  <input
+    type="email"
+    id="contactEmail"
+    placeholder="Your Email"
+    required
+  >
+
+  <textarea
+    id="contactMessage"
+    placeholder="Your Message"
+    required
+  ></textarea>
+
+  <button
+    type="submit"
+    class="primary-btn"
+  >
+    SEND MESSAGE
+  </button>
+
+</form>
+
+  </div>
+
+</section>
+
+
+<!-- OLD FOOTER -->
 <footer>
 
-    <div class="footer-logo">
+  <div class="footer-brand">
 
-        <img
-            src="images/logo.png"
-            alt="NE Fashions"
-        >
+    <img
+      src="images/logo.png"
+      alt="NE Fashions"
+    >
 
-    </div>
-
-
-    <div>
-
-        <h4>
-            Quick Links
-        </h4>
-
-        <a href="#home">
-            Home
-        </a>
-
-        <a href="#shop">
-            Shop
-        </a>
-
-        <a href="#about">
-            About
-        </a>
-
-        <a href="#contact">
-            Contact
-        </a>
-
-    </div>
+  </div>
 
 
-    <div>
+  <div>
 
-        <h4>
-            Customer Care
-        </h4>
+    <h4>
+      Quick Links
+    </h4>
 
-        <a href="#">
-            Shipping Policy
-        </a>
+    <a href="#home">
+      Home
+    </a>
 
-        <a href="#">
-            Returns
-        </a>
+    <a href="#shop">
+      Shop
+    </a>
 
-        <a href="#">
-            Privacy Policy
-        </a>
+    <a href="#about">
+      About
+    </a>
 
-        <a href="#">
-            Size Guide
-        </a>
+    <a href="#contact">
+      Contact
+    </a>
 
-    </div>
+  </div>
 
 
-    <div>
+  <div>
 
-        <h4>
-            Follow Us
-        </h4>
+    <h4>
+      Customer Care
+    </h4>
 
-        <a
-            href="https://instagram.com/ne__fashions"
-            target="_blank"
-        >
-            Instagram
-        </a>
+      <button onclick="openPolicy('shipping')">
+         Shipping Policy
+      </button>
 
-        <a
-            href="https://wa.me/919392888728"
-            target="_blank"
-        >
-            WhatsApp
-        </a>
+      <button onclick="openPolicy('return')">
+         Returns
+      </button>
 
-    </div>
+      <button onclick="openPolicy('privacy')">
+        Privacy Policy
+      </button>
+
+      <button onclick="openSizeGuide()">
+        Size Guide
+      </button>
+
+  </div>
+
+
+  <div>
+
+    <h4>
+      Follow Us
+    </h4>
+
+    <a
+      href="https://instagram.com/ne__fashions"
+      target="_blank"
+    >
+      Instagram
+    </a>
+
+    <a
+      href="https://wa.me/919392888728"
+      target="_blank"
+    >
+      WhatsApp
+    </a>
+
+  </div>
 
 </footer>
 
 
 <div class="copyright">
 
-    © 2026 NE Fashions.
-    All rights reserved.
+  ©️ 2026 NE Fashions.
+  All rights reserved.
 
 </div>
 
 
+<!-- =====================================================
+     NEW PRODUCT DETAIL POPUP — DO NOT CHANGE
+===================================================== -->
 
-<!-- WISHLIST POPUP -->
+<div id="productDetail" class="overlay">
 
-<div
-    id="wishlistModal"
-    class="popup"
->
+  <div class="detail-page">
 
-    <div class="popup-content">
-
-        <button
-            class="close-popup"
-            onclick="closeWishlist()"
-        >
-            ×
-        </button>
-
-        <h2>
-            My Wishlist
-        </h2>
-
-        <div id="wishlistItems"></div>
-
-    </div>
-
-</div>
+    <button
+      class="close-btn"
+      onclick="closeProduct()"
+    >
+      ×
+    </button>
 
 
+    <div class="detail-gallery">
 
-<!-- CART POPUP -->
-
-<div
-    id="cartModal"
-    class="popup"
->
-
-    <div class="popup-content">
+      <div class="main-image-wrap">
 
         <button
-            class="close-popup"
-            onclick="closeCart()"
+          class="gallery-arrow left-arrow"
+          onclick="previousImage()"
         >
-            ×
-        </button>
-
-        <h2>
-            My Cart
-        </h2>
-
-        <div id="cartItems"></div>
-
-        <h3 id="cartTotal">
-            Total: ₹0
-        </h3>
-
-    </div>
-
-</div>
-
-<!-- IMAGE MODAL -->
-
-<div id="imageModal" class="popup">
-
-    <div class="popup-content">
-
-        <button
-            class="close-popup"
-            onclick="closeImageModal()"
-        >
-            ×
+          ‹
         </button>
 
         <img
-            id="imageModalImg"
-            src=""
-            alt=""
-            style="width: 100%; height: auto; display: block;"
+          id="detailMainImage"
+          src=""
+          alt="Product"
         >
+
+        <button
+          class="gallery-arrow right-arrow"
+          onclick="nextImage()"
+        >
+          ›
+        </button>
+
+        <button
+          class="zoom-btn"
+          onclick="openImageViewer()"
+        >
+          ⛶
+        </button>
+
+      </div>
+
+
+      <div
+        id="thumbnailGallery"
+        class="thumbnail-gallery"
+      ></div>
 
     </div>
 
+
+    <div class="detail-info">
+
+      <div class="detail-top">
+
+        <div>
+
+          <p
+            id="detailCategory"
+            class="detail-category"
+          ></p>
+
+          <h2 id="detailName"></h2>
+
+          <div
+            id="detailPrice"
+            class="detail-price"
+          ></div>
+
+        </div>
+
+
+        <div class="detail-actions">
+
+          <button
+            id="detailWishlistBtn"
+            onclick="toggleCurrentWishlist()"
+          >
+            ♡
+          </button>
+
+          <button onclick="shareProduct()">
+            ↗
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- COLORS -->
+      <div
+        id="colorSection"
+        class="option-section"
+      >
+
+        <h3>
+          Color
+          <span id="selectedColorText"></span>
+        </h3>
+
+        <div
+          id="colorOptions"
+          class="color-options"
+        ></div>
+
+      </div>
+
+
+      <!-- SIZES -->
+      <div class="option-section">
+
+        <div class="size-heading">
+
+          <h3>
+            Size
+          </h3>
+
+          <button onclick="openSizeGuide()">
+            Size Guide
+          </button>
+
+        </div>
+
+
+        <div
+          id="sizeOptions"
+          class="size-options"
+        >
+
+          <button
+            data-size="S"
+            onclick="selectSize('S')"
+          >
+            S
+          </button>
+
+          <button
+            data-size="M"
+            onclick="selectSize('M')"
+          >
+            M
+          </button>
+
+          <button
+            data-size="L"
+            onclick="selectSize('L')"
+          >
+            L
+          </button>
+
+          <button
+            data-size="XL"
+            onclick="selectSize('XL')"
+          >
+            XL
+          </button>
+
+          <button
+            data-size="XXL"
+            onclick="selectSize('XXL')"
+          >
+            XXL
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- PURCHASE -->
+      <div class="purchase-buttons">
+
+        <button
+          class="add-cart"
+          onclick="addCurrentToCart()"
+        >
+          ADD TO CART
+        </button>
+
+        <button
+          class="buy-now"
+          onclick="buyCurrentNow()"
+        >
+          BUY NOW
+        </button>
+
+      </div>
+
+
+      <!-- DETAILS -->
+      <div class="product-accordions">
+
+        <details open>
+
+          <summary>
+            Product Details
+            <span>+</span>
+          </summary>
+
+          <p id="productDescription"></p>
+
+        </details>
+
+
+        <details>
+
+          <summary>
+            Size & Fit
+            <span>+</span>
+          </summary>
+
+          <p>
+            Comfortable regular fit.
+            Please check the size guide before ordering.
+          </p>
+
+        </details>
+
+
+        <details>
+
+          <summary>
+            Material & Care
+            <span>+</span>
+          </summary>
+
+          <p id="materialCare"></p>
+
+        </details>
+
+
+        <details>
+
+          <summary>
+            Return & Exchange
+            <span>+</span>
+          </summary>
+
+          <p>
+            Eligible items can be returned or exchanged
+            according to our return policy.
+          </p>
+
+        </details>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
+
+
+<!-- IMAGE VIEWER -->
+<div
+  id="imageViewer"
+  class="image-viewer"
+>
+
+  <button
+    class="viewer-close"
+    onclick="closeImageViewer()"
+  >
+    ×
+  </button>
+
+  <button
+    class="viewer-arrow viewer-left"
+    onclick="previousImage()"
+  >
+    ‹
+  </button>
+
+  <img
+    id="viewerImage"
+    src=""
+    alt="Product image"
+  >
+
+  <button
+    class="viewer-arrow viewer-right"
+    onclick="nextImage()"
+  >
+    ›
+  </button>
+
+  <div
+    id="viewerCounter"
+    class="viewer-counter"
+  ></div>
+
+</div>
+
+
+<!-- CART -->
+<div
+  id="cartOverlay"
+  class="overlay small-overlay"
+>
+
+  <div class="side-panel">
+
+    <button
+      class="close-btn"
+      onclick="closeCart()"
+    >
+      ×
+    </button>
+
+    <div class="panel-heading">
+
+      <span>
+        YOUR BAG
+      </span>
+
+      <h2>
+        Shopping Cart
+      </h2>
+
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div class="cart-bottom">
+
+      <div class="cart-total">
+
+        <span>
+          Total
+        </span>
+
+        <strong id="cartTotal">
+          ₹0
+        </strong>
+
+      </div>
+
+      <button
+        class="checkout-btn"
+        onclick="checkout()"
+      >
+        CHECKOUT
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- WISHLIST -->
+<div
+  id="wishlistOverlay"
+  class="overlay small-overlay"
+>
+
+  <div class="side-panel">
+
+    <button
+      class="close-btn"
+      onclick="closeWishlist()"
+    >
+      ×
+    </button>
+
+    <div class="panel-heading">
+
+      <span>
+        SAVED WITH LOVE
+      </span>
+
+      <h2>
+        Wishlist
+      </h2>
+
+    </div>
+
+    <div id="wishlistItems"></div>
+
+  </div>
+
+</div>
+
+
+<!-- SIZE GUIDE -->
+<div
+  id="sizeGuide"
+  class="overlay"
+>
+
+  <div class="modal-card">
+
+    <button
+      class="close-btn"
+      onclick="closeSizeGuide()"
+    >
+      ×
+    </button>
+
+    <div class="section-heading left">
+
+      <span>
+        FIND YOUR FIT
+      </span>
+
+      <h2>
+        Size Guide
+      </h2>
+
+    </div>
+
+
+    <div class="size-table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Size</th>
+            <th>Bust</th>
+            <th>Waist</th>
+            <th>Hip</th>
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr>
+            <td>S</td>
+            <td>34"</td>
+            <td>28"</td>
+            <td>36"</td>
+          </tr>
+
+          <tr>
+            <td>M</td>
+            <td>36"</td>
+            <td>30"</td>
+            <td>38"</td>
+          </tr>
+
+          <tr>
+            <td>L</td>
+            <td>38"</td>
+            <td>32"</td>
+            <td>40"</td>
+          </tr>
+
+          <tr>
+            <td>XL</td>
+            <td>40"</td>
+            <td>34"</td>
+            <td>42"</td>
+          </tr>
+
+          <tr>
+            <td>XXL</td>
+            <td>42"</td>
+            <td>36"</td>
+            <td>44"</td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <p class="note">
+      Measurements are sample measurements.
+      Replace these with your final NE FASHIONS
+      measurements later.
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- POLICY -->
+<div
+  id="policyModal"
+  class="overlay"
+>
+
+  <div class="modal-card policy-card">
+
+    <button
+      class="close-btn"
+      onclick="closePolicy()"
+    >
+      ×
+    </button>
+
+    <div id="policyContent"></div>
+
+  </div>
+
+</div>
+
 
 <script src="script.js"></script>
 
