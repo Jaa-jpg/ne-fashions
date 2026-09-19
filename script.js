@@ -1,875 +1,1490 @@
-// ==========================================
-// NE FASHIONS PRODUCTS
-// ==========================================
+/* =========================================================
+   NE FASHIONS - FINAL PRODUCT DATA
+   15 VISIBLE PRODUCTS
+   17 IMAGE GROUPS
+   COLOR VARIANTS ARE CONNECTED
+========================================================= */
 
 const products = [
 
-    {
-        id: 1,
-        name: "Elegant Blue Floral Printed Frock",
-        price: 699,
-        category: "Frocks",
-        fabric: "Georgette",
-        colour: "Blue",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/frock-1.jpg",
-    },
+  /* ---------------- FROCKS ---------------- */
 
-    {
-        id: 2,
-        name: "Elegant Mustard Embroidered Frock",
-        price: 699,
-        category: "Frocks",
-        fabric: "Mangalagiri",
-        colour: "Mustard",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/frock-2.jpg",
-    },
+  {
+    id: "frock-1",
+    name: "Elegant Blue Floral Printed Frock",
+    category: "Frocks",
+    price: 699,
+    description: "Elegant blue floral printed frock with a graceful feminine silhouette.",
+    material: "Georgette",
+    colors: [
+      {
+        name: "Blue",
+        images: [
+          "images/frock-1.0.jpg",
+          "images/frock-1.jpg",
+          "images/frock-1.1.jpg",
+          "images/frock-1.2.jpg",
+          "images/frock-1.3.jpg",
+          "images/frock-1.4.jpg"
+        ]
+      }
+    ]
+  },
 
-    {
-        id: 3,
-        name: "Elegant White Printed Frock",
-        price: 699,
-        category: "Frocks",
-        fabric: "Dhabu cotton",
-        colour: "White",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/frock-3.jpg",
-    },
+  {
+    id: "frock-2",
+    name: "Elegant Mustard Embroidered Frock",
+    category: "Frocks",
+    price: 699,
+    description: "Beautiful mustard embroidered frock designed for a soft and elegant look.",
+    material: "Mangalagiri",
+    colors: [
+      {
+        name: "Mustard",
+        images: [
+          "images/frock-2.0.jpg",
+          "images/frock-2.jpg",
+          "images/frock-2.1.jpg",
+          "images/frock-2.2.jpg",
+          "images/frock-2.3.jpg"
+        ]
+      }
+    ]
+  },
 
-    {
-        id: 4,
-        name: "Elegant Rust Orange Embroidered Suit Set",
-        price: 899,
-        category: "3 Piece Sets",
-        fabric: "Roman silk",
-        colour: "Rust orange",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/3-piece-1.jpg",
-    },
+  {
+    id: "frock-3",
+    name: "Elegant White Printed Frock",
+    category: "Frocks",
+    price: 699,
+    description: "Elegant white printed frock with a timeless everyday style.",
+    material: "Dhabu Cotton",
+    colors: [
+      {
+        name: "White",
+        images: [
+          "images/frock-3.0.jpg",
+          "images/frock-3.jpg",
+          "images/frock-3.1.jpg",
+          "images/frock-3.2.jpg",
+          "images/frock-3.3.jpg",
+          "images/frock-3.4.jpg"
+        ]
+      }
+    ]
+  },
 
-    {
-        id: 5,
-        name: "Elegant Deep Purple Embroidered Suit Set",
-        price: 899,
-        category: "3 piece sets",
-        fabric: "Roman silk",
-        colour: "Deep Purple",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/3-piece-2.jpg",
-    },
 
-    {
-        id: 6,
-        name: "Elegant Navy Blue Embroidered Suit Set",
-        price: 750,
-        category: "Kurtis",
-        fabric: "Rayon-cotton",
-        colour: "Navy Blue",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/kurti-2.jpg",
-    },
+  /* ---------------- DAILY WEAR ---------------- */
 
-    {
-        id: 7,
-        name: "Elegant Navy Blue Printed Kurti",
-        price: 899,
-        category: "Kurtis",
-        fabric: "Rayon-cotton",
-        colour: "Navy Blue",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/kurti-1.jpg",
-    },
+  {
+    id: "dailywear-1",
+    name: "Elegant Grey Blue Peacock Suit Set",
+    category: "Daily Wear",
+    price: 899,
+    description: "A graceful grey blue peacock printed suit set perfect for everyday elegance.",
+    material: "Rayon",
+    colors: [
+      {
+        name: "Grey Blue",
+        images: [
+          "images/dailywear-1.0.jpg",
+          "images/dailywear-1.jpg"
+        ]
+      }
+    ]
+  },
 
-    {
-        id: 8,
-        name: "Elegant Grey Blue Peacock Suit Set",
-        price: 899,
-        category: "Daily wear",
-        fabric: "Rayon",
-        colour: "Grey Blue",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/daily-wear-1.jpg",
-    },
+  {
+    id: "dailywear-2",
+    name: "Elegant Yellow Floral Suit Set",
+    category: "Daily Wear",
+    price: 899,
+    description: "Bright and feminine yellow floral suit set for a fresh everyday look.",
+    material: "Rayon",
+    colors: [
+      {
+        name: "Yellow",
+        images: [
+          "images/dailywear-2.0.jpg",
+          "images/dailywear-2.jpg",
+          "images/dailywear-2.1.jpg",
+          "images/dailywear-2.2.jpg",
+          "images/dailywear-2.3.jpg"
+        ]
+      }
+    ]
+  },
 
-    {
-        id: 9,
-        name: "Elegant Yellow Floral Suit Set",
-        price: 899,
-        category: "Daily wear",
-        fabric: "Rayon",
-        colour: "Yellow",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/daily-wear-2.jpg",
-    },
+  {
+    id: "dailywear-3",
+    name: "Graceful Mustard Floral Suit Set",
+    category: "Daily Wear",
+    price: 899,
+    description: "Graceful mustard floral suit set with a comfortable everyday silhouette.",
+    material: "Rayon",
+    colors: [
+      {
+        name: "Mustard",
+        images: [
+          "images/dailywear-3.0.jpg",
+          "images/dailywear-3.jpg"
+        ]
+      }
+    ]
+  },
 
-    {
-        id: 10,
-        name: "Graceful Mustard Floral Suit Set",
-        price: 899,
-        category: "Daily Wear",
-        fabric: "Rayon",
-        colour: "Mustard yellow",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/daily-wear-3.jpg",
-    },
 
-    {
-        id: 11,
-        name: "Elegant Olive Beige Floral Suit Set",
-        price: 1100,
-        category: "Sets",
-        fabric: "Jamdani",
-        colour: "Olive Beige",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/set-1.jpg",
-    },
+  /* ---------------- KURTIS ---------------- */
 
-    {
-        id: 12,
-        name: "Elegant Blue Grey Floral Peacock Suit Set",
-        price: 1100,
-        category: "Sets",
-        fabric: "Jamdani",
-        colour: "Blue Grey",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/set-2.jpg",
-    },
+  {
+    id: "kurti-1",
+    name: "Elegant Navy Blue Printed Kurti",
+    category: "Kurtis",
+    price: 899,
+    description: "A sophisticated navy blue printed kurti designed for effortless styling.",
+    material: "Rayon Cotton",
+    colors: [
+      {
+        name: "Navy Blue",
+        images: [
+          "images/kurti-1.0.jpg",
+          "images/kurti-1.jpg"
+        ]
+      }
+    ]
+  },
 
-    {
-        id: 13,
-        name: "Elegant Rust Red Floral Suit Set",
-        price: 999,
-        category: "Sets",
-        fabric: "Rayon",
-        colour: "Rust Red",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/set-3.jpg",
-    },
+  {
+    id: "kurti-2",
+    name: "Elegant Navy Blue Embroidered Kurti",
+    category: "Kurtis",
+    price: 750,
+    description: "Elegant navy blue embroidered kurti with a refined traditional finish.",
+    material: "Rayon Cotton",
+    colors: [
+      {
+        name: "Navy Blue",
+        images: [
+          "images/kurti-2.0.jpg",
+          "images/kurti-2.jpg",
+          "images/kurti-2.1.jpg",
+          "images/kurti-2.2.jpg",
+          "images/kurti-2.3.jpg"
+        ]
+      }
+    ]
+  },
 
-    {
-        id: 14,
-        name: "Elegant Deep Plum Floral Suit Set",
-        price: 999,
-        category: "Sets",
-        fabric: "Rayon",
-        colour: "Deep Plum",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/set-4.jpg",
-    },
 
-    {
-        id: 15,
-        name: "Elegant Maroon Floral Suit Set",
-        price: 999,
-        category: "Sets",
-        fabric: "Rayon",
-        colour: "Maroon",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/set-5.jpg",
-    },
+  /* ---------------- 3 PIECE SET - COLOR VARIANT ---------------- */
 
-    {
-        id: 16,
-        name: "Elegant Rani Pink Floral Suit Set",
-        price: 699,
-        category: "Sets",
-        fabric: "Rayon",
-        colour: "Rani Pink",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/set-6.jpg",
-    },
+  {
+    id: "three-piece-1",
+    name: "Elegant Embroidered 3 Piece Suit Set",
+    category: "3 Piece Sets",
+    price: 899,
+    description: "Elegant embroidered three-piece suit set available in beautiful statement colours.",
+    material: "Roman Silk",
+    colors: [
+      {
+        name: "Orange",
+        images: [
+          "images/Orange1-3piece-1.0.jpg",
+          "images/Orange1-3piece-1.jpg",
+          "images/Orange1.1-3piece-1.jpg",
+          "images/Orange1.2-3piece-1.jpg",
+          "images/Orange1.3-3piece-1.jpg",
+          "images/Orange1.4-3piece-1.jpg"
+        ]
+      },
+      {
+        name: "Purple",
+        images: [
+          "images/Purple1-3piece-2.0.jpg",
+          "images/Purple1-3piece-2.jpg",
+          "images/Purple1.1-3piece-2.jpg",
+          "images/Purple1.2-3piece-2.jpg",
+          "images/Purple1.3-3piece-2.jpg",
+          "images/Purple1.4-3piece-2.jpg"
+        ]
+      }
+    ]
+  },
 
-    {
-        id: 17,
-        name: "Elegant Mauve Floral Suit Set",
-        price: 899,
-        category: "Sets",
-        fabric: "Rayon",
-        colour: "Mauve",
-        sizes: ["M", "L", "XL", "XXL"],
-        image: "images/set-7.jpg",
-    },
+
+  /* ---------------- SET - COLOR VARIANT ---------------- */
+
+  {
+    id: "floral-set-1",
+    name: "Elegant Floral Suit Set",
+    category: "Sets",
+    price: 999,
+    description: "Beautiful floral suit set available in rich maroon and purple colour options.",
+    material: "Rayon",
+    colors: [
+      {
+        name: "Maroon",
+        images: [
+          "images/maroonset-3.0.jpg",
+          "images/maroonset-3.jpg",
+          "images/maroonset-3.1.jpg",
+          "images/maroonset-3.2.jpg",
+          "images/maroonset-3.3.jpg"
+        ]
+      },
+      {
+        name: "Purple",
+        images: [
+          "images/purpleset-4.0.jpg",
+          "images/purpleset-4.jpg",
+          "images/purpleset-4.1.jpg",
+          "images/purpleset-4.2.jpg",
+          "images/purpleset-4.3.jpg"
+        ]
+      }
+    ]
+  },
+
+
+  /* ---------------- OTHER SETS ---------------- */
+
+  {
+    id: "set-1",
+    name: "Elegant Olive Beige Floral Suit Set",
+    category: "Sets",
+    price: 1100,
+    description: "Elegant olive beige floral suit set with a premium traditional appearance.",
+    material: "Jamdani",
+    colors: [
+      {
+        name: "Olive Beige",
+        images: [
+          "images/set-1.0.jpg",
+          "images/set-1.jpg",
+          "images/set-1.1.jpg",
+          "images/set-1.2.jpg",
+          "images/set-1.3.jpg"
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "set-2",
+    name: "Elegant Blue Grey Floral Peacock Suit Set",
+    category: "Sets",
+    price: 1100,
+    description: "Beautiful blue grey floral peacock suit set with an elegant traditional feel.",
+    material: "Jamdani",
+    colors: [
+      {
+        name: "Blue Grey",
+        images: [
+          "images/set-2.0.jpg",
+          "images/set-2.jpg",
+          "images/set-2.1.jpg",
+          "images/set-2.2.jpg",
+          "images/set-2.3.jpg"
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "set-5",
+    name: "Elegant Maroon Floral Suit Set",
+    category: "Sets",
+    price: 999,
+    description: "Elegant maroon floral suit set with a rich and graceful appearance.",
+    material: "Rayon",
+    colors: [
+      {
+        name: "Maroon",
+        images: [
+          "images/set-5.0.jpg",
+          "images/set-5.jpg"
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "set-6",
+    name: "Elegant Rani Pink Floral Suit Set",
+    category: "Sets",
+    price: 699,
+    description: "Beautiful rani pink floral suit set for a bright and feminine look.",
+    material: "Rayon",
+    colors: [
+      {
+        name: "Rani Pink",
+        images: [
+          "images/set-6.0.jpg",
+          "images/set-6.jpg"
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "set-7",
+    name: "Elegant Mauve Floral Suit Set",
+    category: "Sets",
+    price: 899,
+    description: "Soft mauve floral suit set designed for effortless elegance.",
+    material: "Rayon",
+    colors: [
+      {
+        name: "Mauve",
+        images: [
+          "images/set-7.0.jpg",
+          "images/set-7.jpg",
+          "images/set-7.1.jpg",
+          "images/set-7.2.jpg",
+          "images/set-7.3.jpg"
+        ]
+      }
+    ]
+  }
+
 ];
 
 
-// ==========================================
-// CART & WISHLIST
-// ==========================================
+/* =========================================================
+   STATE
+========================================================= */
 
-let cart = JSON.parse(localStorage.getItem("neCart")) || [];
+let currentProduct = null;
+let currentColorIndex = 0;
+let currentImageIndex = 0;
+let selectedSize = null;
 
-let wishlist = JSON.parse(localStorage.getItem("neWishlist")) || [];
-
-
-// ==========================================
-// DISPLAY PRODUCTS
-// ==========================================
-
-function displayProducts() {
-
-    const productGrid =
-        document.getElementById("productGrid");
-
-    const category =
-        document.getElementById("categoryFilter").value;
-
-    const sort =
-        document.getElementById("sortFilter").value;
-
-    const search =
-        document.getElementById("searchInput").value
-        .toLowerCase();
+let cart = JSON.parse(localStorage.getItem("neFashionsCart")) || [];
+let wishlist = JSON.parse(localStorage.getItem("neFashionsWishlist")) || [];
 
 
-    let filteredProducts = products.filter(product => {
+/* =========================================================
+   HELPERS
+========================================================= */
 
-        const matchesCategory =
-            category === "All" ||
-            product.category === category;
+function money(amount) {
+  return "₹" + amount.toLocaleString("en-IN");
+}
 
-        const matchesSearch =
-            product.name.toLowerCase().includes(search) ||
-            product.colour.toLowerCase().includes(search) ||
-            product.fabric.toLowerCase().includes(search);
+function getProductColor(product, index = 0) {
+  return product.colors[index] || product.colors[0];
+}
 
-        return matchesCategory && matchesSearch;
+function getCurrentColor() {
+  return currentProduct.colors[currentColorIndex];
+}
 
-    });
+function getCurrentImage() {
+  return getCurrentColor().images[currentImageIndex];
+}
 
+function saveCart() {
+  localStorage.setItem("neFashionsCart", JSON.stringify(cart));
+}
 
-    if (sort === "low") {
-
-        filteredProducts.sort(
-            (a, b) => a.price - b.price
-        );
-
-    }
-
-    if (sort === "high") {
-
-        filteredProducts.sort(
-            (a, b) => b.price - a.price
-        );
-
-    }
+function saveWishlist() {
+  localStorage.setItem("neFashionsWishlist", JSON.stringify(wishlist));
+}
 
 
-    productGrid.innerHTML = "";
+/* =========================================================
+   RENDER PRODUCTS
+========================================================= */
 
+function renderProducts() {
 
-    filteredProducts.forEach(product => {
+  const grid = document.getElementById("productGrid");
 
-        const card =
-            document.createElement("div");
+  const search = document
+    .getElementById("searchInput")
+    .value
+    .toLowerCase()
+    .trim();
 
-        card.className = "product-card";
+  const category = document.getElementById("categoryFilter").value;
+  const sort = document.getElementById("sortFilter").value;
 
+  let filtered = products.filter(product => {
 
-        card.innerHTML = `
+    const matchesSearch =
+      product.name.toLowerCase().includes(search) ||
+      product.category.toLowerCase().includes(search) ||
+      product.colors.some(color =>
+        color.name.toLowerCase().includes(search)
+      );
 
-            <div class="product-image-wrap">
+    const matchesCategory =
+      category === "All" ||
+      product.category === category;
 
-                <img
-                    src="${product.image}"
-                    alt="${product.name}"
-                    style="cursor: pointer;"
-                >
+    return matchesSearch && matchesCategory;
+  });
 
+  if (sort === "low") {
+    filtered.sort((a, b) => a.price - b.price);
+  }
+
+  if (sort === "high") {
+    filtered.sort((a, b) => b.price - a.price);
+  }
+
+  if (sort === "az") {
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  if (!filtered.length) {
+    grid.innerHTML = `
+      <div class="empty-message" style="grid-column:1/-1;">
+        No products found.
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(product => {
+
+    const firstColor = product.colors[0];
+    const isWishlisted = wishlist.includes(product.id);
+
+    return `
+      <article class="product-card">
+
+        <div class="product-image-wrap"
+             onclick="openProduct('${product.id}', 0)">
+
+          <img
+            id="card-image-${product.id}"
+            src="${firstColor.images[0]}"
+            alt="${product.name}"
+            onerror="handleImageError(this)"
+          >
+
+          <button
+            class="product-heart ${isWishlisted ? "active" : ""}"
+            onclick="event.stopPropagation(); toggleWishlist('${product.id}')"
+          >
+            ${isWishlisted ? "♥" : "♡"}
+          </button>
+        </div>
+
+        <div class="product-info">
+
+          <h3>${product.name}</h3>
+
+          <div class="product-price">
+            ${money(product.price)}
+          </div>
+
+          ${
+            product.colors.length > 1
+            ?
+            `
+            <div class="card-colors">
+
+              ${product.colors.map((color, index) => `
                 <button
-                    class="wishlist-btn"
-                    onclick="toggleWishlist(${product.id})"
+                  class="card-color ${index === 0 ? "active" : ""}"
+                  title="${color.name}"
+                  onclick="event.stopPropagation(); changeCardColor('${product.id}', ${index})"
                 >
-                    ${wishlist.includes(product.id) ? "♥️" : "♡"}
-                </button>
+                <span
+                  class="card-color-circle"
+                  style="background-color: ${getColorValue(color.name)};"
+                ></span>
+              </button>
+              `).join("")}
+
+              <span class="color-label">
+                ${product.colors.length} Colors
+              </span>
 
             </div>
+            `
+            : ""
+          }
+
+        </div>
+
+      </article>
+    `;
+
+  }).join("");
+}
 
 
-            <div class="product-info">
+/* =========================================================
+   CARD COLOR CHANGE
+========================================================= */
 
-                <h3>
-                    ${product.name}
-                </h3>
+function changeCardColor(productId, colorIndex) {
 
-                <h4>
-                    ₹${product.price.toLocaleString("en-IN")}
-                </h4>
+  const product = products.find(p => p.id === productId);
 
-                <p>
-                    ${product.colour} • ${product.fabric}
-                </p>
+  if (!product) return;
 
-                <p>
-                    Sizes:
-                    ${product.sizes.join(", ")}
-                </p>
+  const image = document.getElementById(`card-image-${productId}`);
 
-                <button
-                    class="primary-btn"
-                    onclick="addToCart(${product.id})"
-                >
-                    ADD TO CART
-                </button>
+  image.src = product.colors[colorIndex].images[0];
 
-            </div>
+  const card = image.closest(".product-card");
 
-        `;
+  card.querySelectorAll(".card-color").forEach((button, index) => {
+    button.classList.toggle("active", index === colorIndex);
+  });
+
+}
 
 
-        // PRODUCT IMAGE CLICK
-        const productImage =
-            card.querySelector(".product-image-wrap img");
-
-        productImage.addEventListener("click", function () {
-
-            openImageModal(
-                this.src,
-                this.alt
-            );
-
-        });
+/* =========================================================
+   PRODUCT DETAIL
+========================================================= */
 
 
-        productGrid.appendChild(card);
+function openProduct(productId, colorIndex = 0) {
+
+  currentProduct = products.find(p => p.id === productId);
+
+  if (!currentProduct) return;
+
+  currentColorIndex = colorIndex;
+  currentImageIndex = 0;
+  selectedSize = null;
+
+  document.getElementById("productDetail").classList.add("active");
+
+  renderProductDetail();
+}
+
+function renderProductDetail() {
+
+  if (!currentProduct) return;
+
+  const color = getCurrentColor();
+
+  document.getElementById("detailCategory").textContent =
+    currentProduct.category;
+
+  document.getElementById("detailName").textContent =
+    currentProduct.name;
+
+  document.getElementById("detailPrice").textContent =
+    money(currentProduct.price);
+
+  document.getElementById("productDescription").textContent =
+    currentProduct.description;
+
+  document.getElementById("materialCare").textContent =
+    `${currentProduct.material}. Hand wash or gentle wash recommended. Dry in shade and iron carefully.`;
+
+  document.getElementById("selectedColorText").textContent =
+    `• ${color.name}`;
+
+  document.getElementById("detailMainImage").src =
+    color.images[currentImageIndex];
+
+  renderThumbnails();
+  renderColorOptions();
+  updateSizeButtons();
+  updateDetailWishlistButton();
+}
+
+
+/* =========================================================
+   COLOR CIRCLES
+========================================================= */
+
+function getColorValue(colorName) {
+
+  const colors = {
+    "Purple": "#8E4585",
+    "Orange": "#E87532",
+    "Blue": "#3F6FA8",
+    "Mustard": "#D4A72C",
+    "White": "#FFFFFF",
+    "Grey Blue": "#71859A",
+    "Yellow": "#E6C229",
+    "Navy Blue": "#243B64",
+    "Maroon": "#7A263A",
+    "Olive Beige": "#9B916B",
+    "Blue Grey": "#71808C",
+    "Rani Pink": "#D94F83",
+    "Mauve": "#A77B8E",
+    "Grey": "#808080"
+  };
+
+  return colors[colorName] || "#CCCCCC";
+}
+
+
+/* =========================================================
+   THUMBNAILS
+========================================================= */
+
+function renderThumbnails() {
+
+  const gallery = document.getElementById("thumbnailGallery");
+  const color = getCurrentColor();
+
+  gallery.innerHTML = color.images.map((image, index) => `
+    <button
+      class="${index === currentImageIndex ? "active" : ""}"
+      onclick="selectImage(${index})"
+    >
+      <img src="${image}" alt="" onerror="handleImageError(this)">
+    </button>
+  `).join("");
+}
+
+
+/* =========================================================
+   COLOR OPTIONS
+========================================================= */
+
+function renderColorOptions() {
+
+  const container = document.getElementById("colorOptions");
+
+  if (!container || !currentProduct) return;
+
+  const colors = currentProduct.colors || [];
+
+  container.innerHTML = colors.map((color, index) => `
+    <button
+      type="button"
+      class="color-option ${index === currentColorIndex ? "active" : ""}"
+      onclick="selectColor(${index})"
+      title="${color.name}"
+    >
+      <span
+        class="color-circle"
+        style="background-color: ${getColorValue(color.name)};"
+      ></span>
+    </button>
+  `).join("");
+}
+
+
+/* =========================================================
+   COLOR SELECT
+========================================================= */
+
+function selectColor(index) {
+
+  if (!currentProduct.colors[index]) return;
+
+  currentColorIndex = index;
+  currentImageIndex = 0;
+
+  renderProductDetail();
+}
+
+
+/* =========================================================
+   IMAGE SELECT
+========================================================= */
+
+function selectImage(index) {
+
+  const color = getCurrentColor();
+
+  if (!color.images[index]) return;
+
+  currentImageIndex = index;
+
+  document.getElementById("detailMainImage").src =
+    color.images[index];
+
+  renderThumbnails();
+}
+
+
+/* =========================================================
+   IMAGE NAVIGATION
+========================================================= */
+
+function nextImage() {
+
+  const color = getCurrentColor();
+
+  currentImageIndex =
+    (currentImageIndex + 1) % color.images.length;
+
+  updateMainImage();
+}
+
+function previousImage() {
+
+  const color = getCurrentColor();
+
+  currentImageIndex =
+    (currentImageIndex - 1 + color.images.length) %
+    color.images.length;
+
+  updateMainImage();
+}
+
+function updateMainImage() {
+
+  const image = getCurrentImage();
+
+  document.getElementById("detailMainImage").src = image;
+
+  renderThumbnails();
+
+  if (
+    document.getElementById("imageViewer").classList.contains("active")
+  ) {
+    updateViewer();
+  }
+}
+
+
+/* =========================================================
+   IMAGE VIEWER
+========================================================= */
+
+function openImageViewer() {
+
+  document.getElementById("imageViewer").classList.add("active");
+
+  updateViewer();
+
+  document.body.style.overflow = "hidden";
+}
+
+function closeImageViewer() {
+
+  document.getElementById("imageViewer").classList.remove("active");
+
+  document.body.style.overflow = "";
+}
+
+function updateViewer() {
+
+  document.getElementById("viewerImage").src =
+    getCurrentImage();
+
+  document.getElementById("viewerCounter").textContent =
+    `${currentImageIndex + 1} / ${getCurrentColor().images.length}`;
+}
+
+
+/* =========================================================
+   TOUCH SWIPE
+========================================================= */
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+const viewerImage = document.getElementById("viewerImage");
+
+viewerImage.addEventListener("touchstart", function(e) {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+viewerImage.addEventListener("touchend", function(e) {
+
+  touchEndX = e.changedTouches[0].screenX;
+
+  const distance = touchEndX - touchStartX;
+
+  if (Math.abs(distance) < 40) return;
+
+  if (distance < 0) {
+    nextImage();
+  } else {
+    previousImage();
+  }
+
+});
+
+
+/* =========================================================
+   SIZE
+========================================================= */
+
+function selectSize(size) {
+
+  selectedSize = size;
+
+  updateSizeButtons();
+}
+
+function updateSizeButtons() {
+
+  document.querySelectorAll("#sizeOptions button")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.size === selectedSize
+      );
 
     });
-
-
-    updateCounts();
-
 }
 
 
-// ==========================================
-// ADD TO CART
-// ==========================================
-
-function addToCart(productId) {
-
-    const existing =
-        cart.find(item => item.id === productId);
-
-
-    if (existing) {
-
-        existing.quantity++;
-
-    } else {
-
-        cart.push({
-            id: productId,
-            quantity: 1
-        });
-
-    }
-
-
-    saveCart();
-
-    updateCounts();
-
-}
-
-
-// ==========================================
-// REMOVE FROM CART
-// ==========================================
-
-function removeFromCart(productId) {
-
-    cart =
-        cart.filter(item => item.id !== productId);
-
-    saveCart();
-
-    updateCounts();
-
-    showCart();
-
-}
-
-
-// ==========================================
-// WISHLIST
-// ==========================================
+/* =========================================================
+   WISHLIST
+========================================================= */
 
 function toggleWishlist(productId) {
 
-    if (wishlist.includes(productId)) {
+  if (wishlist.includes(productId)) {
+    wishlist = wishlist.filter(id => id !== productId);
+  } else {
+    wishlist.push(productId);
+  }
 
-        wishlist =
-            wishlist.filter(id => id !== productId);
+  saveWishlist();
 
-    } else {
+  renderProducts();
+  updateWishlistCount();
 
-        wishlist.push(productId);
+if (
+  document.getElementById("wishlistOverlay")
+    .classList.contains("active")
+) {
+  renderWishlist();
+}
 
-    }
+if (currentProduct && currentProduct.id === productId) {
+  updateDetailWishlistButton();
 
+  }
+}
 
-    localStorage.setItem(
-        "neWishlist",
-        JSON.stringify(wishlist)
-    );
+function updateWishlistCount() {
 
+  const count = document.getElementById("wishlistCount");
 
-    displayProducts();
+  if (!count) return;
 
-    showWishlist();
+  count.textContent = wishlist.length;
 
+  count.classList.toggle(
+    "show",
+    wishlist.length > 0
+  );
 }
 
 
-// ==========================================
-// SHOW WISHLIST
-// ==========================================
+function updateCartCount() {
 
-function showWishlist() {
+  const count = document.getElementById("cartCount");
 
-    const modal =
-        document.getElementById("wishlistModal");
+  if (!count) return;
 
-    const container =
-        document.getElementById("wishlistItems");
+  const totalItems = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
 
+  count.textContent = totalItems;
 
-    if (wishlist.length === 0) {
-
-        container.innerHTML =
-            "<p>Your wishlist is empty.</p>";
-
-    } else {
-
-        container.innerHTML = "";
-
-
-        wishlist.forEach(id => {
-
-            const product =
-                products.find(p => p.id === id);
-
-
-            if (!product) return;
-
-
-            container.innerHTML += `
-
-                <div class="popup-item">
-
-                    <img
-                        src="${product.image}"
-                        alt="${product.name}"
-                        style="cursor: pointer;"
-                    >
-
-                    <div>
-
-                        <h3>
-                            ${product.name}
-                        </h3>
-
-                        <p>
-                            ₹${product.price.toLocaleString("en-IN")}
-                        </p>
-
-                        <button
-                            onclick="addToCart(${product.id})"
-                        >
-                            Add to Cart
-                        </button>
-
-                        <button
-                            onclick="toggleWishlist(${product.id})"
-                        >
-                            Remove
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `;
-
-        });
-
-
-        // WISHLIST IMAGE CLICK
-        const wishlistImages =
-            container.querySelectorAll(".popup-item img");
-
-        wishlistImages.forEach(img => {
-
-            img.addEventListener("click", function () {
-
-                openImageModal(
-                    this.src,
-                    this.alt
-                );
-
-            });
-
-        });
-
-    }
-
-
-    modal.classList.add("active");
-
+  if (totalItems > 0) {
+    count.classList.add("show");
+    count.style.display = "flex";
+  } else {
+    count.classList.remove("show");
+    count.style.display = "none";
+  }
 }
 
 
-// ==========================================
-// CLOSE WISHLIST
-// ==========================================
+function updateHeaderCounts() {
+  updateWishlistCount();
+  updateCartCount();
+}
+
+function toggleCurrentWishlist() {
+
+  if (!currentProduct) return;
+
+  toggleWishlist(currentProduct.id);
+}
+
+function updateDetailWishlistButton() {
+
+  const button =
+    document.getElementById("detailWishlistBtn");
+
+  if (!currentProduct) return;
+
+  const active = wishlist.includes(currentProduct.id);
+
+  button.textContent = active ? "♥" : "♡";
+
+  button.style.color = active ? "#8b4c4c" : "";
+}
+
+function openWishlist() {
+
+  document.getElementById("wishlistOverlay")
+    .classList.add("active");
+
+  renderWishlist();
+}
 
 function closeWishlist() {
 
-    document
-        .getElementById("wishlistModal")
-        .classList.remove("active");
+  document.getElementById("wishlistOverlay")
+    .classList.remove("active");
+}
 
+function renderWishlist() {
+
+  const container =
+    document.getElementById("wishlistItems");
+
+  const items = products.filter(product =>
+    wishlist.includes(product.id)
+  );
+
+  if (!items.length) {
+
+    container.innerHTML = `
+      <div class="empty-message">
+        Your wishlist is waiting for something beautiful ♡
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = items.map(product => {
+
+    const color = product.colors[0];
+
+    return `
+      <div class="wishlist-card">
+
+        <img
+          src="${color.images[0]}"
+          alt="${product.name}"
+          onerror="handleImageError(this)"
+        >
+
+        <div>
+          <h3>${product.name}</h3>
+          <p>${money(product.price)}</p>
+
+          <button
+            onclick="openProduct('${product.id}', 0); closeWishlist();"
+          >
+            VIEW
+          </button>
+        </div>
+
+        <button onclick="toggleWishlist('${product.id}')">
+          ♥
+        </button>
+
+      </div>
+    `;
+
+  }).join("");
 }
 
 
-// ==========================================
-// SHOW CART
-// ==========================================
+/* =========================================================
+   CART
+========================================================= */
 
-function showCart() {
+function addCurrentToCart() {
 
-    const modal =
-        document.getElementById("cartModal");
+  if (!currentProduct) return;
 
-    const container =
-        document.getElementById("cartItems");
+  if (!selectedSize) {
+    alert("Please select a size.");
+    return;
+  }
 
-    const totalElement =
-        document.getElementById("cartTotal");
+  const color = getCurrentColor();
 
+  const existing = cart.find(item =>
+    item.productId === currentProduct.id &&
+    item.color === color.name &&
+    item.size === selectedSize
+  );
 
-    if (cart.length === 0) {
+  if (existing) {
+    existing.quantity += 1;
+  } else {
 
-        container.innerHTML =
-            "<p>Your cart is empty.</p>";
+    cart.push({
+      productId: currentProduct.id,
+      name: currentProduct.name,
+      price: currentProduct.price,
+      color: color.name,
+      size: selectedSize,
+      image: color.images[0],
+      quantity: 1
+    });
 
-        totalElement.innerText =
-            "Total: ₹0";
+  }
 
-    } else {
+  saveCart();
 
-        container.innerHTML = "";
+  updateCartCount();
+  renderCart();
 
-        let total = 0;
-
-
-        cart.forEach(item => {
-
-            const product =
-                products.find(p => p.id === item.id);
-
-            if (!product) return;
-
-
-            const itemTotal =
-                product.price * item.quantity;
-
-            total += itemTotal;
-
-
-            container.innerHTML += `
-
-                <div class="popup-item">
-
-                    <img
-                        src="${product.image}"
-                        alt="${product.name}"
-                    >
-
-                    <div>
-
-                        <h3>
-                            ${product.name}
-                        </h3>
-
-                        <p>
-                            ₹${product.price.toLocaleString("en-IN")}
-                        </p>
-
-                        <p>
-                            Quantity:
-                            ${item.quantity}
-                        </p>
-
-                        <button
-                            onclick="removeFromCart(${product.id})"
-                        >
-                            Remove
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `;
-
-        });
-
-
-        totalElement.innerText =
-            "Total: ₹" +
-            total.toLocaleString("en-IN");
-
-
-        const checkoutBtn =
-            document.createElement("button");
-
-        checkoutBtn.className =
-            "primary-btn checkout-btn";
-
-        checkoutBtn.innerText =
-            "CHECKOUT";
-
-        checkoutBtn.onclick =
-            checkout;
-
-        container.appendChild(checkoutBtn);
-
-    }
-
-
-    modal.classList.add("active");
-
+  closeProduct();
 }
 
+function buyCurrentNow() {
 
-// ==========================================
-// CLOSE CART
-// ==========================================
+  if (!currentProduct) return;
+
+  if (!selectedSize) {
+    alert("Please select a size.");
+    return;
+  }
+
+  addCurrentToCart();
+
+  closeProduct();
+
+  setTimeout(() => {
+    openCart();
+  }, 150);
+}
+
+function openCart() {
+
+  document.getElementById("cartOverlay")
+    .classList.add("active");
+
+  renderCart();
+}
 
 function closeCart() {
 
-    document
-        .getElementById("cartModal")
-        .classList.remove("active");
-
+  document.getElementById("cartOverlay")
+    .classList.remove("active");
 }
 
+function renderCart() {
 
-// ==========================================
-// CHECKOUT
-// ==========================================
+  const container =
+    document.getElementById("cartItems");
+
+  if (!cart.length) {
+
+    container.innerHTML = `
+      <div class="empty-message">
+        Your cart is empty.
+      </div>
+    `;
+
+    document.getElementById("cartTotal").textContent = "₹0";
+
+    return;
+  }
+
+  container.innerHTML = cart.map((item, index) => `
+
+    <div class="cart-item">
+
+      <img
+        src="${item.image}"
+        alt="${item.name}"
+        onerror="handleImageError(this)"
+      >
+
+      <div class="cart-item-info">
+
+        <h3>${item.name}</h3>
+
+        <div class="cart-meta">
+          Color: ${item.color}<br>
+          Size: ${item.size}
+        </div>
+
+        <div class="cart-item-price">
+          ${money(item.price)}
+        </div>
+
+        <div class="quantity">
+
+          <button onclick="changeQuantity(${index}, -1)">
+            −
+          </button>
+
+          <span>${item.quantity}</span>
+
+          <button onclick="changeQuantity(${index}, 1)">
+            +
+          </button>
+
+        </div>
+
+        <button
+          class="remove-item"
+          onclick="removeCartItem(${index})"
+        >
+          REMOVE
+        </button>
+
+      </div>
+
+    </div>
+
+  `).join("");
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  document.getElementById("cartTotal").textContent =
+    money(total);
+}
+
+function changeQuantity(index, change) {
+
+  if (!cart[index]) return;
+
+  cart[index].quantity += change;
+
+  if (cart[index].quantity <= 0) {
+    cart.splice(index, 1);
+  }
+
+  saveCart();
+
+  renderCart();
+
+  updateCartCount();
+}
+
+function removeCartItem(index) {
+
+  cart.splice(index, 1);
+
+  saveCart();
+
+  renderCart();
+
+  updateCartCount();
+  
+}
 
 function checkout() {
 
-    if (cart.length === 0) {
+  if (!cart.length) {
+    alert("Your cart is empty.");
+    return;
+  }
 
-        alert("Your cart is empty.");
+  alert(
+    "Checkout is ready for integration. Payment gateway can be connected here."
+  );
+}
 
-        return;
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+async function shareProduct() {
+
+  if (!currentProduct) return;
+
+  const color = getCurrentColor();
+
+  const shareData = {
+    title: currentProduct.name,
+    text:
+      `${currentProduct.name} - ${color.name} | NE FASHIONS`,
+    url: window.location.href
+  };
+
+  if (navigator.share) {
+
+    try {
+      await navigator.share(shareData);
+    } catch (error) {
+      // User closed share sheet.
+    }
+
+  } else {
+
+    try {
+
+      await navigator.clipboard.writeText(
+        window.location.href
+      );
+
+      alert("Product link copied.");
+
+    } catch (error) {
+
+      alert("Copy the website link to share this product.");
 
     }
 
-
-    alert("Checkout coming soon!");
-
-
-    document
-        .getElementById("cartModal")
-        .classList.remove("active");
-
+  }
 }
 
 
-// ==========================================
-// IMAGE MODAL
-// ==========================================
+/* =========================================================
+   PRODUCT CLOSE
+========================================================= */
 
-function openImageModal(image, name) {
+function closeProduct() {
 
-    const modal =
-        document.getElementById("imageModal");
+  document.getElementById("productDetail")
+    .classList.remove("active");
 
-    const modalImage =
-        document.getElementById("imageModalImg");
+  document.body.style.overflow = "";
 
-
-    modalImage.src =
-        image;
-
-    modalImage.alt =
-        name;
-
-
-    modal.classList.add("active");
-
+  closeImageViewer();
 }
 
 
-function closeImageModal() {
-
-    document
-        .getElementById("imageModal")
-        .classList.remove("active");
-
-}
-
-
-// ==========================================
-// COUNTS
-// ==========================================
-
-function updateCounts() {
-
-    const cartCount =
-        document.getElementById("cartCount");
-
-    const wishlistCount =
-        document.getElementById("wishlistCount");
-
-
-    cartCount.innerText =
-        cart.reduce(
-            (total, item) => total + item.quantity,
-            0
-        );
-
-
-    wishlistCount.innerText =
-        wishlist.length;
-
-}
-
-
-// ==========================================
-// SAVE CART
-// ==========================================
-
-function saveCart() {
-
-    localStorage.setItem(
-        "neCart",
-        JSON.stringify(cart)
-    );
-
-}
-
-
-// ==========================================
-// CATEGORY FILTER
-// ==========================================
-
-function filterCategory(category) {
-
-    document.getElementById(
-        "categoryFilter"
-    ).value = category;
-
-
-    displayProducts();
-
-
-    document
-        .getElementById("shop")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
-
-}
-
-
-// ==========================================
-// SEARCH
-// ==========================================
-
-function searchProducts() {
-
-    document
-        .getElementById("shop")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
-
-
-    displayProducts();
-
-}
-
-
-// ==========================================
-// SCROLL TO SHOP
-// ==========================================
-
-function scrollToShop() {
-
-    document
-        .getElementById("shop")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
-
-}
-
-
-// ==========================================
-// MOBILE MENU
-// ==========================================
+/* =========================================================
+   MENU
+========================================================= */
 
 function toggleMenu() {
 
-    document
-        .getElementById("navMenu")
-        .classList.toggle("active");
+  document.getElementById("mobileMenu")
+    .classList.toggle("active");
+}
 
+function closeMenu() {
+
+  document.getElementById("mobileMenu")
+    .classList.remove("active");
 }
 
 
-// ==========================================
-// CONTACT FORM
-// ==========================================
+/* =========================================================
+   SEARCH / CATEGORY
+========================================================= */
 
-function sendMessage(event) {
+function focusSearch() {
 
-    event.preventDefault();
+  document.getElementById("searchInput")
+    .scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
 
-    alert(
-        "Thank you for contacting NE Fashions!"
-    );
+  setTimeout(() => {
+    document.getElementById("searchInput").focus();
+  }, 400);
+}
 
+function scrollToShop() {
+
+  document.getElementById("shop")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+}
+
+function filterCategory(category) {
+
+  document.getElementById("categoryFilter").value =
+    category;
+
+  renderProducts();
+  updateHeaderCounts();
+
+  document.getElementById("shop")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+}
+
+function scrollToContact() {
+
+  document.getElementById("contact")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
 }
 
 
-// ==========================================
-// CLOSE POPUPS WHEN CLICKING OUTSIDE
-// ==========================================
+/* =========================================================
+   SIZE GUIDE
+========================================================= */
 
-window.addEventListener(
-    "click",
-    function(event) {
+function openSizeGuide() {
 
-        if (
-            event.target.classList.contains("popup")
-        ) {
+  document.getElementById("sizeGuide")
+    .classList.add("active");
+}
 
-            event.target.classList.remove("active");
+function closeSizeGuide() {
 
-        }
+  document.getElementById("sizeGuide")
+    .classList.remove("active");
+}
 
+
+/* =========================================================
+   POLICIES
+========================================================= */
+
+function openPolicy(type) {
+
+  const content =
+    document.getElementById("policyContent");
+
+  if (type === "return") {
+
+    content.innerHTML = `
+      <h2>Return & Exchange</h2>
+
+      <h3>Easy Returns</h3>
+      <p>
+        We want you to love your NE FASHIONS purchase.
+        Eligible products can be returned or exchanged
+        within the specified return period.
+      </p>
+
+      <h3>Condition</h3>
+      <p>
+        Products must be unused, unworn, unwashed and
+        returned with the original tags and packaging.
+      </p>
+
+      <h3>Exchange</h3>
+      <p>
+        Size exchanges may be available depending on stock.
+      </p>
+
+      <h3>Important</h3>
+      <p>
+        This is a sample policy. Replace this section with
+        your final business return policy before launch.
+      </p>
+    `;
+
+  } else {
+
+    content.innerHTML = `
+      <h2>Shipping Policy</h2>
+
+      <h3>Processing</h3>
+      <p>
+        Orders are generally processed within the stated
+        processing period after payment confirmation.
+      </p>
+
+      <h3>Delivery</h3>
+      <p>
+        Delivery timelines depend on the destination and
+        courier service.
+      </p>
+
+      <h3>Tracking</h3>
+      <p>
+        Tracking details can be shared once the order is
+        dispatched.
+      </p>
+
+      <h3>Important</h3>
+      <p>
+        This is a sample policy. Replace this section with
+        your final NE FASHIONS shipping policy.
+      </p>
+    `;
+  }
+
+  document.getElementById("policyModal")
+    .classList.add("active");
+}
+
+function closePolicy() {
+
+  document.getElementById("policyModal")
+    .classList.remove("active");
+}
+
+
+/* =========================================================
+   IMAGE ERROR
+========================================================= */
+
+function handleImageError(image) {
+
+  image.onerror = null;
+
+  image.style.opacity = ".25";
+}
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+document.addEventListener("keydown", function(event) {
+
+  if (event.key === "Escape") {
+
+    closeMenu();
+    closeProduct();
+    closeCart();
+    closeWishlist();
+    closeSizeGuide();
+    closePolicy();
+    closeImageViewer();
+
+  }
+
+  if (
+    document.getElementById("imageViewer")
+      .classList.contains("active")
+  ) {
+
+    if (event.key === "ArrowRight") {
+      nextImage();
     }
-);
 
-
-// ==========================================
-// LOAD PRODUCTS WHEN WEBSITE OPENS
-// ==========================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        displayProducts();
-
-        updateCounts();
-
+    if (event.key === "ArrowLeft") {
+      previousImage();
     }
-);
+
+  }
+
+});
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+renderProducts();
+updateHeaderCounts();
+
+function sendWhatsApp(event) {
+
+  event.preventDefault();
+
+  const name = document.getElementById("contactName").value;
+  const email = document.getElementById("contactEmail").value;
+  const message = document.getElementById("contactMessage").value;
+
+  const whatsappNumber = "919392888728";
+
+  const text =
+    `Hi NE Fashions,%0A%0A` +
+    `Name: ${encodeURIComponent(name)}%0A` +
+    `Email: ${encodeURIComponent(email)}%0A` +
+    `Message: ${encodeURIComponent(message)}`;
+
+  window.open(
+    `https://wa.me/${whatsappNumber}?text=${text}`,
+    "_blank"
+  );
+}
