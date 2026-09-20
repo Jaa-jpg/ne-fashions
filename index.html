@@ -17,6 +17,13 @@
 
 <body>
 
+  <div id="intro-screen">
+  <div class="intro-content">
+    <div class="intro-brand" id="introBrand"></div>
+    <div class="intro-tagline">ELEGANCE IN EVERY THREAD</div>
+  </div>
+</div>
+
 <!-- ANNOUNCEMENT -->
 <div class="announcement">
   ✨ New Arrivals | Worldwide Shipping Available
@@ -397,6 +404,61 @@
 </section>
 
 
+
+<!-- OLD INSTAGRAM -->
+<section class="instagram-section">
+
+  <div class="section-heading">
+
+    <span>
+      FOLLOW US
+    </span>
+
+    <h2>
+      @ne__fashions
+    </h2>
+
+  </div>
+
+
+  <div class="instagram-grid">
+
+    <img src="images/a.jpg" alt="">
+    <img src="images/b.jpg" alt="">
+    <img src="images/c.jpg" alt="">
+    <img src="images/d.jpg" alt="">
+    <img src="images/e.jpg" alt="">
+    <img src="images/f.jpg" alt="">
+
+  </div>
+
+</section>
+
+
+<!-- OLD STORY -->
+<section class="about" id="about">
+
+  <div class="about-content">
+
+    <span>
+      OUR STORY
+    </span>
+
+    <h2>
+      Elegance in Every Thread
+    </h2>
+
+    <p>
+      At NE Fashions, we believe everyday fashion should
+      be simple, elegant and affordable. Our collections are
+      thoughtfully selected for women who want comfortable
+      styles that fit beautifully into college days, workdays
+      and everyday moments.
+    </p>
+
+  </div>
+
+</section>
 <!-- OLD REVIEWS -->
 <section class="reviews">
 
@@ -473,62 +535,6 @@
 </section>
 
 
-<!-- OLD INSTAGRAM -->
-<section class="instagram-section">
-
-  <div class="section-heading">
-
-    <span>
-      FOLLOW US
-    </span>
-
-    <h2>
-      @ne__fashions
-    </h2>
-
-  </div>
-
-
-  <div class="instagram-grid">
-
-    <img src="images/a.jpg" alt="">
-    <img src="images/b.jpg" alt="">
-    <img src="images/c.jpg" alt="">
-    <img src="images/d.jpg" alt="">
-    <img src="images/e.jpg" alt="">
-    <img src="images/f.jpg" alt="">
-
-  </div>
-
-</section>
-
-
-<!-- OLD STORY -->
-<section class="about" id="about">
-
-  <div class="about-content">
-
-    <span>
-      OUR STORY
-    </span>
-
-    <h2>
-      Elegance in Every Thread
-    </h2>
-
-    <p>
-      At NE Fashions, we believe everyday fashion should
-      be simple, elegant and affordable. Our collections are
-      thoughtfully selected for women who want comfortable
-      styles that fit beautifully into college days, workdays
-      and everyday moments.
-    </p>
-
-  </div>
-
-</section>
-
-
 <!-- OLD CONTACT -->
 <section class="contact" id="contact">
 
@@ -558,7 +564,9 @@
       </p>
 
       <p>
+        <a href="https://wa.me/+919392888728" target="_blank">
         +91 9392888728
+        </a>
       </p>
 
       <p>
@@ -1221,6 +1229,33 @@
 
 
 <script src="script.js"></script>
+
+<script>
+  const introText = "NE FASHIONS";
+  const introBrand = document.getElementById("introBrand");
+  const introScreen = document.getElementById("intro-screen");
+
+  let i = 0;
+
+  function showIntroText() {
+    if (i < introText.length) {
+      introBrand.textContent += introText[i];
+      i++;
+
+      setTimeout(showIntroText, 120);
+    } else {
+      setTimeout(() => {
+        introScreen.classList.add("intro-done");
+
+        setTimeout(() => {
+          introScreen.remove();
+        }, 600);
+      }, 500);
+    }
+  }
+
+  window.addEventListener("load", showIntroText);
+</script>
 
 </body>
 </html>

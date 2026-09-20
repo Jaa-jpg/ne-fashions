@@ -363,6 +363,32 @@ let selectedSize = null;
 let cart = JSON.parse(localStorage.getItem("neFashionsCart")) || [];
 let wishlist = JSON.parse(localStorage.getItem("neFashionsWishlist")) || [];
 
+/* Convert old wishlist format into new format */
+wishlist = wishlist.map(item => {
+
+  if (typeof item === "string") {
+    return {
+      productId: item,
+      color: null,
+      size: null
+    };
+  }
+
+  return item;
+});
+
+function updateCartCount() {
+  const count = document.getElementById("cartCount");
+  if (!count) return;
+
+  const totalQuantity = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
+  count.textContent = totalQuantity;
+  count.classList.toggle("show", totalQuantity > 0);
+}
 
 /* =========================================================
    HELPERS
@@ -450,7 +476,7 @@ function renderProducts() {
   grid.innerHTML = filtered.map(product => {
 
     const firstColor = product.colors[0];
-    const isWishlisted = wishlist.includes(product.id);
+    const isWishlisted = isProductWishlisted(product.id);
 
     return `
       <article class="product-card">
@@ -516,7 +542,6 @@ function renderProducts() {
 
   }).join("");
 }
-
 
 /* =========================================================
    CARD COLOR CHANGE
@@ -588,10 +613,12 @@ function renderProductDetail() {
   document.getElementById("detailMainImage").src =
     color.images[currentImageIndex];
 
-  renderThumbnails();
-  renderColorOptions();
-  updateSizeButtons();
-  updateDetailWishlistButton();
+ renderThumbnails();
+ renderColorOptions();
+ updateSizeButtons();
+ updateDetailWishlistButton();
+ updateDetailCartButton();
+
 }
 
 
@@ -814,6 +841,10 @@ function selectSize(size) {
   selectedSize = size;
 
   updateSizeButtons();
+
+  updateDetailWishlistButton();
+
+  updateDetailCartButton();
 }
 
 function updateSizeButtons() {
@@ -834,35 +865,151 @@ function updateSizeButtons() {
    WISHLIST
 ========================================================= */
 
-function toggleWishlist(productId) {
+/* =========================================================
+   WISHLIST + CART
+========================================================= */
 
-  if (wishlist.includes(productId)) {
-    wishlist = wishlist.filter(id => id !== productId);
-  } else {
-    wishlist.push(productId);
+/* ---------------- WISHLIST HELPERS ---------------- */
+
+function getWishlistItem(productId, colorName = null) {
+  return wishlist.find(item =>
+    item.productId === productId &&
+    (!colorName || item.color === colorName)
+  );
+}
+
+function isProductWishlisted(productId) {
+  return wishlist.some(item =>
+    item.productId === productId
+  );
+}
+
+
+/* ---------------- WISHLIST ADD ---------------- */
+
+function toggleWishlist(productId) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+
+  /* Already wishlisted → REMOVE */
+  const existing = wishlist.find(item =>
+    item.productId === productId
+  );
+
+  if (existing) {
+    wishlist = wishlist.filter(item =>
+      item.productId !== productId
+    );
+
+    saveWishlist();
+    renderProducts();
+    updateWishlistCount();
+    renderWishlist();
+
+    if (currentProduct && currentProduct.id === productId) {
+      updateDetailWishlistButton();
+    }
+
+    return;
   }
 
-  saveWishlist();
+  /* Not wishlisted → open product and select size */
+  if (!currentProduct || currentProduct.id !== productId) {
+    openProduct(productId, 0);
 
+    setTimeout(() => {
+      alert("Please select a size first.");
+    }, 100);
+
+    return;
+  }
+
+  if (!selectedSize) {
+    alert("Please select a size first.");
+    return;
+  }
+
+  const color = getCurrentColor();
+
+  wishlist.push({
+    productId: product.id,
+    color: color.name,
+    size: selectedSize
+  });
+
+  saveWishlist();
   renderProducts();
   updateWishlistCount();
-
-if (
-  document.getElementById("wishlistOverlay")
-    .classList.contains("active")
-) {
+  updateDetailWishlistButton();
   renderWishlist();
 }
 
-if (currentProduct && currentProduct.id === productId) {
-  updateDetailWishlistButton();
+
+/* ---------------- DETAIL WISHLIST ---------------- */
+
+function toggleCurrentWishlist() {
+
+  if (!currentProduct) return;
+
+  toggleWishlist(currentProduct.id);
+}
+
+
+/* ---------------- WISHLIST BUTTON ---------------- */
+
+function updateDetailWishlistButton() {
+
+  const button =
+    document.getElementById("detailWishlistBtn");
+
+  if (!button || !currentProduct) return;
+
+  const color = getCurrentColor();
+
+  const item =
+    getWishlistItem(
+      currentProduct.id,
+      color.name
+    );
+
+  if (item) {
+
+    button.textContent = "♥";
+
+    button.classList.add("active");
+
+    button.setAttribute(
+      "aria-label",
+      `Wishlisted • Size ${item.size}`
+    );
+
+    button.title =
+      `Wishlist • Size ${item.size}`;
+
+  } else {
+
+    button.textContent = "♡";
+
+    button.classList.remove("active");
+
+    button.setAttribute(
+      "aria-label",
+      "Add to wishlist"
+    );
+
+    button.title =
+      "Select size and add to wishlist";
 
   }
 }
 
+
+/* ---------------- WISHLIST COUNT ---------------- */
+
 function updateWishlistCount() {
 
-  const count = document.getElementById("wishlistCount");
+  const count =
+    document.getElementById("wishlistCount");
 
   if (!count) return;
 
@@ -875,121 +1022,254 @@ function updateWishlistCount() {
 }
 
 
-function updateCartCount() {
-
-  const count = document.getElementById("cartCount");
-
-  if (!count) return;
-
-  const totalItems = cart.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
-
-  count.textContent = totalItems;
-
-  if (totalItems > 0) {
-    count.classList.add("show");
-    count.style.display = "flex";
-  } else {
-    count.classList.remove("show");
-    count.style.display = "none";
-  }
-}
-
-
-function updateHeaderCounts() {
-  updateWishlistCount();
-  updateCartCount();
-}
-
-function toggleCurrentWishlist() {
-
-  if (!currentProduct) return;
-
-  toggleWishlist(currentProduct.id);
-}
-
-function updateDetailWishlistButton() {
-
-  const button =
-    document.getElementById("detailWishlistBtn");
-
-  if (!currentProduct) return;
-
-  const active = wishlist.includes(currentProduct.id);
-
-  button.textContent = active ? "♥" : "♡";
-
-  button.style.color = active ? "#8b4c4c" : "";
-}
+/* ---------------- OPEN WISHLIST ---------------- */
 
 function openWishlist() {
 
-  document.getElementById("wishlistOverlay")
-    .classList.add("active");
+  const overlay =
+    document.getElementById("wishlistOverlay");
+
+  if (!overlay) return;
+
+  overlay.classList.add("active");
+
+  document.body.classList.add("no-scroll");
 
   renderWishlist();
 }
 
+
+/* ---------------- CLOSE WISHLIST ---------------- */
+
 function closeWishlist() {
 
-  document.getElementById("wishlistOverlay")
-    .classList.remove("active");
+  const overlay =
+    document.getElementById("wishlistOverlay");
+
+  if (!overlay) return;
+
+  overlay.classList.remove("active");
+
+  document.body.classList.remove("no-scroll");
 }
+
+
+/* ---------------- REMOVE WISHLIST ---------------- */
+
+function removeFromWishlist(productId, colorName, size) {
+
+  wishlist =
+    wishlist.filter(item =>
+      !(
+        item.productId === productId &&
+        item.color === colorName &&
+        item.size === size
+      )
+    );
+
+  saveWishlist();
+
+  renderProducts();
+  updateWishlistCount();
+  renderWishlist();
+
+  if (
+    currentProduct &&
+    currentProduct.id === productId
+  ) {
+    updateDetailWishlistButton();
+  }
+}
+
+
+/* ---------------- WISHLIST → CART ---------------- */
+
+function wishlistAddToCart(productId, colorName, size) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+
+  const color =
+    product.colors.find(c => c.name === colorName) ||
+    product.colors[0];
+
+  const existing = cart.find(item =>
+    item.productId === productId &&
+    item.color === color.name &&
+    item.size === size
+  );
+
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      color: color.name,
+      size: size,
+      image: color.images[0],
+      quantity: 1
+    });
+  }
+
+  saveCart();
+  updateCartCount();
+  renderCart();
+
+  if (
+    currentProduct &&
+    currentProduct.id === productId &&
+    selectedSize === size &&
+    getCurrentColor().name === color.name
+  ) {
+    updateDetailCartButton();
+  }
+
+  renderWishlist();
+}
+
+/* ---------------- RENDER WISHLIST ---------------- */
 
 function renderWishlist() {
 
   const container =
     document.getElementById("wishlistItems");
 
-  const items = products.filter(product =>
-    wishlist.includes(product.id)
-  );
+  if (!container) return;
 
-  if (!items.length) {
+  if (!wishlist.length) {
 
     container.innerHTML = `
-      <div class="empty-message">
-        Your wishlist is waiting for something beautiful ♡
+
+      <div class="wishlist-empty">
+
+        <div class="wishlist-empty-icon">
+          ♡
+        </div>
+
+        <h3>Your wishlist is empty</h3>
+
+        <p>
+          Save your favourite styles here
+          and shop them whenever you're ready.
+        </p>
+
+        <button
+          class="primary-btn"
+          onclick="closeWishlist(); scrollToShop();"
+        >
+          EXPLORE COLLECTION
+        </button>
+
       </div>
+
     `;
 
     return;
   }
 
-  container.innerHTML = items.map(product => {
+  container.innerHTML =
+    wishlist.map(item => {
 
-    const color = product.colors[0];
+      const product =
+        products.find(
+          p => p.id === item.productId
+        );
 
-    return `
-      <div class="wishlist-card">
+      if (!product) return "";
 
-        <img
-          src="${color.images[0]}"
-          alt="${product.name}"
-          onerror="handleImageError(this)"
-        >
+      const color =
+        product.colors.find(
+          c => c.name === item.color
+        ) || product.colors[0];
 
-        <div>
-          <h3>${product.name}</h3>
-          <p>${money(product.price)}</p>
+      return `
 
-          <button
-            onclick="openProduct('${product.id}', 0); closeWishlist();"
+        <div class="wishlist-card">
+
+          <img
+            src="${color.images[0]}"
+            alt="${product.name}"
+            onclick="
+              openProduct(
+                '${product.id}',
+                ${product.colors.indexOf(color)}
+              );
+              closeWishlist();
+            "
+            onerror="handleImageError(this)"
           >
-            VIEW
-          </button>
+
+          <div class="wishlist-info">
+
+            <h4>
+              ${product.name}
+            </h4>
+
+            <p>
+              ${money(product.price)}
+            </p>
+
+            <div class="wishlist-meta">
+
+              <span>
+                Color: ${color.name}
+              </span>
+
+              <span>
+                Size: ${item.size}
+              </span>
+
+            </div>
+
+            <div class="wishlist-actions">
+
+              <button
+                class="wishlist-view"
+                onclick="
+                  wishlistAddToCart(
+                    '${product.id}',
+                    '${color.name}',
+                    '${item.size}'
+                  )
+                "
+              >
+                ADD TO CART
+              </button>
+
+              <button
+                class="wishlist-remove"
+                onclick="
+                  removeFromWishlist(
+                    '${product.id}',
+                    '${color.name}',
+                    '${item.size}'
+                  )
+                "
+              >
+                REMOVE
+              </button>
+
+            </div>
+
+          </div>
+
         </div>
 
-        <button onclick="toggleWishlist('${product.id}')">
-          ♥
-        </button>
+      `;
 
-      </div>
-    `;
+    }).join("");
+}
 
-  }).join("");
+
+/* ---------------- SAVE WISHLIST ---------------- */
+
+function saveWishlist() {
+
+  localStorage.setItem(
+    "neFashionsWishlist",
+    JSON.stringify(wishlist)
+  );
 }
 
 
@@ -997,35 +1277,52 @@ function renderWishlist() {
    CART
 ========================================================= */
 
+
+/* ---------------- ADD TO CART ---------------- */
+
 function addCurrentToCart() {
 
   if (!currentProduct) return;
 
   if (!selectedSize) {
+
     alert("Please select a size.");
+
     return;
   }
 
-  const color = getCurrentColor();
+  const color =
+    getCurrentColor();
 
-  const existing = cart.find(item =>
-    item.productId === currentProduct.id &&
-    item.color === color.name &&
-    item.size === selectedSize
-  );
+  const existing =
+    cart.find(item =>
+      item.productId === currentProduct.id &&
+      item.color === color.name &&
+      item.size === selectedSize
+    );
 
   if (existing) {
+
     existing.quantity += 1;
+
   } else {
 
     cart.push({
+
       productId: currentProduct.id,
+
       name: currentProduct.name,
+
       price: currentProduct.price,
+
       color: color.name,
+
       size: selectedSize,
+
       image: color.images[0],
+
       quantity: 1
+
     });
 
   }
@@ -1033,17 +1330,107 @@ function addCurrentToCart() {
   saveCart();
 
   updateCartCount();
+
   renderCart();
 
-  closeProduct();
+  updateDetailCartButton();
 }
+
+
+/* ---------------- PRODUCT PAGE CART BUTTON ---------------- */
+
+function updateDetailCartButton() {
+
+  if (!currentProduct) return;
+
+  const button =
+    document.getElementById("detailAddToCartBtn") ||
+    document.querySelector(
+      'button[onclick*="addCurrentToCart"]'
+    );
+
+  if (!button) return;
+
+  if (!selectedSize) {
+
+    button.innerHTML = "ADD TO CART";
+    button.classList.remove("added");
+
+    return;
+  }
+
+  const color = getCurrentColor();
+
+  const cartItem = cart.find(item =>
+    item.productId === currentProduct.id &&
+    item.color === color.name &&
+    item.size === selectedSize
+  );
+
+  /* Product is already in cart */
+  if (cartItem) {
+
+    button.innerHTML = `
+      <span class="cart-qty-minus"
+            onclick="event.stopPropagation(); changeCurrentProductQuantity(-1)">
+        −
+      </span>
+
+      <span class="cart-qty-number">
+        ${cartItem.quantity}
+      </span>
+
+      <span class="cart-qty-plus"
+            onclick="event.stopPropagation(); changeCurrentProductQuantity(1)">
+        +
+      </span>
+    `;
+
+    button.classList.add("added");
+
+  } else {
+
+    button.innerHTML = "ADD TO CART";
+    button.classList.remove("added");
+
+  }
+}
+function changeCurrentProductQuantity(change) {
+
+  if (!currentProduct || !selectedSize) return;
+
+  const color = getCurrentColor();
+
+  const cartItem = cart.find(item =>
+    item.productId === currentProduct.id &&
+    item.color === color.name &&
+    item.size === selectedSize
+  );
+
+  if (!cartItem) return;
+
+  cartItem.quantity += change;
+
+  if (cartItem.quantity <= 0) {
+    cart = cart.filter(item => item !== cartItem);
+  }
+
+  saveCart();
+  updateCartCount();
+  renderCart();
+  updateDetailCartButton();
+}
+
+/* ---------------- BUY NOW ---------------- */
 
 function buyCurrentNow() {
 
   if (!currentProduct) return;
 
   if (!selectedSize) {
+
     alert("Please select a size.");
+
     return;
   }
 
@@ -1056,6 +1443,9 @@ function buyCurrentNow() {
   }, 150);
 }
 
+
+/* ---------------- OPEN CART ---------------- */
+
 function openCart() {
 
   document.getElementById("cartOverlay")
@@ -1064,88 +1454,113 @@ function openCart() {
   renderCart();
 }
 
+
+/* ---------------- CLOSE CART ---------------- */
+
 function closeCart() {
 
   document.getElementById("cartOverlay")
     .classList.remove("active");
 }
 
+
+/* ---------------- RENDER CART ---------------- */
+
 function renderCart() {
 
   const container =
     document.getElementById("cartItems");
 
+  if (!container) return;
+
   if (!cart.length) {
 
     container.innerHTML = `
+
       <div class="empty-message">
         Your cart is empty.
       </div>
+
     `;
 
-    document.getElementById("cartTotal").textContent = "₹0";
+    document.getElementById("cartTotal").textContent =
+      "₹0";
 
     return;
   }
 
-  container.innerHTML = cart.map((item, index) => `
+  container.innerHTML =
+    cart.map((item, index) => `
 
-    <div class="cart-item">
+      <div class="cart-item">
 
-      <img
-        src="${item.image}"
-        alt="${item.name}"
-        onerror="handleImageError(this)"
-      >
-
-      <div class="cart-item-info">
-
-        <h3>${item.name}</h3>
-
-        <div class="cart-meta">
-          Color: ${item.color}<br>
-          Size: ${item.size}
-        </div>
-
-        <div class="cart-item-price">
-          ${money(item.price)}
-        </div>
-
-        <div class="quantity">
-
-          <button onclick="changeQuantity(${index}, -1)">
-            −
-          </button>
-
-          <span>${item.quantity}</span>
-
-          <button onclick="changeQuantity(${index}, 1)">
-            +
-          </button>
-
-        </div>
-
-        <button
-          class="remove-item"
-          onclick="removeCartItem(${index})"
+        <img
+          src="${item.image}"
+          alt="${item.name}"
+          onerror="handleImageError(this)"
         >
-          REMOVE
-        </button>
+
+        <div class="cart-item-info">
+
+          <h3>
+            ${item.name}
+          </h3>
+
+          <div class="cart-meta">
+            Color: ${item.color}<br>
+            Size: ${item.size}
+          </div>
+
+          <div class="cart-item-price">
+            ${money(item.price)}
+          </div>
+
+          <div class="quantity">
+
+            <button
+              onclick="changeQuantity(${index}, -1)"
+            >
+              −
+            </button>
+
+            <span>
+              ${item.quantity}
+            </span>
+
+            <button
+              onclick="changeQuantity(${index}, 1)"
+            >
+              +
+            </button>
+
+          </div>
+
+          <button
+            class="remove-item"
+            onclick="removeCartItem(${index})"
+          >
+            REMOVE
+          </button>
+
+        </div>
 
       </div>
 
-    </div>
+    `).join("");
 
-  `).join("");
-
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum + item.price * item.quantity,
+      0
+    );
 
   document.getElementById("cartTotal").textContent =
     money(total);
 }
+
+
+/* ---------------- CHANGE QUANTITY ---------------- */
 
 function changeQuantity(index, change) {
 
@@ -1154,7 +1569,9 @@ function changeQuantity(index, change) {
   cart[index].quantity += change;
 
   if (cart[index].quantity <= 0) {
+
     cart.splice(index, 1);
+
   }
 
   saveCart();
@@ -1162,9 +1579,16 @@ function changeQuantity(index, change) {
   renderCart();
 
   updateCartCount();
+
+  updateDetailCartButton();
 }
 
+
+/* ---------------- REMOVE CART ITEM ---------------- */
+
 function removeCartItem(index) {
+
+  if (!cart[index]) return;
 
   cart.splice(index, 1);
 
@@ -1173,13 +1597,19 @@ function removeCartItem(index) {
   renderCart();
 
   updateCartCount();
-  
+
+  updateDetailCartButton();
 }
+
+
+/* ---------------- CHECKOUT ---------------- */
 
 function checkout() {
 
   if (!cart.length) {
+
     alert("Your cart is empty.");
+
     return;
   }
 
@@ -1187,7 +1617,6 @@ function checkout() {
     "Checkout is ready for integration. Payment gateway can be connected here."
   );
 }
-
 
 /* =========================================================
    SHARE
@@ -1255,16 +1684,24 @@ function closeProduct() {
 
 function toggleMenu() {
 
-  document.getElementById("mobileMenu")
-    .classList.toggle("active");
+  const menu = document.getElementById("mobileMenu");
+
+  menu.classList.toggle("active");
+
+  if (menu.classList.contains("active")) {
+    document.body.classList.add("no-scroll");
+  } else {
+    document.body.classList.remove("no-scroll");
+  }
 }
 
 function closeMenu() {
 
   document.getElementById("mobileMenu")
     .classList.remove("active");
-}
 
+  document.body.classList.remove("no-scroll");
+}
 
 /* =========================================================
    SEARCH / CATEGORY
@@ -1466,6 +1903,8 @@ document.addEventListener("keydown", function(event) {
 
 renderProducts();
 updateHeaderCounts();
+updateCartCount();
+updateWishlistCount();
 
 function sendWhatsApp(event) {
 
@@ -1488,3 +1927,81 @@ function sendWhatsApp(event) {
     "_blank"
   );
 }
+/* =========================================================
+   SECTION NAVIGATION — OPEN SECTION WITHOUT SCROLLING
+========================================================= */
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener("click", function (event) {
+    const targetId = this.getAttribute("href");
+
+    if (!targetId || targetId === "#") return;
+
+    const target = document.querySelector(targetId);
+
+    if (!target) return;
+
+    event.preventDefault();
+
+    // Close mobile menu if open
+    if (typeof closeMenu === "function") {
+      closeMenu();
+    }
+
+    // Instantly position the selected section at the top
+    const headerHeight =
+      document.querySelector(".header")?.offsetHeight || 0;
+
+    const announcementHeight =
+      document.querySelector(".announcement")?.offsetHeight || 0;
+
+    const targetPosition =
+      target.getBoundingClientRect().top +
+      window.pageYOffset -
+      headerHeight -
+      announcementHeight;
+
+    window.scrollTo({
+      top: targetPosition,
+      behavior: "auto"
+    });
+  });
+});
+/* =========================================================
+   SECTION NAVIGATION — OPEN SECTION WITHOUT SCROLLING
+========================================================= */
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener("click", function (event) {
+    const targetId = this.getAttribute("href");
+
+    if (!targetId || targetId === "#") return;
+
+    const target = document.querySelector(targetId);
+
+    if (!target) return;
+
+    event.preventDefault();
+
+    if (typeof closeMenu === "function") {
+      closeMenu();
+    }
+
+    const headerHeight =
+      document.querySelector(".header")?.offsetHeight || 0;
+
+    const announcementHeight =
+      document.querySelector(".announcement")?.offsetHeight || 0;
+
+    const targetPosition =
+      target.getBoundingClientRect().top +
+      window.pageYOffset -
+      headerHeight -
+      announcementHeight;
+
+    window.scrollTo({
+      top: targetPosition,
+      behavior: "auto"
+    });
+  });
+});
