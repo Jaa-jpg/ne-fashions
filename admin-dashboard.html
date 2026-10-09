@@ -211,27 +211,86 @@
       }
     }
 
-    @media (max-width: 650px) {
-      .layout {
-        flex-direction: column;
-      }
+   
+/* Mobile menu button - hidden on laptop */
+.menu-toggle {
+  display: none;
+  border: none;
+  background: #222;
+  color: white;
+  font-size: 25px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-      .sidebar {
-        width: 100%;
-      }
+@media (max-width: 650px) {
+  .layout {
+    display: block;
+    min-height: 100vh;
+  }
 
-      .cards {
-        grid-template-columns: 1fr;
-      }
+  .sidebar {
+    display: none;
+    width: 100%;
+    padding: 20px 18px;
+  }
 
-      .main {
-        padding: 20px;
-      }
+  .sidebar.open {
+    display: block;
+  }
 
-      .order-row {
-        grid-template-columns: 1fr;
-      }
-    }
+  .menu-toggle {
+    display: inline-block;
+  }
+
+  .topbar {
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 22px;
+  }
+
+  .topbar h2 {
+    font-size: 22px;
+  }
+
+  .topbar-right {
+    gap: 8px;
+  }
+
+  .admin-name {
+    display: none;
+  }
+
+  .main {
+    padding: 16px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .card {
+    padding: 16px;
+    min-width: 0;
+  }
+
+  .card h3 {
+    font-size: 22px;
+    overflow-wrap: anywhere;
+  }
+
+  .section {
+    padding: 16px;
+  }
+
+  .order-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    overflow-wrap: anywhere;
+  }
+}
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -295,7 +354,14 @@
     </aside>
 
 
-    <main class="main">
+    <button
+  class="menu-toggle"
+  id="menuToggle"
+  aria-label="Open navigation menu"
+  aria-expanded="false"
+  onclick="toggleAdminMenu()">
+  ☰
+</button>
 
       <div class="topbar">
 
@@ -850,9 +916,21 @@
   /* =====================================================
      START
   ===================================================== */
+function toggleAdminMenu() {
+  const sidebar = document.querySelector(".sidebar");
+  const button = document.getElementById("menuToggle");
 
-  checkAdminLogin();
+  const isOpen = sidebar.classList.toggle("open");
 
+  button.textContent = isOpen ? "✕" : "☰";
+  button.setAttribute("aria-expanded", String(isOpen));
+  button.setAttribute(
+    "aria-label",
+    isOpen ? "Close navigation menu" : "Open navigation menu"
+  );
+}
+
+checkAdminLogin();
 </script>
 
 </body>
