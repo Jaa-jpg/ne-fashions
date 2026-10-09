@@ -954,7 +954,11 @@
                 Payment Status
               </label>
 
-              <select id="editPaymentStatus"></select>
+              <select id="editPaymentStatus">
+  <option value="pending">Pending</option>
+  <option value="approved">Approved</option>
+  <option value="rejected">Rejected</option>
+</select>
 
             </div>
 
@@ -2500,6 +2504,7 @@ async function updateOrderStatus() {
     saveButton.textContent = "Save Changes";
   }
 }
+
 
     /* =====================================================
        CLOSE MODAL
