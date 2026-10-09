@@ -2218,7 +2218,6 @@ if (!addressId) {
       throw orderError;
     }
 
-```js
 // SAVE ORDER ITEMS
 const orderItems = [];
 
@@ -2303,7 +2302,6 @@ if (orderItems.length > 0) {
     throw new Error("Order items save failed: " + orderItemsError.message);
   }
 }
-```
 
     // --------------------------------------------------
     // 7. SHOW SUCCESS SCREEN
