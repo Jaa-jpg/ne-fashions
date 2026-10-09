@@ -49,17 +49,12 @@
 
   <nav class="desktop-nav">
     <a href="#home">Home</a>
-    <a href="#shop">Shop</a>
-    <a href="#categories">Collections</a>
+    <a href="#shop">Collections</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
 
   <div class="header-actions">
-
-    <button onclick="focusSearch()" aria-label="Search">
-      ⌕
-    </button>
 
     <button onclick="openWishlist()" aria-label="Wishlist">
       ♡
@@ -80,8 +75,7 @@
 <nav id="mobileMenu" class="mobile-menu">
 
   <a href="#home" onclick="closeMenu()">Home</a>
-  <a href="#shop" onclick="closeMenu()">Shop</a>
-  <a href="#categories" onclick="closeMenu()">Collections</a>
+  <a href="#shop" onclick="closeMenu()">Collections</a>
   <a href="#about" onclick="closeMenu()">About</a>
   <a href="#contact" onclick="closeMenu()">Contact</a>
 
@@ -115,164 +109,18 @@
 </section>
 
 
-<!-- CATEGORIES -->
-<section class="categories" id="categories">
-
-  <div class="section-heading">
-
-    <span>EXPLORE</span>
-
-    <h2>
-      Shop By Category
-    </h2>
-
-  </div>
-
-  <div class="category-grid">
-
-    <button onclick="filterCategory('Daily Wear')">
-
-      <img
-        src="images/dailywear.jpg"
-        alt="Daily Wear"
-      >
-
-      <span>Daily Wear</span>
-
-    </button>
-
-
-    <button onclick="filterCategory('3 Piece Sets')">
-
-      <img
-        src="images/3-piece-sets.jpg"
-        alt="3 Piece Sets"
-      >
-
-      <span>3 Piece Sets</span>
-
-    </button>
-
-
-    <button onclick="filterCategory('Kurtis')">
-
-      <img
-        src="images/kurti.jpg"
-        alt="Kurtis"
-      >
-
-      <span>Kurtis</span>
-
-    </button>
-
-
-    <button onclick="filterCategory('Frocks')">
-
-      <img
-        src="images/frocks.jpg"
-        alt="Frocks"
-      >
-
-      <span>Frocks</span>
-
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- SEARCH + FILTER -->
-<section class="search-section" id="shop">
-
-  <div class="search-box">
-
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Search your style..."
-      oninput="renderProducts()"
-    >
-
-    <span>⌕</span>
-
-  </div>
-
-
-  <div class="filters">
-
-    <select
-      id="categoryFilter"
-      onchange="renderProducts()"
-    >
-
-      <option value="All">
-        All Categories
-      </option>
-
-      <option value="Daily Wear">
-        Daily Wear
-      </option>
-
-      <option value="3 Piece Sets">
-        3 Piece Sets
-      </option>
-
-      <option value="Kurtis">
-        Kurtis
-      </option>
-
-      <option value="Frocks">
-        Frocks
-      </option>
-
-      <option value="Sets">
-        Sets
-      </option>
-
-    </select>
-
-
-    <select
-      id="sortFilter"
-      onchange="renderProducts()"
-    >
-
-      <option value="default">
-        Sort
-      </option>
-
-      <option value="low">
-        Price: Low to High
-      </option>
-
-      <option value="high">
-        Price: High to Low
-      </option>
-
-      <option value="az">
-        Name: A-Z
-      </option>
-
-    </select>
-
-  </div>
-
-</section>
-
-
 <!-- NEW PRODUCT COLLECTION -->
-<main class="products-section">
-
+<main class="products-section" id="shop">
+  
   <div class="section-heading collection-heading">
 
-    <span>OUR COLLECTION</span>
+  <span>EXPLORE</span>
 
-    <h2>
-      New Arrivals
-    </h2>
+  <h2>
+    OUR COLLECTION
+  </h2>
 
-  </div>
+</div>
 
   <div
     id="productGrid"
@@ -1072,6 +920,550 @@
 
 </div>
 
+<!-- CHECKOUT -->
+<div
+  id="checkoutOverlay"
+  class="overlay"
+>
+  <div class="modal-card checkout-card">
+
+    <button
+      class="close-btn"
+      onclick="closeCheckout()"
+    >
+      ×
+    </button>
+
+    <div class="section-heading left">
+
+      <span>COMPLETE YOUR ORDER</span>
+
+      <h2>Checkout</h2>
+
+    </div>
+
+    <form
+      id="checkoutForm"
+      onsubmit="continueCheckout(event)"
+    >
+
+      <div class="checkout-summary">
+
+        <div>
+          <span>Order Total</span>
+          <strong id="checkoutTotal">₹0</strong>
+        </div>
+
+      </div>
+
+
+      <div class="checkout-fields">
+
+        <div class="checkout-field">
+
+          <label for="customerName">
+            Full Name
+          </label>
+
+          <input
+            type="text"
+            id="customerName"
+            placeholder="Enter your full name"
+            required
+          >
+
+        </div>
+
+
+        <div class="checkout-field">
+
+          <label for="customerPhone">
+            Mobile Number
+          </label>
+
+          <input
+            type="tel"
+            id="customerPhone"
+            placeholder="Enter your mobile number"
+            inputmode="numeric"
+            pattern="[0-9]{10}"
+            maxlength="10"
+            required
+          >
+
+        </div>
+
+
+        <div class="checkout-field">
+
+          <label for="customerEmail">
+            Email Address
+          </label>
+
+          <input
+            type="email"
+            id="customerEmail"
+            placeholder="Enter your email"
+            required
+          >
+
+        </div>
+
+
+        <div class="checkout-field">
+
+          <label for="customerAddress">
+            Delivery Address
+          </label>
+
+          <textarea
+            id="customerAddress"
+            placeholder="House / Flat, Street, Area"
+            rows="3"
+            required
+          ></textarea>
+
+        </div>
+
+
+        <div class="checkout-row">
+
+          <div class="checkout-field">
+
+            <label for="customerCity">
+              City
+            </label>
+
+            <input
+              type="text"
+              id="customerCity"
+              placeholder="City"
+              required
+            >
+
+          </div>
+
+
+          <div class="checkout-field">
+
+            <label for="customerState">
+              State
+            </label>
+
+            <input
+              type="text"
+              id="customerState"
+              placeholder="State"
+              required
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="checkout-field">
+
+          <label for="customerPincode">
+            Pincode
+          </label>
+
+          <input
+            type="text"
+            id="customerPincode"
+            placeholder="6-digit pincode"
+            inputmode="numeric"
+            pattern="[0-9]{6}"
+            maxlength="6"
+            required
+          >
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="checkout-continue-btn"
+      >
+        CONTINUE
+      </button>
+
+    </form>
+
+
+    <!-- ORDER OPTIONS -->
+
+    <div
+      id="checkoutOptions"
+      class="checkout-options"
+      style="display:none;"
+    >
+
+      <div class="checkout-options-heading">
+
+        <span>CHOOSE HOW TO ORDER</span>
+
+        <h3>Complete Your Purchase</h3>
+
+        <p>
+          Choose your preferred ordering method below.
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="order-option whatsapp-option"
+        onclick="orderViaWhatsApp()"
+      >
+
+        <span class="order-option-icon">
+          📱
+        </span>
+
+        <span class="order-option-content">
+
+          <strong>
+            Order via WhatsApp
+          </strong>
+
+          <small>
+            Send your order details directly to NE Fashions
+          </small>
+
+        </span>
+
+        <span>
+          →
+        </span>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="order-option upi-option"
+        onclick="payViaUPI()"
+      >
+
+        <span class="order-option-icon">
+          💳
+        </span>
+
+        <span class="order-option-content">
+
+          <strong>
+            Pay via UPI & Place Order
+          </strong>
+
+          <small>
+            Pay securely using UPI and submit your order
+          </small>
+
+        </span>
+
+        <span>
+          →
+        </span>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="checkout-back-btn"
+        onclick="backToCustomerDetails()"
+      >
+        ← EDIT DETAILS
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- UPI PAYMENT -->
+<div
+  id="upiOverlay"
+  class="overlay"
+>
+  <div class="modal-card upi-card">
+
+    <button
+      class="close-btn"
+      onclick="closeUPI()"
+    >
+      ×
+    </button>
+
+    <div class="section-heading left">
+      <span>SECURE UPI PAYMENT</span>
+      <h2>Complete Payment</h2>
+    </div>
+
+    <div class="upi-payment-content">
+
+      <!-- ORDER TOTAL -->
+      <div class="upi-total-box">
+        <span>Order Total</span>
+        <strong id="upiTotal">₹0</strong>
+      </div>
+
+      <!-- QR -->
+<div class="upi-qr-section">
+
+  <p class="upi-pay-label">
+    Scan & Pay using any UPI App
+  </p>
+
+  <div class="upi-qr-box">
+    <img
+      id="upiQrCode"
+      src="assets/upi-qr.png"
+      alt="NE Fashions UPI QR Code"
+      class="upi-qr-image"
+    >
+  </div>
+
+  <p class="upi-or">OR</p>
+
+  <div class="upi-id-box">
+    <span>UPI ID</span>
+    <strong id="upiId">9392888728-n5e5@ibl</strong>
+    <button type="button" onclick="copyUPIId()">COPY</button>
+  </div>
+
+</div>
+
+      <!-- PAYMENT INSTRUCTION -->
+<div class="upi-instruction">
+  <strong>After making the payment</strong>
+
+  <p>
+    Complete the payment and upload a screenshot of the successful payment below.
+  </p>
+</div>
+
+
+<!-- PAYMENT VERIFICATION FORM -->
+<form
+  id="upiForm"
+  onsubmit="submitUPIOrder(event)"
+>
+
+  <!-- PAYMENT SCREENSHOT -->
+  <div class="checkout-field">
+
+    <label for="paymentScreenshot">
+      Payment Screenshot <span>*</span>
+    </label>
+
+    <input
+      type="file"
+      id="paymentScreenshot"
+      accept="image/png,image/jpeg,image/webp"
+      required
+    >
+
+    <small>
+      Upload a screenshot showing the successful payment.
+    </small>
+
+  </div>
+
+
+  <!-- PAYMENT NAME -->
+  <div class="checkout-field">
+
+    <label for="paymentName">
+      Name Shown in Payment <span>*</span>
+    </label>
+
+    <input
+      type="text"
+      id="paymentName"
+      placeholder="Enter the name shown in your UPI/bank payment"
+      autocomplete="name"
+      required
+    >
+
+  </div>
+
+
+  <!-- PAYMENT PHONE -->
+  <div class="checkout-field">
+
+    <label for="paymentPhone">
+      Phone Number Used for Payment <span>*</span>
+    </label>
+
+    <input
+      type="tel"
+      id="paymentPhone"
+      placeholder="Enter 10-digit phone number"
+      inputmode="numeric"
+      pattern="[0-9]{10}"
+      maxlength="10"
+      autocomplete="tel"
+      required
+    >
+
+  </div>
+
+
+  <!-- PAYMENT CONFIRMATION -->
+  <label class="upi-confirm-check">
+
+    <input
+      type="checkbox"
+      id="paymentCompleted"
+      required
+    >
+
+    <span>
+      I have completed the UPI payment
+    </span>
+
+  </label>
+
+
+  <button
+    type="submit"
+    class="checkout-continue-btn"
+  >
+    SUBMIT ORDER
+  </button>
+
+</form>
+
+      <!-- BACK -->
+      <button
+        type="button"
+        class="checkout-back-btn"
+        onclick="backToCheckoutOptions()"
+      >
+        ← BACK
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ORDER SUCCESS -->
+<div
+  id="orderSuccessOverlay"
+  class="overlay"
+>
+  <div class="modal-card order-success-card">
+
+    <button
+      class="close-btn"
+      onclick="closeOrderSuccess()"
+    >
+      ×
+    </button>
+
+    <div class="order-success-content">
+
+      <div class="order-success-icon">
+        ✓
+      </div>
+
+      <div class="section-heading center">
+        <span>ORDER CONFIRMED</span>
+        <h2>Thank You!</h2>
+      </div>
+
+      <p class="order-success-message">
+        Your order has been received successfully.
+        We will verify your payment and confirm your order shortly.
+      </p>
+
+      <div class="order-success-number">
+        <span>ORDER NUMBER</span>
+        <strong id="successOrderNumber">
+          NEF-0001
+        </strong>
+      </div>
+
+      <div class="order-success-summary">
+
+        <div class="success-summary-row">
+          <span>Customer</span>
+          <strong id="successCustomerName">
+            —
+          </strong>
+        </div>
+
+        <div class="success-summary-row">
+          <span>Mobile</span>
+          <strong id="successCustomerPhone">
+            —
+          </strong>
+        </div>
+
+        <div class="success-summary-row">
+          <span>Total Amount</span>
+          <strong id="successOrderTotal">
+            ₹0
+          </strong>
+        </div>
+
+        <div class="success-summary-row">
+          <span>Payment</span>
+          <strong id="successPaymentMethod">
+            UPI
+          </strong>
+        </div>
+
+        <div class="success-summary-row">
+          <span>Payment Status</span>
+          <strong id="successPaymentStatus">
+            Payment Verification Pending
+          </strong>
+        </div>
+
+      </div>
+
+      <div class="order-success-note">
+        <strong>What happens next?</strong>
+
+        <p>
+          Our team will verify your payment and confirm your order.
+          Once your order is confirmed, you will receive an update
+          with the next steps.
+        </p>
+      </div>
+
+      <div class="order-success-actions">
+
+        <button
+          type="button"
+          class="checkout-continue-btn"
+          onclick="continueShoppingAfterOrder()"
+        >
+          CONTINUE SHOPPING
+        </button>
+
+        <button
+          type="button"
+          class="checkout-back-btn"
+          onclick="contactForOrder()"
+        >
+          CONTACT NE FASHIONS
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 <!-- WISHLIST -->
 <div
@@ -1227,7 +1619,7 @@
 
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 
 <script>

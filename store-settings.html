@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Store Settings - NE FASHIONS Admin</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      color: #222;
+    }
+
+    .topbar {
+      height: 70px;
+      background: #111;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .brand span {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      margin-top: 3px;
+      color: #ccc;
+    }
+
+    .back-btn {
+      color: white;
+      text-decoration: none;
+      border: 1px solid #555;
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .back-btn:hover {
+      background: #222;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 30px 20px 50px;
+    }
+
+    .page-header {
+      margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      margin-bottom: 7px;
+    }
+
+    .page-header p {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .card-description {
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 7px;
+      color: #444;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      padding: 12px 13px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+      background: white;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #888;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .save-area {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .save-btn {
+      background: #111;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .save-btn:hover {
+      background: #333;
+    }
+
+    .save-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      font-size: 13px;
+      display: none;
+    }
+
+    .message.success {
+      display: block;
+      color: #198754;
+    }
+
+    .message.error {
+      display: block;
+      color: #c62828;
+    }
+
+    .hint {
+      margin-top: 6px;
+      color: #999;
+      font-size: 11px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #777;
+    }
+
+    @media (max-width: 700px) {
+
+      .topbar {
+        padding: 0 15px;
+      }
+
+      .container {
+        padding: 20px 12px 40px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      .save-area {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .save-btn {
+        width: 100%;
+      }
+
+      .message {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+
+    <div class="brand">
+      NE FASHIONS
+      <span>ADMIN PANEL</span>
+    </div>
+
+    <a href="admin-dashboard.html" class="back-btn">
+      ← Dashboard
+    </a>
+
+  </div>
+
+
+  <div class="container">
+
+    <div class="page-header">
+      <h1>Store Settings</h1>
+      <p>Manage your store information and customer-facing contact details.</p>
+    </div>
+
+
+    <div id="loading" class="loading">
+      Loading store settings...
+    </div>
+
+
+    <div id="settingsContent" style="display:none;">
+
+
+      <!-- STORE INFORMATION -->
+
+      <div class="card">
+
+        <h2>Store Information</h2>
+
+        <p class="card-description">
+          Basic information displayed across your store.
+        </p>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="storeName">
+              Store Name
+            </label>
+
+            <input
+              type="text"
+              id="storeName"
+              placeholder="NE FASHIONS"
+            >
+          </div>
+
+
+          <div class="form-group">
+            <label for="tagline">
+              Tagline
+            </label>
+
+            <input
+              type="text"
+              id="tagline"
+              placeholder="Elegance in Every Thread"
+            >
+          </div>
+
+
+          <div class="form-group full">
+            <label for="address">
+              Address
+            </label>
+
+            <textarea
+              id="address"
+              placeholder="Store address"
+            ></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- PAYMENT -->
+
+      <div class="card">
+
+        <h2>Payment Details</h2>
+
+        <p class="card-description">
+          UPI details used for online payments.
+        </p>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="upiId">
+              UPI ID
+            </label>
+
+            <input
+              type="text"
+              id="upiId"
+              placeholder="example@upi"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="upiQrUrl">
+              UPI QR URL
+            </label>
+
+            <input
+              type="text"
+              id="upiQrUrl"
+              placeholder="https://..."
+            >
+
+            <div class="hint">
+              Enter the URL of your uploaded UPI QR image.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CONTACT -->
+
+      <div class="card">
+
+        <h2>Contact Information</h2>
+
+        <p class="card-description">
+          Contact details customers can use to reach the store.
+        </p>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="whatsappNumber">
+              WhatsApp Number
+            </label>
+
+            <input
+              type="text"
+              id="whatsappNumber"
+              placeholder="+91 9392888728"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="phone">
+              Phone
+            </label>
+
+            <input
+              type="text"
+              id="phone"
+              placeholder="+91..."
+            >
+
+          </div>
+
+
+          <div class="form-group full">
+
+            <label for="email">
+              Email
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              placeholder="store@example.com"
+            >
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- SHIPPING -->
+
+      <div class="card">
+
+        <h2>Shipping Information</h2>
+
+        <p class="card-description">
+          Message displayed to customers regarding shipping.
+        </p>
+
+        <div class="form-grid">
+
+          <div class="form-group full">
+
+            <label for="shippingMessage">
+              Shipping Message
+            </label>
+
+            <textarea
+              id="shippingMessage"
+              placeholder="Example: ₹100 shipping across India."
+            ></textarea>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- SAVE -->
+
+      <div class="save-area">
+
+        <div
+          id="message"
+          class="message">
+        </div>
+
+        <button
+          id="saveBtn"
+          class="save-btn"
+          onclick="saveSettings()">
+
+          Save Settings
+
+        </button>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+<script>
+
+  /* =====================================================
+     SUPABASE
+  ===================================================== */
+
+  const SUPABASE_URL =
+    "https://rcablyesxkzvxzolwvyz.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "sb_publishable_7WueOf83yr4MDgHOz506iA_wGZ3uzcB";
+
+
+  const supabaseClient =
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+
+  /* =====================================================
+     CURRENT SETTINGS
+  ===================================================== */
+
+  let currentSettings = null;
+
+
+  /* =====================================================
+     LOAD SETTINGS
+  ===================================================== */
+
+  async function loadSettings() {
+
+    const loading =
+      document.getElementById("loading");
+
+    const content =
+      document.getElementById("settingsContent");
+
+    try {
+
+      const { data, error } =
+        await supabaseClient
+          .from("store_settings")
+          .select(`
+            id,
+            store_name,
+            tagline,
+            upi_id,
+            upi_qr_url,
+            whatsapp_number,
+            email,
+            phone,
+            address,
+            shipping_message,
+            updated_at
+          `)
+          .order("id", {
+            ascending: true
+          })
+          .limit(1)
+          .maybeSingle();
+
+      if (error) {
+        throw error;
+      }
+
+      currentSettings = data;
+
+      if (data) {
+        fillForm(data);
+      }
+
+      loading.style.display = "none";
+      content.style.display = "block";
+
+    } catch (error) {
+
+      loading.innerHTML = `
+        <strong>
+          Store settings could not be loaded.
+        </strong>
+
+        <br><br>
+
+        ${escapeHtml(error.message)}
+      `;
+
+      console.error(error);
+    }
+  }
+
+
+  /* =====================================================
+     FILL FORM
+  ===================================================== */
+
+  function fillForm(data) {
+
+    document.getElementById("storeName").value =
+      data.store_name || "";
+
+    document.getElementById("tagline").value =
+      data.tagline || "";
+
+    document.getElementById("upiId").value =
+      data.upi_id || "";
+
+    document.getElementById("upiQrUrl").value =
+      data.upi_qr_url || "";
+
+    document.getElementById("whatsappNumber").value =
+      data.whatsapp_number || "";
+
+    document.getElementById("email").value =
+      data.email || "";
+
+    document.getElementById("phone").value =
+      data.phone || "";
+
+    document.getElementById("address").value =
+      data.address || "";
+
+    document.getElementById("shippingMessage").value =
+      data.shipping_message || "";
+  }
+
+
+  /* =====================================================
+     SAVE SETTINGS
+  ===================================================== */
+
+  async function saveSettings() {
+
+    const saveBtn =
+      document.getElementById("saveBtn");
+
+    const message =
+      document.getElementById("message");
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+
+    message.className = "message";
+    message.textContent = "";
+
+    const settingsData = {
+
+      store_name:
+        document.getElementById("storeName").value.trim(),
+
+      tagline:
+        document.getElementById("tagline").value.trim(),
+
+      upi_id:
+        document.getElementById("upiId").value.trim(),
+
+      upi_qr_url:
+        document.getElementById("upiQrUrl").value.trim(),
+
+      whatsapp_number:
+        document.getElementById("whatsappNumber").value.trim(),
+
+      email:
+        document.getElementById("email").value.trim(),
+
+      phone:
+        document.getElementById("phone").value.trim(),
+
+      address:
+        document.getElementById("address").value.trim(),
+
+      shipping_message:
+        document.getElementById("shippingMessage").value.trim(),
+
+      updated_at:
+        new Date().toISOString()
+    };
+
+
+    try {
+
+      let result;
+
+
+      /*
+        Existing row → UPDATE
+      */
+
+      if (currentSettings && currentSettings.id) {
+
+        result =
+          await supabaseClient
+            .from("store_settings")
+            .update(settingsData)
+            .eq("id", currentSettings.id)
+            .select()
+            .single();
+
+      }
+
+
+      /*
+        No existing row → INSERT
+      */
+
+      else {
+
+        result =
+          await supabaseClient
+            .from("store_settings")
+            .insert(settingsData)
+            .select()
+            .single();
+
+      }
+
+
+      if (result.error) {
+        throw result.error;
+      }
+
+
+      currentSettings =
+        result.data;
+
+
+      message.className =
+        "message success";
+
+      message.textContent =
+        "Store settings saved successfully.";
+
+
+      setTimeout(() => {
+
+        message.className =
+          "message";
+
+        message.textContent = "";
+
+      }, 4000);
+
+
+    } catch (error) {
+
+      message.className =
+        "message error";
+
+      message.textContent =
+        "Could not save settings: " +
+        error.message;
+
+      console.error(error);
+
+    } finally {
+
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Save Settings";
+
+    }
+  }
+
+
+  /* =====================================================
+     ESCAPE HTML
+  ===================================================== */
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  /* =====================================================
+     INITIAL LOAD
+  ===================================================== */
+
+  loadSettings();
+
+</script>
+
+</body>
+</html>

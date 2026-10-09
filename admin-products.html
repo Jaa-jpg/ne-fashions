@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NE Fashions — Products</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+      width: 240px;
+      background: #222;
+      color: #fff;
+      padding: 25px 18px;
+    }
+
+    .brand {
+      padding: 0 12px 30px;
+    }
+
+    .brand h1 {
+      font-family: Georgia, serif;
+      font-size: 24px;
+    }
+
+    .brand p {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .menu button {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #ddd;
+      padding: 13px 12px;
+      text-align: left;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .menu button:hover,
+    .menu button.active {
+      background: #333;
+      color: #fff;
+    }
+
+    /* Main */
+
+    .main {
+      flex: 1;
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .topbar h2 {
+      font-size: 26px;
+    }
+
+    .add-btn {
+      border: none;
+      background: #222;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .add-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Product form */
+
+    .form-box {
+      display: none;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+
+    .form-box.show {
+      display: block;
+    }
+
+    .form-box h3 {
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: #222;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .save-btn,
+    .cancel-btn {
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .save-btn {
+      border: none;
+      background: #222;
+      color: #fff;
+    }
+
+    .cancel-btn {
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #222;
+    }
+
+    /* Product list */
+
+    .products-box {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .products-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .products-header h3 {
+      font-size: 18px;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 750px;
+    }
+
+    th,
+    td {
+      padding: 15px 18px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      font-size: 13px;
+    }
+
+    th {
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .active-status {
+      background: #e9f7ee;
+      color: #18733b;
+    }
+
+    .out-status {
+      background: #fbeaea;
+      color: #a32626;
+    }
+
+    .action-btn {
+      border: 1px solid #ddd;
+      background: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-right: 5px;
+    }
+
+    .action-btn:hover {
+      background: #f5f5f5;
+    }
+
+    .empty {
+      padding: 40px 20px;
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 200px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        gap: 15px;
+        flex-direction: column;
+      }
+    }
+
+ #colorList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-name {
+  width: 350px !important;
+}
+
+.color-picker {
+  width: 38px !important;
+  height: 38px !important;
+  padding: 2px !important;
+  border: 1px solid #ddd !important;
+  border-radius: 7px !important;
+  cursor: pointer;
+}
+
+.color-preview {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.remove-color {
+  border: none;
+  background: transparent;
+  color: #777;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+  </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+  <div class="layout">
+
+```
+<aside class="sidebar">
+
+  <div class="brand">
+    <h1>NE Fashions</h1>
+    <p>Admin Panel</p>
+  </div>
+
+  <nav class="menu">
+    <button onclick="location.href='admin-dashboard.html'">Dashboard</button>
+    <button class="active">Products</button>
+    <button>Orders</button>
+    <button>Customers</button>
+    <button>Coupons</button>
+    <button>Reviews</button>
+    <button>Store Settings</button>
+  </nav>
+
+</aside>
+
+<main class="main">
+
+  <div class="topbar">
+    <h2>Products</h2>
+
+    <button class="add-btn" onclick="showProductForm()">
+      + Add Product
+    </button>
+  </div>
+
+  <!-- Add Product Form -->
+
+  <div class="form-box" id="productForm">
+
+    <h3>Add New Product</h3>
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label>Product Name</label>
+       <input type="text" id="productName" placeholder="Enter product name">
+      </div>
+
+      <div class="field">
+        <label>Category</label>
+       <select id="productCategory">
+              <option value="">Select category</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Price</label>
+        <input type="number" id="productPrice" placeholder="Enter price">
+      </div>
+
+      <div class="field">
+        <label>Material</label>
+        <input type="text" id="productMaterial" placeholder="Example: Cotton">
+      </div>
+<div class="field full">
+  <label>Product Colors</label>
+
+  <div id="colorList"></div>
+
+  <button type="button" class="action-btn" onclick="addColor()">
+    + Add Color
+  </button>
+</div>
+
+      <div class="field full">
+        <label>Description</label>
+        <textarea id="productDescription" placeholder="Enter product description"></textarea>
+      </div>
+
+     <div class="field full">
+      <label>Product Images</label>
+
+      <input
+       type="file"
+       id="productImages"
+       accept="image/*"
+      multiple
+      >
+
+     <small>Select multiple product images</small>
+    </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="save-btn" onclick="saveProduct()">Save Product</button>
+      <button class="cancel-btn" onclick="hideProductForm()">Cancel</button>
+    </div>
+
+  </div>
+  
+
+  <!-- Product List -->
+
+  <div class="products-box">
+
+    <div class="products-header">
+      <h3>All Products</h3>
+    </div>
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td>Sample Frock</td>
+            <td>Frocks</td>
+            <td>₹999</td>
+
+            <td>
+              <span class="status active-status">
+                Active
+              </span>
+            </td>
+
+            <td>
+              <button class="action-btn">Edit</button>
+              <button class="action-btn">Delete</button>
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</main>
+```
+
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://rcablyesxkzvxzolwvyz.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_7WueOf83yr4MDgHOz506iA_wGZ3uzcB";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  function showProductForm() {
+    document.getElementById("productForm").classList.add("show");
+  }
+
+  function hideProductForm() {
+    document.getElementById("productForm").classList.remove("show");
+  }
+
+  async function loadProducts() {
+
+    const { data, error } = await supabaseClient
+      .from("products")
+      .select(`
+        id,
+        name,
+        price,
+        active,
+        categories (
+          name
+        )
+      `)
+      .order("id", { ascending: false });
+
+    if (error) {
+      console.error("Products loading error:", error);
+      return;
+    }
+
+    const tableBody = document.querySelector("tbody");
+
+    tableBody.innerHTML = "";
+
+    data.forEach(product => {
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${product.name}</td>
+        <td>${product.categories?.name || "-"}</td>
+        <td>₹${product.price}</td>
+
+        <td>
+          <span class="status ${
+            product.active
+              ? "active-status"
+              : "out-status"
+          }">
+            ${product.active ? "Active" : "Inactive"}
+          </span>
+        </td>
+
+        <td>
+          <button class="action-btn">Edit</button>
+          <button class="action-btn">Delete</button>
+        </td>
+      `;
+
+      tableBody.appendChild(row);
+
+    });
+  }
+
+  async function loadCategories() {
+
+  const { data, error } = await supabaseClient
+    .from("categories")
+    .select("id, name")
+    .eq("active", true)
+    .order("name");
+
+  if (error) {
+    console.error("Categories loading error:", error.message, error.details, error.hint);
+    return;
+  }
+
+  const categorySelect = document.getElementById("productCategory");
+
+  categorySelect.innerHTML =
+    `<option value="">Select category</option>`;
+
+  data.forEach(category => {
+    categorySelect.innerHTML += `
+      <option value="${category.id}">
+        ${category.name}
+      </option>
+    `;
+  });
+}
+
+function addColor() {
+
+  const colorList = document.getElementById("colorList");
+
+  const colorRow = document.createElement("div");
+
+  colorRow.className = "color-row";
+
+  colorRow.innerHTML = `
+    <input
+      type="text"
+      placeholder="Enter color name"
+      class="color-name"
+    >
+
+    <button
+      type="button"
+      class="remove-color"
+      onclick="this.parentElement.remove()"
+    >
+      ×
+    </button>
+  `;
+
+  const colorInput = colorRow.querySelector(".color-name");
+
+  colorInput.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      colorInput.blur();
+    }
+
+  });
+
+  colorList.appendChild(colorRow);
+  colorInput.focus();
+}
+async function saveProduct() {
+
+  const name = document.getElementById("productName").value.trim();
+  const categoryId = document.getElementById("productCategory").value;
+  const price = document.getElementById("productPrice").value;
+  const material = document.getElementById("productMaterial").value.trim();
+  const description = document.getElementById("productDescription").value.trim();
+
+  if (!name || !categoryId || !price) {
+    alert("Please enter product name, category and price.");
+    return;
+  }
+
+  const { data: product, error: productError } = await supabaseClient
+    .from("products")
+    .insert({
+      name: name,
+      category_id: Number(categoryId),
+      price: Number(price),
+      material: material,
+      description: description
+    })
+    .select()
+    .single();
+
+  if (productError) {
+    console.error("Product save error:", productError);
+    alert("Product could not be saved.");
+    return;
+  }
+
+  const colorInputs = document.querySelectorAll(".color-name");
+
+  for (const input of colorInputs) {
+
+    const colorName = input.value.trim();
+
+    if (!colorName) continue;
+
+    const { error: variantError } = await supabaseClient
+      .from("product_variants")
+      .insert({
+        product_id: product.id,
+        color_name: colorName,
+        color_code: null,
+        active: true
+      });
+
+    if (variantError) {
+      console.error("Color save error:", variantError);
+      alert("Product saved, but color could not be saved.");
+      return;
+    }
+  }
+
+  alert("Product saved successfully!");
+
+  document.getElementById("productName").value = "";
+  document.getElementById("productCategory").value = "";
+  document.getElementById("productPrice").value = "";
+  document.getElementById("productMaterial").value = "";
+  document.getElementById("productDescription").value = "";
+  document.getElementById("colorList").innerHTML = "";
+
+  hideProductForm();
+  loadProducts();
+}
+
+async function checkAdminLogin() {
+
+  const { data: { session } } =
+    await supabaseClient.auth.getSession();
+
+  if (!session) {
+    window.location.href = "admin.html";
+  }
+}
+
+  checkAdminLogin().then(() => {
+  loadCategories();
+  loadProducts();
+});
+
+
+</script>
+
+</body>
+</html>

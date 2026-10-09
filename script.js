@@ -5,6 +5,16 @@
    COLOR VARIANTS ARE CONNECTED
 ========================================================= */
 
+const SUPABASE_URL = "https://rcablyesxkzvxzolwvyz.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_7WueOf83yr4MDgHOz506iA_wGZ3uzcB";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
 const products = [
 
   /* ---------------- FROCKS ---------------- */
@@ -427,62 +437,19 @@ function renderProducts() {
 
   const grid = document.getElementById("productGrid");
 
-  const search = document
-    .getElementById("searchInput")
-    .value
-    .toLowerCase()
-    .trim();
+  if (!grid) return;
 
-  const category = document.getElementById("categoryFilter").value;
-  const sort = document.getElementById("sortFilter").value;
-
-  let filtered = products.filter(product => {
-
-    const matchesSearch =
-      product.name.toLowerCase().includes(search) ||
-      product.category.toLowerCase().includes(search) ||
-      product.colors.some(color =>
-        color.name.toLowerCase().includes(search)
-      );
-
-    const matchesCategory =
-      category === "All" ||
-      product.category === category;
-
-    return matchesSearch && matchesCategory;
-  });
-
-  if (sort === "low") {
-    filtered.sort((a, b) => a.price - b.price);
-  }
-
-  if (sort === "high") {
-    filtered.sort((a, b) => b.price - a.price);
-  }
-
-  if (sort === "az") {
-    filtered.sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  if (!filtered.length) {
-    grid.innerHTML = `
-      <div class="empty-message" style="grid-column:1/-1;">
-        No products found.
-      </div>
-    `;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(product => {
+  grid.innerHTML = products.map(product => {
 
     const firstColor = product.colors[0];
-    const isWishlisted = isProductWishlisted(product.id);
 
     return `
       <article class="product-card">
 
-        <div class="product-image-wrap"
-             onclick="openProduct('${product.id}', 0)">
+        <div
+          class="product-image-wrap"
+          onclick="openProduct('${product.id}', 0)"
+        >
 
           <img
             id="card-image-${product.id}"
@@ -491,12 +458,6 @@ function renderProducts() {
             onerror="handleImageError(this)"
           >
 
-          <button
-            class="product-heart ${isWishlisted ? "active" : ""}"
-            onclick="event.stopPropagation(); toggleWishlist('${product.id}')"
-          >
-            ${isWishlisted ? "♥" : "♡"}
-          </button>
         </div>
 
         <div class="product-info">
@@ -519,11 +480,11 @@ function renderProducts() {
                   title="${color.name}"
                   onclick="event.stopPropagation(); changeCardColor('${product.id}', ${index})"
                 >
-                <span
-                  class="card-color-circle"
-                  style="background-color: ${getColorValue(color.name)};"
-                ></span>
-              </button>
+                  <span
+                    class="card-color-circle"
+                    style="background-color: ${getColorValue(color.name)};"
+                  ></span>
+                </button>
               `).join("")}
 
               <span class="color-label">
@@ -1507,9 +1468,30 @@ function renderCart() {
           </h3>
 
           <div class="cart-meta">
-            Color: ${item.color}<br>
-            Size: ${item.size}
-          </div>
+
+  <div>
+    Color: ${item.color}
+  </div>
+
+  <div class="cart-size-row">
+
+  <span class="cart-size-label">Size:</span>
+
+  <div class="cart-size-options">
+    ${["S", "M", "L", "XL", "XXL"].map(size => `
+      <button
+        type="button"
+        class="cart-size-option ${item.size === size ? "active" : ""}"
+        onclick="changeCartSize(${index}, '${size}')"
+      >
+        ${size}
+      </button>
+    `).join("")}
+  </div>
+
+</div>
+
+</div>
 
           <div class="cart-item-price">
             ${money(item.price)}
@@ -1558,7 +1540,31 @@ function renderCart() {
   document.getElementById("cartTotal").textContent =
     money(total);
 }
+function changeCartSize(index, newSize) {
 
+  if (!cart[index]) return;
+
+  const item = cart[index];
+
+  const existing = cart.find((cartItem, cartIndex) =>
+    cartIndex !== index &&
+    cartItem.productId === item.productId &&
+    cartItem.color === item.color &&
+    cartItem.size === newSize
+  );
+
+  if (existing) {
+    existing.quantity += item.quantity;
+    cart.splice(index, 1);
+  } else {
+    item.size = newSize;
+  }
+
+  saveCart();
+  renderCart();
+  updateCartCount();
+  updateDetailCartButton();
+}
 
 /* ---------------- CHANGE QUANTITY ---------------- */
 
@@ -1602,7 +1608,14 @@ function removeCartItem(index) {
 }
 
 
-/* ---------------- CHECKOUT ---------------- */
+/* =========================================================
+   CHECKOUT
+========================================================= */
+
+let checkoutCustomer = null;
+
+
+/* ---------------- OPEN CHECKOUT ---------------- */
 
 function checkout() {
 
@@ -1613,14 +1626,736 @@ function checkout() {
     return;
   }
 
-  alert(
-    "Checkout is ready for integration. Payment gateway can be connected here."
+  const checkoutOverlay =
+    document.getElementById("checkoutOverlay");
+
+  if (!checkoutOverlay) return;
+
+  /* Update total */
+
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum + item.price * item.quantity,
+      0
+    );
+
+  document.getElementById("checkoutTotal").textContent =
+    money(total);
+
+  /* Reset checkout view */
+
+  document.getElementById("checkoutForm").style.display =
+    "block";
+
+  document.getElementById("checkoutOptions").style.display =
+    "none";
+
+  checkoutOverlay.classList.add("active");
+
+  document.body.classList.add("no-scroll");
+
+}
+
+
+/* ---------------- CLOSE CHECKOUT ---------------- */
+
+function closeCheckout() {
+
+  const checkoutOverlay =
+    document.getElementById("checkoutOverlay");
+
+  if (!checkoutOverlay) return;
+
+  checkoutOverlay.classList.remove("active");
+
+  document.body.classList.remove("no-scroll");
+
+}
+
+
+/* ---------------- CUSTOMER DETAILS ---------------- */
+
+function continueCheckout(event) {
+
+  event.preventDefault();
+
+  if (!cart.length) {
+
+    alert("Your cart is empty.");
+
+    closeCheckout();
+
+    return;
+  }
+
+  const phone =
+    document.getElementById("customerPhone").value.trim();
+
+  const pincode =
+    document.getElementById("customerPincode").value.trim();
+
+
+  /* Validate phone */
+
+  if (!/^[0-9]{10}$/.test(phone)) {
+
+    alert("Please enter a valid 10-digit mobile number.");
+
+    return;
+  }
+
+
+  /* Validate pincode */
+
+  if (!/^[0-9]{6}$/.test(pincode)) {
+
+    alert("Please enter a valid 6-digit pincode.");
+
+    return;
+  }
+
+
+  /* Save customer details temporarily */
+
+  checkoutCustomer = {
+
+    name:
+      document.getElementById("customerName")
+        .value
+        .trim(),
+
+    phone:
+      phone,
+
+    email:
+      document.getElementById("customerEmail")
+        .value
+        .trim(),
+
+    address:
+      document.getElementById("customerAddress")
+        .value
+        .trim(),
+
+    city:
+      document.getElementById("customerCity")
+        .value
+        .trim(),
+
+    state:
+      document.getElementById("customerState")
+        .value
+        .trim(),
+
+    pincode:
+      pincode
+
+  };
+
+
+  /* Show order options */
+
+  document.getElementById("checkoutForm").style.display =
+    "none";
+
+  document.getElementById("checkoutOptions").style.display =
+    "block";
+
+}
+
+
+/* ---------------- BACK TO DETAILS ---------------- */
+
+function backToCustomerDetails() {
+
+  document.getElementById("checkoutOptions").style.display =
+    "none";
+
+  document.getElementById("checkoutForm").style.display =
+    "block";
+
+}
+
+
+/* ---------------- ORDER VIA WHATSAPP ---------------- */
+
+function orderViaWhatsApp() {
+
+  if (!checkoutCustomer) {
+
+    alert("Please enter your customer details first.");
+
+    return;
+  }
+
+  if (!cart.length) {
+
+    alert("Your cart is empty.");
+
+    return;
+  }
+
+
+  const whatsappNumber =
+    "919392888728";
+
+
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum + item.price * item.quantity,
+      0
+    );
+
+
+  let message =
+    `Hi NE Fashions,%0A%0A` +
+
+    `I would like to place an order.%0A%0A` +
+
+    `*Customer Details*%0A` +
+
+    `Name: ${encodeURIComponent(checkoutCustomer.name)}%0A` +
+
+    `Phone: ${encodeURIComponent(checkoutCustomer.phone)}%0A` +
+
+    `Email: ${encodeURIComponent(checkoutCustomer.email)}%0A` +
+
+    `Address: ${encodeURIComponent(checkoutCustomer.address)}%0A` +
+
+    `City: ${encodeURIComponent(checkoutCustomer.city)}%0A` +
+
+    `State: ${encodeURIComponent(checkoutCustomer.state)}%0A` +
+
+    `Pincode: ${encodeURIComponent(checkoutCustomer.pincode)}%0A%0A` +
+
+    `*Order Details*%0A`;
+
+
+  cart.forEach((item, index) => {
+
+    const subtotal =
+      item.price * item.quantity;
+
+    message +=
+      `${index + 1}. ${encodeURIComponent(item.name)}%0A` +
+
+      `Color: ${encodeURIComponent(item.color)}%0A` +
+
+      `Size: ${encodeURIComponent(item.size)}%0A` +
+
+      `Qty: ${item.quantity}%0A` +
+
+      `Price: ${encodeURIComponent(money(item.price))}%0A` +
+
+      `Subtotal: ${encodeURIComponent(money(subtotal))}%0A%0A`;
+
+  });
+
+
+  message +=
+    `*Order Total: ${encodeURIComponent(money(total))}*%0A%0A` +
+
+    `Please confirm my order. Thank you!`;
+
+
+  window.open(
+    `https://wa.me/${whatsappNumber}?text=${message}`,
+    "_blank"
+  );
+
+}
+
+
+/* =========================================================
+   UPI PAYMENT
+========================================================= */
+
+function payViaUPI() {
+
+  if (!checkoutCustomer) {
+    alert("Please enter your customer details first.");
+    return;
+  }
+
+  if (!cart.length) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum + item.price * item.quantity,
+      0
+    );
+
+  const checkoutOptions =
+    document.getElementById("checkoutOptions");
+
+  const upiOverlay =
+    document.getElementById("upiOverlay");
+
+  const upiTotal =
+    document.getElementById("upiTotal");
+
+  if (!upiOverlay || !upiTotal) {
+    alert("UPI payment screen could not be opened.");
+    return;
+  }
+
+  upiTotal.textContent = money(total);
+
+  if (checkoutOptions) {
+    checkoutOptions.style.display = "none";
+  }
+
+  upiOverlay.classList.add("active");
+
+  document.body.classList.add("no-scroll");
+}
+
+
+/* ---------------- CLOSE UPI ---------------- */
+
+function closeUPI() {
+
+  const upiOverlay =
+    document.getElementById("upiOverlay");
+
+  if (!upiOverlay) return;
+
+  upiOverlay.classList.remove("active");
+
+  document.body.classList.remove("no-scroll");
+}
+
+
+/* ---------------- BACK TO CHECKOUT OPTIONS ---------------- */
+
+function backToCheckoutOptions() {
+
+  closeUPI();
+
+  const checkoutOverlay =
+    document.getElementById("checkoutOverlay");
+
+  const checkoutOptions =
+    document.getElementById("checkoutOptions");
+
+  if (checkoutOverlay) {
+    checkoutOverlay.classList.add("active");
+  }
+
+  if (checkoutOptions) {
+    checkoutOptions.style.display = "block";
+  }
+
+  document.body.classList.add("no-scroll");
+}
+
+
+/* ---------------- COPY UPI ID ---------------- */
+
+function copyUPIId() {
+
+  const upiId =
+    document.getElementById("upiId");
+
+  if (!upiId) return;
+
+  const text =
+    upiId.textContent.trim();
+
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      alert("UPI ID copied.");
+    })
+    .catch(() => {
+      alert("Unable to copy UPI ID.");
+    });
+}
+
+
+/* ---------------- SUBMIT UPI ORDER ---------------- */
+
+async function submitUPIOrder(event) {
+  event.preventDefault();
+
+  if (!checkoutCustomer) {
+    alert("Customer details are missing. Please go back and enter your details.");
+    return;
+  }
+
+  if (!cart.length) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const screenshotInput = document.getElementById("paymentScreenshot");
+  const paymentName = document.getElementById("paymentName").value.trim();
+  const paymentPhone = document.getElementById("paymentPhone").value.trim();
+  const paymentCompleted = document.getElementById("paymentCompleted").checked;
+
+  // Validate payment details
+  if (!screenshotInput.files || !screenshotInput.files.length) {
+    alert("Please upload your payment screenshot.");
+    return;
+  }
+
+  if (!paymentName) {
+    alert("Please enter the name shown in your payment.");
+    return;
+  }
+
+  if (!/^[0-9]{10}$/.test(paymentPhone)) {
+    alert("Please enter a valid 10-digit payment phone number.");
+    return;
+  }
+
+  if (!paymentCompleted) {
+    alert("Please confirm that you have completed the payment.");
+    return;
+  }
+
+  const screenshotFile = screenshotInput.files[0];
+
+  // Allow only image files
+  if (!screenshotFile.type.startsWith("image/")) {
+    alert("Please upload a valid image file.");
+    return;
+  }
+
+  // Limit screenshot size to 5 MB
+  if (screenshotFile.size > 5 * 1024 * 1024) {
+    alert("Payment screenshot must be less than 5 MB.");
+    return;
+  }
+
+  const submitButton = document.querySelector(
+    '#upiForm button[type="submit"]'
+  );
+
+  const originalButtonText = submitButton.textContent;
+
+  try {
+    submitButton.disabled = true;
+    submitButton.textContent = "SUBMITTING...";
+
+    // --------------------------------------------------
+    // 1. CREATE / FIND CUSTOMER
+    // --------------------------------------------------
+
+    let customerId = null;
+
+    const { data: existingCustomer, error: customerFindError } =
+      await supabaseClient
+        .from("customers")
+        .select("id")
+        .eq("phone", checkoutCustomer.phone)
+        .maybeSingle();
+
+    if (customerFindError) {
+      throw customerFindError;
+    }
+
+    if (existingCustomer) {
+      customerId = existingCustomer.id;
+
+          } else {
+
+      const { error: customerInsertError } =
+        await supabaseClient
+          .from("customers")
+          .insert({
+            name: checkoutCustomer.name,
+            phone: checkoutCustomer.phone,
+            email: checkoutCustomer.email
+          });
+
+      if (customerInsertError) {
+        throw customerInsertError;
+      }
+
+      // Get the newly created customer's ID
+      const { data: insertedCustomer, error: insertedCustomerError } =
+        await supabaseClient
+          .from("customers")
+          .select("id")
+          .eq("phone", checkoutCustomer.phone)
+          .maybeSingle();
+
+      if (insertedCustomerError) {
+        throw insertedCustomerError;
+      }
+
+      if (!insertedCustomer) {
+        throw new Error(
+          "Customer was created, but customer ID could not be found."
+        );
+      }
+
+      customerId = insertedCustomer.id;
+    }
+    
+    // --------------------------------------------------
+// 2. SAVE CUSTOMER ADDRESS
+// --------------------------------------------------
+console.log("ADDRESS DATA:", {
+  customer_id: customerId,
+  full_name: checkoutCustomer.name,
+  phone: checkoutCustomer.phone,
+  address_line: checkoutCustomer.address,
+  city: checkoutCustomer.city,
+  state: checkoutCustomer.state,
+  pincode: checkoutCustomer.pincode
+});
+
+
+const { data: addressId, error: addressInsertError } =
+  await supabaseClient.rpc("create_checkout_address", {
+    p_customer_id: customerId,
+    p_full_name: checkoutCustomer.name,
+    p_phone: checkoutCustomer.phone,
+    p_address_line: checkoutCustomer.address,
+    p_city: checkoutCustomer.city,
+    p_state: checkoutCustomer.state,
+    p_pincode: checkoutCustomer.pincode
+  });
+
+if (addressInsertError) {
+  throw new Error(
+    "Address save failed: " + addressInsertError.message
   );
 }
+
+if (!addressId) {
+  throw new Error("No address ID was returned.");
+}+
+
+    // --------------------------------------------------
+    // 3. CALCULATE ORDER TOTAL
+    // --------------------------------------------------
+
+    const subtotal = cart.reduce(
+      (sum, item) => sum + (Number(item.price) * Number(item.quantity)),
+      0
+    );
+
+    const shippingFee = 0;
+    const discount = 0;
+    const totalAmount = subtotal + shippingFee - discount;
+
+
+    // --------------------------------------------------
+    // 4. GENERATE UNIQUE ORDER NUMBER
+    // --------------------------------------------------
+
+    const orderNumber =
+      "NEF-" +
+      Date.now().toString().slice(-8);
+
+
+    // --------------------------------------------------
+    // 5. UPLOAD PAYMENT SCREENSHOT
+    // --------------------------------------------------
+
+    const fileExtension =
+      screenshotFile.name.split(".").pop().toLowerCase();
+
+    const fileName =
+      `${orderNumber}-${Date.now()}.${fileExtension}`;
+
+    const filePath =
+      `payments/${fileName}`;
+
+    const { error: uploadError } =
+      await supabaseClient
+        .storage
+        .from("payment-screenshots")
+        .upload(filePath, screenshotFile, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: screenshotFile.type
+        });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+
+    // --------------------------------------------------
+    // 6. CREATE ORDER
+    // --------------------------------------------------
+
+    const { data: newOrder, error: orderError } =
+      await supabaseClient
+        .from("orders")
+        .insert({
+          order_number: orderNumber,
+          customer_id: customerId,
+          address_id: addressId,
+
+          subtotal: subtotal,
+          shipping_fee: shippingFee,
+          discount: discount,
+          total_amount: totalAmount,
+
+          payment_status: "pending",
+          order_status: "pending",
+
+          payment_screenshot_url: filePath,
+          payment_name: paymentName,
+          payment_phone: paymentPhone,
+
+          notes: "UPI payment submitted. Payment verification pending."
+        })
+        .select("id, order_number")
+        .single();
+
+    if (orderError) {
+      throw orderError;
+    }
+
+```js
+// SAVE ORDER ITEMS
+const orderItems = [];
+
+for (const item of cart) {
+  // Match website product with database product
+  const { data: product, error: productError } =
+    await supabaseClient
+      .from("products")
+      .select("id, name, price")
+      .eq("name", item.name)
+      .eq("active", true)
+      .maybeSingle();
+
+  if (productError) {
+    throw new Error("Product lookup failed: " + productError.message);
+  }
+
+  if (!product) {
+    throw new Error(
+      'Product "' + item.name +
+      '" is not in the database. Add this product to Supabase first.'
+    );
+  }
+
+  // Find selected color variant
+  let variantId = null;
+
+  if (item.color) {
+    const { data: variant, error: variantError } =
+      await supabaseClient
+        .from("product_variants")
+        .select("id")
+        .eq("product_id", product.id)
+        .ilike("color_name", item.color)
+        .eq("active", true)
+        .maybeSingle();
+
+    if (variantError) {
+      throw new Error("Color lookup failed: " + variantError.message);
+    }
+
+    if (!variant) {
+      throw new Error(
+        'Color "' + item.color +
+        '" is not available for "' + product.name + '".'
+      );
+    }
+
+    variantId = variant.id;
+  }
+
+  const quantity = Number(item.quantity);
+  const unitPrice = Number(item.price);
+  const totalPrice = unitPrice * quantity;
+
+  if (!Number.isFinite(quantity) || quantity < 1) {
+    throw new Error("Invalid quantity for " + product.name);
+  }
+
+  if (!Number.isFinite(unitPrice) || unitPrice < 0) {
+    throw new Error("Invalid price for " + product.name);
+  }
+
+  orderItems.push({
+    order_id: newOrder.id,
+    product_id: product.id,
+    variant_id: variantId,
+    size: item.size || null,
+    quantity: quantity,
+    unit_price: unitPrice,
+    total_price: totalPrice
+  });
+}
+
+if (orderItems.length > 0) {
+  const { error: orderItemsError } =
+    await supabaseClient
+      .from("order_items")
+      .insert(orderItems);
+
+  if (orderItemsError) {
+    throw new Error("Order items save failed: " + orderItemsError.message);
+  }
+}
+```
+
+    // --------------------------------------------------
+    // 7. SHOW SUCCESS SCREEN
+    // --------------------------------------------------
+
+    try {
+  const { data: emailResult, error: emailError } =
+    await supabaseClient.functions.invoke("send-order-email", {
+      body: {
+        orderNumber: newOrder.order_number,
+        customerName: checkoutCustomer.name,
+        customerEmail: checkoutCustomer.email,
+        customerPhone: checkoutCustomer.phone,
+        totalAmount: totalAmount,
+        paymentStatus: "Payment verification pending"
+      }
+    });
+
+  if (emailError) {
+    console.error("Email notification error:", emailError);
+  } else {
+    console.log("Order email sent:", emailResult);
+  }
+} catch (emailError) {
+
+  console.error("Email function error:", emailError);
+
+}
+
+showOrderSuccess(newOrder.order_number);
+
+} catch (error) {
+
+  console.error("UPI ORDER ERROR:", error);
+
+  alert(
+    "ORDER ERROR:\n\n" +
+    (error?.message || error?.details || JSON.stringify(error))
+  );
+
+} finally {
+
+    submitButton.disabled = false;
+    submitButton.textContent = originalButtonText;
+  }
+}
+
 
 /* =========================================================
    SHARE
 ========================================================= */
+
 
 async function shareProduct() {
 
@@ -1728,19 +2463,171 @@ function scrollToShop() {
     });
 }
 
+/* =========================================================
+   SHOP BY CATEGORY
+========================================================= */
+
 function filterCategory(category) {
 
-  document.getElementById("categoryFilter").value =
-    category;
+  const shop = document.getElementById("shop");
+  const productGrid = document.getElementById("productGrid");
 
+  if (!shop || !productGrid) return;
+
+
+  // Get only selected category products
+  const filtered = products.filter(product =>
+    product.category === category
+  );
+
+  productGrid.innerHTML = filtered.map(product => {
+
+    const firstColor = product.colors[0];
+
+    return `
+      <article class="product-card">
+
+        <div class="product-image-wrap"
+             onclick="openProduct('${product.id}', 0)">
+
+          <img
+            id="card-image-${product.id}"
+            src="${firstColor.images[0]}"
+            alt="${product.name}"
+            onerror="handleImageError(this)"
+          >
+
+        </div>
+
+        <div class="product-info">
+
+          <h3>${product.name}</h3>
+
+          <div class="product-price">
+            ${money(product.price)}
+          </div>
+
+          ${
+            product.colors.length > 1
+            ?
+            `
+            <div class="card-colors">
+
+              ${product.colors.map((color, index) => `
+                <button
+                  class="card-color ${index === 0 ? "active" : ""}"
+                  title="${color.name}"
+                  onclick="event.stopPropagation(); changeCardColor('${product.id}', ${index})"
+                >
+                  <span
+                    class="card-color-circle"
+                    style="background-color: ${getColorValue(color.name)};"
+                  ></span>
+                </button>
+              `).join("")}
+
+              <span class="color-label">
+                ${product.colors.length} Colors
+              </span>
+
+            </div>
+            `
+            : ""
+          }
+
+        </div>
+
+      </article>
+    `;
+
+  }).join("");
+
+  /* Open category neatly at Shop section */
+  const headerHeight =
+    document.querySelector(".header")?.offsetHeight || 0;
+
+  const announcementHeight =
+    document.querySelector(".announcement")?.offsetHeight || 0;
+
+  const targetPosition =
+    shop.getBoundingClientRect().top +
+    window.pageYOffset -
+    headerHeight -
+    announcementHeight;
+
+  window.scrollTo({
+    top: targetPosition,
+    behavior: "auto"
+  });
+
+  shop.classList.add("category-view-active");
+
+  /* Create Back button */
+  let backButton = document.getElementById("categoryBackButton");
+
+  if (!backButton) {
+
+    backButton = document.createElement("button");
+
+    backButton.id = "categoryBackButton";
+    backButton.type = "button";
+    backButton.textContent = "← BACK TO SHOP";
+
+    backButton.onclick = restoreShopView;
+
+    shop.insertBefore(backButton, productGrid);
+  }
+
+  backButton.style.display = "block";
+}
+
+
+/* =========================================================
+   RESTORE ALL SHOP PRODUCTS
+========================================================= */
+
+function restoreShopView() {
+
+  const shop = document.getElementById("shop");
+  const productGrid = document.getElementById("productGrid");
+
+  if (!shop || !productGrid) return;
+
+  /* Restore ALL original Shop products */
   renderProducts();
+
+  /* Remove category mode */
+  shop.classList.remove("category-view-active");
+
+  /* Hide Back button */
+  const backButton =
+    document.getElementById("categoryBackButton");
+
+  if (backButton) {
+    backButton.style.display = "none";
+  }
+
   updateHeaderCounts();
 
-  document.getElementById("shop")
-    .scrollIntoView({
-      behavior: "smooth"
-    });
+  /* Return to Shop section */
+  const headerHeight =
+    document.querySelector(".header")?.offsetHeight || 0;
+
+  const announcementHeight =
+    document.querySelector(".announcement")?.offsetHeight || 0;
+
+  const targetPosition =
+    shop.getBoundingClientRect().top +
+    window.pageYOffset -
+    headerHeight -
+    announcementHeight;
+
+  window.scrollTo({
+    top: targetPosition,
+    behavior: "auto"
+  });
 }
+
 
 function scrollToContact() {
 
@@ -1867,17 +2754,19 @@ function handleImageError(image) {
 
 document.addEventListener("keydown", function(event) {
 
-  if (event.key === "Escape") {
+if (event.key === "Escape") {
+  closeMenu();
+  closeProduct();
+  closeCart();
+  closeWishlist();
+  closeCheckout();
+  closeUPI();
+  closeOrderSuccess();
+  closeSizeGuide();
+  closePolicy();
+  closeImageViewer();
+}
 
-    closeMenu();
-    closeProduct();
-    closeCart();
-    closeWishlist();
-    closeSizeGuide();
-    closePolicy();
-    closeImageViewer();
-
-  }
 
   if (
     document.getElementById("imageViewer")
@@ -1896,112 +2785,115 @@ document.addEventListener("keydown", function(event) {
 
 });
 
+/* =====================================================
+   ORDER SUCCESS
+===================================================== */
 
-/* =========================================================
-   INITIAL LOAD
-========================================================= */
+function showOrderSuccess(orderNumber) {
 
-renderProducts();
-updateHeaderCounts();
-updateCartCount();
-updateWishlistCount();
+  if (!checkoutCustomer) {
+    alert("Customer details are missing.");
+    return;
+  }
 
-function sendWhatsApp(event) {
+  if (!cart.length) {
+    alert("Your cart is empty.");
+    return;
+  }
 
-  event.preventDefault();
+  const orderSuccessOverlay =
+    document.getElementById("orderSuccessOverlay");
 
-  const name = document.getElementById("contactName").value;
-  const email = document.getElementById("contactEmail").value;
-  const message = document.getElementById("contactMessage").value;
+  if (!orderSuccessOverlay) {
+    alert("Order success screen could not be opened.");
+    return;
+  }
 
-  const whatsappNumber = "919392888728";
+  const total = cart.reduce(
+    (sum, item) =>
+      sum + Number(item.price) * Number(item.quantity),
+    0
+  );
 
-  const text =
-    `Hi NE Fashions,%0A%0A` +
-    `Name: ${encodeURIComponent(name)}%0A` +
-    `Email: ${encodeURIComponent(email)}%0A` +
-    `Message: ${encodeURIComponent(message)}`;
+  document.getElementById("successOrderNumber").textContent =
+    orderNumber || "NEF-0001";
+
+  document.getElementById("successCustomerName").textContent =
+    checkoutCustomer.name;
+
+  document.getElementById("successCustomerPhone").textContent =
+    checkoutCustomer.phone;
+
+  document.getElementById("successOrderTotal").textContent =
+    money(total);
+
+  document.getElementById("successPaymentMethod").textContent =
+    "UPI";
+
+  document.getElementById("successPaymentStatus").textContent =
+    "Payment Verification Pending";
+
+  closeUPI();
+  closeCheckout();
+
+  orderSuccessOverlay.classList.add("active");
+
+  document.body.classList.add("no-scroll");
+}
+
+
+function closeOrderSuccess() {
+
+  const orderSuccessOverlay =
+    document.getElementById("orderSuccessOverlay");
+
+  if (!orderSuccessOverlay) return;
+
+  orderSuccessOverlay.classList.remove("active");
+
+  document.body.classList.remove("no-scroll");
+}
+
+
+function continueShoppingAfterOrder() {
+
+  closeOrderSuccess();
+
+  cart = [];
+
+  saveCart();
+
+  updateCartCount();
+
+  scrollToShop();
+}
+
+
+function contactForOrder() {
+
+  const phoneNumber =
+    "919392888728";
+
+  const message =
+    "Hi NE Fashions, I have just placed an order and would like to contact you regarding my order.";
+
+  const whatsappURL =
+    `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   window.open(
-    `https://wa.me/${whatsappNumber}?text=${text}`,
+    whatsappURL,
     "_blank"
   );
 }
 /* =========================================================
-   SECTION NAVIGATION — OPEN SECTION WITHOUT SCROLLING
+   INITIALIZE WEBSITE
 ========================================================= */
 
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-  link.addEventListener("click", function (event) {
-    const targetId = this.getAttribute("href");
+document.addEventListener("DOMContentLoaded", function () {
 
-    if (!targetId || targetId === "#") return;
+  renderProducts();
 
-    const target = document.querySelector(targetId);
+  updateCartCount();
+  updateWishlistCount();
 
-    if (!target) return;
-
-    event.preventDefault();
-
-    // Close mobile menu if open
-    if (typeof closeMenu === "function") {
-      closeMenu();
-    }
-
-    // Instantly position the selected section at the top
-    const headerHeight =
-      document.querySelector(".header")?.offsetHeight || 0;
-
-    const announcementHeight =
-      document.querySelector(".announcement")?.offsetHeight || 0;
-
-    const targetPosition =
-      target.getBoundingClientRect().top +
-      window.pageYOffset -
-      headerHeight -
-      announcementHeight;
-
-    window.scrollTo({
-      top: targetPosition,
-      behavior: "auto"
-    });
-  });
-});
-/* =========================================================
-   SECTION NAVIGATION — OPEN SECTION WITHOUT SCROLLING
-========================================================= */
-
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-  link.addEventListener("click", function (event) {
-    const targetId = this.getAttribute("href");
-
-    if (!targetId || targetId === "#") return;
-
-    const target = document.querySelector(targetId);
-
-    if (!target) return;
-
-    event.preventDefault();
-
-    if (typeof closeMenu === "function") {
-      closeMenu();
-    }
-
-    const headerHeight =
-      document.querySelector(".header")?.offsetHeight || 0;
-
-    const announcementHeight =
-      document.querySelector(".announcement")?.offsetHeight || 0;
-
-    const targetPosition =
-      target.getBoundingClientRect().top +
-      window.pageYOffset -
-      headerHeight -
-      announcementHeight;
-
-    window.scrollTo({
-      top: targetPosition,
-      behavior: "auto"
-    });
-  });
 });
