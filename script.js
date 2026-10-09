@@ -2132,7 +2132,7 @@ if (addressInsertError) {
 
 if (!addressId) {
   throw new Error("No address ID was returned.");
-}+
+}
 
     // --------------------------------------------------
     // 3. CALCULATE ORDER TOTAL
