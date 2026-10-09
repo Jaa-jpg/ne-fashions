@@ -2430,155 +2430,76 @@
        UPDATE ORDER STATUS
     ===================================================== */
 
-    async function updateOrderStatus() {
+    
+async function updateOrderStatus() {
+  if (!currentOrderId) return;
 
-      if (
-        !currentOrderId
-      ) {
-        return;
-      }
+  const paymentStatus =
+    document.getElementById("editPaymentStatus").value;
 
+  const orderStatus =
+    document.getElementById("editOrderStatus").value;
 
-      const paymentStatus =
-        document.getElementById(
-          "editPaymentStatus"
-        ).value;
+  const saveButton = document.getElementById("saveStatusBtn");
 
+  saveButton.disabled = true;
+  saveButton.textContent = "Saving...";
 
-      const orderStatus =
-        document.getElementById(
-          "editOrderStatus"
-        ).value;
+  try {
+    const { data: updatedOrder, error } = await supabaseClient
+      .from("orders")
+      .update({
+        payment_status: paymentStatus,
+        order_status: orderStatus,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", currentOrderId)
+      .select("id, payment_status, order_status")
+      .maybeSingle();
 
+    if (error) throw error;
 
-      const saveButton =
-        document.getElementById(
-          "saveStatusBtn"
-        );
-
-
-      saveButton.disabled =
-        true;
-
-      saveButton.textContent =
-        "Saving...";
-
-
-      try {
-
-        const {
-          error
-        } = await supabaseClient
-          .from("orders")
-          .update({
-
-            payment_status:
-              paymentStatus,
-
-            order_status:
-              orderStatus,
-
-            updated_at:
-              new Date().toISOString()
-
-          })
-          .eq(
-            "id",
-            currentOrderId
-          );
-
-
-        if (error) {
-          throw error;
-        }
-
-
-        /*
-          Update local data.
-        */
-
-        const index =
-          allOrders.findIndex(
-            order =>
-              Number(order.id) ===
-              Number(currentOrderId)
-          );
-
-
-        if (
-          index !== -1
-        ) {
-
-          allOrders[index]
-            .payment_status =
-              paymentStatus;
-
-          allOrders[index]
-            .order_status =
-              orderStatus;
-
-          allOrders[index]
-            .updated_at =
-              new Date().toISOString();
-
-        }
-
-
-        updateStats();
-
-        applyFilters();
-
-
-        /*
-          Update modal badges.
-        */
-
-        document.getElementById(
-          "detailPaymentStatus"
-        ).innerHTML =
-          statusBadge(
-            paymentStatus
-          );
-
-
-        document.getElementById(
-          "detailOrderStatus"
-        ).innerHTML =
-          statusBadge(
-            orderStatus
-          );
-
-
-        showToast(
-          "Order status updated successfully."
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "Order status update error:",
-          error
-        );
-
-
-        showToast(
-          "Could not update order: " +
-          error.message
-        );
-
-      } finally {
-
-        saveButton.disabled =
-          false;
-
-        saveButton.textContent =
-          "Save Changes";
-
-      }
-
+    if (!updatedOrder) {
+      throw new Error(
+        "No order was updated. Check admin login and orders UPDATE policy."
+      );
     }
 
+    const index = allOrders.findIndex(
+      order => Number(order.id) === Number(updatedOrder.id)
+    );
+
+    if (index !== -1) {
+      allOrders[index].payment_status = updatedOrder.payment_status;
+      allOrders[index].order_status = updatedOrder.order_status;
+      allOrders[index].updated_at = new Date().toISOString();
+    }
+
+    updateStats();
+    applyFilters();
+
+    document.getElementById("detailPaymentStatus").innerHTML =
+      statusBadge(updatedOrder.payment_status);
+
+    document.getElementById("detailOrderStatus").innerHTML =
+      statusBadge(updatedOrder.order_status);
+
+    document.getElementById("editPaymentStatus").value =
+      updatedOrder.payment_status;
+
+    document.getElementById("editOrderStatus").value =
+      updatedOrder.order_status;
+
+    showToast("Order status saved successfully.");
+
+  } catch (error) {
+    console.error("Order status update error:", error);
+    showToast("Could not update order: " + error.message);
+  } finally {
+    saveButton.disabled = false;
+    saveButton.textContent = "Save Changes";
+  }
+}
 
     /* =====================================================
        CLOSE MODAL
