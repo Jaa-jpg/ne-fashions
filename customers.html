@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customers - NE Fashions Admin</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    .topbar {
+      height: 70px;
+      background: #111;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .brand span {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      margin-top: 3px;
+    }
+
+    .page {
+      padding: 30px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      gap: 15px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+    }
+
+    .page-header p {
+      color: #777;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .back-btn {
+  color: white;
+  text-decoration: none;
+  border: 1px solid #555;
+  padding: 9px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.back-btn:hover {
+  background: #222;
+}
+
+
+    .refresh-btn {
+      border: none;
+      background: #111;
+      color: white;
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .refresh-btn:hover {
+      background: #333;
+    }
+
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 10px;
+      padding: 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .stat-card p {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-card h2 {
+      font-size: 25px;
+    }
+
+    .table-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .table-top {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-box {
+      width: 350px;
+      max-width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .search-box:focus {
+      border-color: #111;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 16px 18px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+
+    th {
+      background: #fafafa;
+      color: #555;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tbody tr:hover {
+      background: #fafafa;
+    }
+
+    .customer-name {
+      font-weight: 600;
+    }
+
+    .view-btn {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 7px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .view-btn:hover {
+      background: #111;
+      color: white;
+      border-color: #111;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #777;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: #777;
+    }
+
+    .error {
+      margin: 20px;
+      padding: 14px;
+      background: #fff0f0;
+      color: #c00;
+      border-radius: 7px;
+      font-size: 14px;
+    }
+
+    /* MODAL */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 20px;
+    }
+
+    .close-btn {
+      border: none;
+      background: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    .detail-row {
+      padding: 14px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .detail-value {
+      font-size: 15px;
+      color: #222;
+      word-break: break-word;
+    }
+
+    @media (max-width: 800px) {
+      .page {
+        padding: 20px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .table-top {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-box {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      NE FASHIONS
+      <span>ADMIN PANEL</span>
+    </div>
+    <a href="admin-dashboard.html" class="back-btn">
+  ← Dashboard
+</a>
+  </div>
+
+  <main class="page">
+
+    <div class="page-header">
+      <div>
+        <h1>Customers</h1>
+        <p>View and manage your customer information.</p>
+      </div>
+
+      <button class="refresh-btn" onclick="loadCustomers()">
+        ↻ Refresh
+      </button>
+    </div>
+
+    <div class="stats">
+
+      <div class="stat-card">
+        <p>Total Customers</p>
+        <h2 id="totalCustomers">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <p>Customers With Email</p>
+        <h2 id="emailCustomers">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <p>Customers With Phone</p>
+        <h2 id="phoneCustomers">0</h2>
+      </div>
+
+    </div>
+
+    <div class="table-card">
+
+      <div class="table-top">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-box"
+          placeholder="Search by name, phone or email..."
+          oninput="filterCustomers()"
+        >
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Joined</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="customersBody">
+            <tr>
+              <td colspan="5">
+                <div class="loading">Loading customers...</div>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- CUSTOMER DETAILS MODAL -->
+
+  <div class="modal" id="customerModal">
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <h2>Customer Details</h2>
+
+        <button class="close-btn" onclick="closeCustomerModal()">
+          ×
+        </button>
+      </div>
+
+      <div class="modal-body" id="customerDetails">
+      </div>
+
+    </div>
+
+  </div>
+
+
+<script>
+
+  /* ================================
+     SUPABASE CONNECTION
+  ================================= */
+
+  const SUPABASE_URL =
+    "https://rcablyesxkzvxzolwvyz.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "sb_publishable_7WueOf83yr4MDgHOz506iA_wGZ3uzcB";
+
+  const supabaseClient =
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+
+  /* ================================
+     DATA
+  ================================= */
+
+  let allCustomers = [];
+
+
+  /* ================================
+     LOAD CUSTOMERS
+  ================================= */
+
+  async function loadCustomers() {
+
+    const tbody =
+      document.getElementById("customersBody");
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5">
+          <div class="loading">
+            Loading customers...
+          </div>
+        </td>
+      </tr>
+    `;
+
+    try {
+
+      const { data, error } =
+        await supabaseClient
+          .from("customers")
+          .select("*")
+          .order("created_at", {
+            ascending: false
+          });
+
+      if (error) {
+        throw error;
+      }
+
+      allCustomers = data || [];
+
+      updateStats();
+
+      renderCustomers(allCustomers);
+
+    } catch (error) {
+
+      console.error(error);
+
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5">
+            <div class="error">
+              Customers could not be loaded:
+              ${escapeHtml(error.message)}
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
+  }
+
+
+  /* ================================
+     STATS
+  ================================= */
+
+  function updateStats() {
+
+    document.getElementById("totalCustomers")
+      .textContent = allCustomers.length;
+
+    const emailCount =
+      allCustomers.filter(
+        customer =>
+          customer.email &&
+          customer.email.trim() !== ""
+      ).length;
+
+    const phoneCount =
+      allCustomers.filter(
+        customer =>
+          customer.phone &&
+          customer.phone.trim() !== ""
+      ).length;
+
+    document.getElementById("emailCustomers")
+      .textContent = emailCount;
+
+    document.getElementById("phoneCustomers")
+      .textContent = phoneCount;
+
+  }
+
+
+  /* ================================
+     RENDER CUSTOMERS
+  ================================= */
+
+  function renderCustomers(customers) {
+
+    const tbody =
+      document.getElementById("customersBody");
+
+    if (!customers.length) {
+
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              No customers found.
+            </div>
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+
+    tbody.innerHTML =
+      customers.map(customer => {
+
+        const name =
+          customer.name || "—";
+
+        const phone =
+          customer.phone || "—";
+
+        const email =
+          customer.email || "—";
+
+        const joined =
+          formatDate(customer.created_at);
+
+        return `
+          <tr>
+
+            <td>
+              <div class="customer-name">
+                ${escapeHtml(name)}
+              </div>
+            </td>
+
+            <td>
+              ${escapeHtml(phone)}
+            </td>
+
+            <td>
+              ${escapeHtml(email)}
+            </td>
+
+            <td>
+              ${joined}
+            </td>
+
+            <td>
+              <button
+                class="view-btn"
+                onclick="viewCustomer(${customer.id})"
+              >
+                View
+              </button>
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
+
+  }
+
+
+  /* ================================
+     SEARCH
+  ================================= */
+
+  function filterCustomers() {
+
+    const search =
+      document.getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    if (!search) {
+
+      renderCustomers(allCustomers);
+
+      return;
+    }
+
+
+    const filtered =
+      allCustomers.filter(customer => {
+
+        const name =
+          (customer.name || "")
+            .toLowerCase();
+
+        const phone =
+          (customer.phone || "")
+            .toLowerCase();
+
+        const email =
+          (customer.email || "")
+            .toLowerCase();
+
+        return (
+          name.includes(search) ||
+          phone.includes(search) ||
+          email.includes(search)
+        );
+
+      });
+
+
+    renderCustomers(filtered);
+
+  }
+
+
+  /* ================================
+     VIEW CUSTOMER
+  ================================= */
+
+  function viewCustomer(customerId) {
+
+    const customer =
+      allCustomers.find(
+        item => Number(item.id) === Number(customerId)
+      );
+
+    if (!customer) {
+      return;
+    }
+
+
+    const details =
+      document.getElementById("customerDetails");
+
+
+    details.innerHTML = `
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Customer ID
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(String(customer.id))}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Name
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(customer.name || "—")}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Phone
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(customer.phone || "—")}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Email
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(customer.email || "—")}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Customer Since
+        </div>
+
+        <div class="detail-value">
+          ${formatDate(customer.created_at)}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Last Updated
+        </div>
+
+        <div class="detail-value">
+          ${formatDate(customer.updated_at)}
+        </div>
+
+      </div>
+
+    `;
+
+
+    document
+      .getElementById("customerModal")
+      .classList.add("active");
+
+  }
+
+
+  /* ================================
+     CLOSE MODAL
+  ================================= */
+
+  function closeCustomerModal() {
+
+    document
+      .getElementById("customerModal")
+      .classList.remove("active");
+
+  }
+
+
+  /* ================================
+     DATE FORMAT
+  ================================= */
+
+  function formatDate(dateValue) {
+
+    if (!dateValue) {
+      return "—";
+    }
+
+    const date =
+      new Date(dateValue);
+
+    if (isNaN(date.getTime())) {
+      return "—";
+    }
+
+    return date.toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }
+    );
+
+  }
+
+
+  /* ================================
+     HTML ESCAPE
+  ================================= */
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  /* ================================
+     CLOSE MODAL ON OUTSIDE CLICK
+  ================================= */
+
+  document
+    .getElementById("customerModal")
+    .addEventListener("click", function(event) {
+
+      if (event.target === this) {
+        closeCustomerModal();
+      }
+
+    });
+
+
+  /* ================================
+     INITIAL LOAD
+  ================================= */
+
+  loadCustomers();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NE Fashions — Dashboard</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+      width: 240px;
+      background: #222;
+      color: #fff;
+      padding: 25px 18px;
+    }
+
+    .brand {
+      padding: 0 12px 30px;
+    }
+
+    .brand h1 {
+      font-family: Georgia, serif;
+      font-size: 24px;
+    }
+
+    .brand p {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .menu button {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #ddd;
+      padding: 13px 12px;
+      text-align: left;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .menu button:hover,
+    .menu button.active {
+      background: #333;
+      color: #fff;
+    }
+
+    /* Main */
+
+    .main {
+      flex: 1;
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topbar h2 {
+      font-size: 26px;
+    }
+
+    .admin-name {
+      font-size: 14px;
+      color: #777;
+    }
+
+    /* Cards */
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 22px;
+      border-radius: 12px;
+      border: 1px solid #eee;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      font-size: 25px;
+    }
+
+    /* Sections */
+
+    .section {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .section h3 {
+      margin-bottom: 18px;
+      font-size: 18px;
+    }
+
+    .empty {
+      color: #888;
+      font-size: 14px;
+      padding: 25px 0;
+    }
+
+    /* Recent Orders */
+
+    .orders-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .order-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 15px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+    }
+
+    .order-number {
+      font-weight: 600;
+    }
+
+    .order-small {
+      font-size: 13px;
+      color: #777;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #f1f1f1;
+      color: #555;
+    }
+
+    .refresh-btn {
+      border: 1px solid #ddd;
+      background: white;
+      padding: 9px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .refresh-btn:hover {
+      background: #f5f5f5;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sidebar {
+        width: 200px;
+      }
+
+      .order-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .order-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <aside class="sidebar">
+
+      <div class="brand">
+        <h1>NE Fashions</h1>
+        <p>Admin Panel</p>
+      </div>
+
+      <nav class="menu">
+
+        <button
+          class="active"
+          onclick="window.location.href='admin-dashboard.html'">
+          Dashboard
+        </button>
+
+        <button
+          onclick="window.location.href='products.html'">
+          Products
+        </button>
+
+        <button
+          onclick="window.location.href='orders.html'">
+          Orders
+        </button>
+
+        <button
+          onclick="window.location.href='customers.html'">
+          Customers
+        </button>
+
+        <button
+          onclick="window.location.href='coupons.html'">
+          Coupons
+        </button>
+
+        <button
+          onclick="window.location.href='reviews.html'">
+          Reviews
+        </button>
+
+        <button
+          onclick="window.location.href='store-settings.html'">
+          Store Settings
+        </button>
+
+        <button onclick="adminLogout()">
+          Logout
+        </button>
+
+      </nav>
+
+    </aside>
+
+
+    <main class="main">
+
+      <div class="topbar">
+
+        <h2>Dashboard</h2>
+
+        <div class="topbar-right">
+
+          <button
+            class="refresh-btn"
+            onclick="loadDashboard()">
+            ↻ Refresh
+          </button>
+
+          <div class="admin-name">
+            Admin
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- DASHBOARD CARDS -->
+
+      <div class="cards">
+
+        <div class="card">
+          <p>Total Orders</p>
+          <h3 id="totalOrders">0</h3>
+        </div>
+
+        <div class="card">
+          <p>Today's Orders</p>
+          <h3 id="todayOrders">0</h3>
+        </div>
+
+        <div class="card">
+          <p>Pending Payments</p>
+          <h3 id="pendingPayments">0</h3>
+        </div>
+
+        <div class="card">
+          <p>Total Revenue</p>
+          <h3 id="totalRevenue">₹0</h3>
+        </div>
+
+      </div>
+
+
+      <!-- RECENT ORDERS -->
+
+      <div class="section">
+
+        <h3>Recent Orders</h3>
+
+        <div
+          id="recentOrders"
+          class="orders-list">
+
+          <div class="empty">
+            Loading orders...
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- STOCK ALERTS -->
+
+      <div class="section">
+
+        <h3>Stock Alerts</h3>
+
+        <div class="empty">
+          Stock quantity is not currently stored in the
+          products table, so stock alerts will be added
+          when inventory/stock fields are available.
+        </div>
+
+      </div>
+
+
+    </main>
+
+  </div>
+
+
+<script>
+
+  /* =====================================================
+     SUPABASE
+  ===================================================== */
+
+  const SUPABASE_URL =
+    "https://rcablyesxkzvxzolwvyz.supabase.co";
+
+  /*
+    IMPORTANT:
+    Replace this with the SAME anon/publishable key
+    used in your working Products / Orders pages.
+  */
+
+  const SUPABASE_KEY =
+    "sb_publishable_7WueOf83yr4MDgHOz506iA_wGZ3uzcB";
+
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+  /* =====================================================
+     ADMIN LOGIN CHECK
+  ===================================================== */
+
+  async function checkAdminLogin() {
+
+    const {
+      data: { session }
+    } =
+      await supabaseClient.auth.getSession();
+
+    if (!session) {
+
+      window.location.href =
+        "admin.html";
+
+      return;
+    }
+
+    loadDashboard();
+  }
+
+
+  /* =====================================================
+     LOAD DASHBOARD
+  ===================================================== */
+
+  async function loadDashboard() {
+
+    await Promise.all([
+      loadOrderStats(),
+      loadRecentOrders()
+    ]);
+
+  }
+
+
+  /* =====================================================
+     ORDER STATS
+  ===================================================== */
+
+  async function loadOrderStats() {
+
+    try {
+
+      /*
+        Total orders
+      */
+
+      const {
+        count: totalOrders,
+        error: totalError
+      } =
+        await supabaseClient
+          .from("orders")
+          .select("*", {
+            count: "exact",
+            head: true
+          });
+
+      if (totalError) {
+        throw totalError;
+      }
+
+
+      /*
+        Today's orders
+
+        Uses today's date in browser/local time.
+      */
+
+      const now =
+        new Date();
+
+      const startOfDay =
+        new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate()
+        );
+
+      const {
+        count: todayOrders,
+        error: todayError
+      } =
+        await supabaseClient
+          .from("orders")
+          .select("*", {
+            count: "exact",
+            head: true
+          })
+          .gte(
+            "created_at",
+            startOfDay.toISOString()
+          );
+
+      if (todayError) {
+        throw todayError;
+      }
+
+
+      /*
+        Pending payments
+      */
+
+      const {
+        count: pendingPayments,
+        error: paymentError
+      } =
+        await supabaseClient
+          .from("orders")
+          .select("*", {
+            count: "exact",
+            head: true
+          })
+          .eq(
+            "payment_status",
+            "pending"
+          );
+
+      if (paymentError) {
+        throw paymentError;
+      }
+
+
+      /*
+        Revenue
+
+        Fetch total_amount values and calculate
+        on the client because Supabase REST does
+        not provide a simple SUM here.
+      */
+
+      const {
+        data: revenueRows,
+        error: revenueError
+      } =
+        await supabaseClient
+          .from("orders")
+          .select("total_amount");
+
+      if (revenueError) {
+        throw revenueError;
+      }
+
+
+      let revenue = 0;
+
+      (revenueRows || []).forEach(order => {
+
+        const amount =
+          Number(order.total_amount);
+
+        if (!isNaN(amount)) {
+          revenue += amount;
+        }
+
+      });
+
+
+      document.getElementById("totalOrders")
+        .textContent =
+        totalOrders || 0;
+
+      document.getElementById("todayOrders")
+        .textContent =
+        todayOrders || 0;
+
+      document.getElementById("pendingPayments")
+        .textContent =
+        pendingPayments || 0;
+
+      document.getElementById("totalRevenue")
+        .textContent =
+        "₹" +
+        revenue.toLocaleString("en-IN");
+
+    } catch (error) {
+
+      console.error(
+        "Dashboard stats error:",
+        error
+      );
+
+    }
+  }
+
+
+  /* =====================================================
+     RECENT ORDERS
+  ===================================================== */
+
+  async function loadRecentOrders() {
+
+    const container =
+      document.getElementById(
+        "recentOrders"
+      );
+
+    container.innerHTML =
+      `<div class="empty">
+        Loading orders...
+      </div>`;
+
+
+    try {
+
+      const {
+        data: orders,
+        error
+      } =
+        await supabaseClient
+          .from("orders")
+          .select(`
+            id,
+            order_number,
+            subtotal,
+            shipping_fee,
+            discount,
+            total_amount,
+            payment_status,
+            order_status,
+            created_at,
+            customer_id
+          `)
+          .order(
+            "created_at",
+            {
+              ascending: false
+            }
+          )
+          .limit(5);
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (!orders || !orders.length) {
+
+        container.innerHTML =
+          `<div class="empty">
+            No orders yet.
+          </div>`;
+
+        return;
+      }
+
+
+      container.innerHTML = "";
+
+
+      orders.forEach(order => {
+
+        const row =
+          document.createElement("div");
+
+        row.className =
+          "order-row";
+
+
+        const orderNumber =
+          order.order_number ||
+          "Order #" + order.id;
+
+
+        const amount =
+          Number(
+            order.total_amount || 0
+          );
+
+
+        const date =
+          formatDate(
+            order.created_at
+          );
+
+
+        row.innerHTML = `
+
+          <div>
+            <div class="order-number">
+              ${escapeHtml(orderNumber)}
+            </div>
+
+            <div class="order-small">
+              ${date}
+            </div>
+          </div>
+
+
+          <div>
+            <div class="order-small">
+              Customer ID
+            </div>
+
+            <div>
+              ${escapeHtml(
+                String(
+                  order.customer_id ?? "-"
+                )
+              )}
+            </div>
+          </div>
+
+
+          <div>
+            <div class="order-small">
+              Amount
+            </div>
+
+            <div>
+              ₹${amount.toLocaleString("en-IN")}
+            </div>
+          </div>
+
+
+          <div>
+
+            <span class="status">
+              ${escapeHtml(
+                order.order_status ||
+                "Pending"
+              )}
+            </span>
+
+            <br>
+
+            <small class="order-small">
+              Payment:
+              ${escapeHtml(
+                order.payment_status ||
+                "-"
+              )}
+            </small>
+
+          </div>
+
+        `;
+
+
+        container.appendChild(row);
+
+      });
+
+
+    } catch (error) {
+
+      console.error(
+        "Recent orders error:",
+        error
+      );
+
+      container.innerHTML =
+        `<div class="empty">
+          Orders could not be loaded.
+          <br><br>
+          ${escapeHtml(error.message)}
+        </div>`;
+
+    }
+
+  }
+
+
+  /* =====================================================
+     DATE FORMAT
+  ===================================================== */
+
+  function formatDate(date) {
+
+    if (!date) {
+      return "-";
+    }
+
+    const d =
+      new Date(date);
+
+    if (isNaN(d.getTime())) {
+      return "-";
+    }
+
+    return d.toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }
+    );
+
+  }
+
+
+  /* =====================================================
+     ESCAPE HTML
+  ===================================================== */
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  /* =====================================================
+     LOGOUT
+  ===================================================== */
+
+  async function adminLogout() {
+
+    const {
+      error
+    } =
+      await supabaseClient.auth.signOut();
+
+    if (error) {
+
+      console.error(
+        "Logout error:",
+        error
+      );
+
+      return;
+    }
+
+    window.location.href =
+      "admin.html";
+  }
+
+
+  /* =====================================================
+     START
+  ===================================================== */
+
+  checkAdminLogin();
+
+</script>
+
+</body>
+</html>

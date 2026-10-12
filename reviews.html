@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reviews - NE FASHIONS Admin</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      color: #222;
+    }
+
+    .topbar {
+      height: 70px;
+      background: #111;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .brand span {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      margin-top: 3px;
+      color: #ccc;
+    }
+
+    .back-btn {
+      color: white;
+      text-decoration: none;
+      border: 1px solid #555;
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .back-btn:hover {
+      background: #222;
+    }
+
+    .container {
+      padding: 28px;
+      max-width: 1500px;
+      margin: auto;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 15px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    .page-header p {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .refresh-btn {
+      background: #111;
+      color: white;
+      border: none;
+      padding: 11px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .refresh-btn:hover {
+      background: #333;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 10px;
+      padding: 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .stat-title {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 27px;
+      font-weight: 700;
+    }
+
+    .toolbar {
+      background: white;
+      padding: 18px;
+      border-radius: 10px;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      outline: none;
+      background: white;
+    }
+
+    .toolbar input:focus,
+    .toolbar select:focus {
+      border-color: #999;
+    }
+
+    .table-container {
+      background: white;
+      border-radius: 10px;
+      overflow-x: auto;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 950px;
+    }
+
+    th {
+      background: #fafafa;
+      text-align: left;
+      padding: 15px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #666;
+      border-bottom: 1px solid #eee;
+    }
+
+    td {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background: #fcfcfc;
+    }
+
+    .customer-name {
+      font-weight: 600;
+    }
+
+    .product-name {
+      font-weight: 600;
+    }
+
+    .review-text {
+      max-width: 330px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #555;
+    }
+
+    .stars {
+      color: #e4a11b;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .rating-number {
+      color: #777;
+      margin-left: 5px;
+      font-size: 12px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status.active {
+      background: #e8f7ed;
+      color: #198754;
+    }
+
+    .status.inactive {
+      background: #fbe9e9;
+      color: #c62828;
+    }
+
+    .action-btn {
+      border: none;
+      background: #111;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-right: 5px;
+      margin-bottom: 4px;
+    }
+
+    .action-btn:hover {
+      opacity: 0.85;
+    }
+
+    .action-btn.secondary {
+      background: #777;
+    }
+
+    .action-btn.danger {
+      background: #c62828;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: #777;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: #777;
+    }
+
+    /* Modal */
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 12px;
+      padding: 25px;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .modal-header h2 {
+      font-size: 21px;
+    }
+
+    .close-btn {
+      border: none;
+      background: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #777;
+    }
+
+    .detail-row {
+      margin-bottom: 17px;
+    }
+
+    .detail-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .detail-value {
+      font-size: 15px;
+      color: #222;
+    }
+
+    .full-review {
+      background: #f8f8f8;
+      padding: 16px;
+      border-radius: 8px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+      padding-top: 18px;
+      border-top: 1px solid #eee;
+    }
+
+    @media (max-width: 900px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 0 15px;
+      }
+
+      .container {
+        padding: 18px 12px;
+      }
+
+      .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .modal {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      NE FASHIONS
+      <span>ADMIN PANEL</span>
+    </div>
+
+    <a href="admin-dashboard.html" class="back-btn">
+      ← Dashboard
+    </a>
+  </div>
+
+  <div class="container">
+
+    <div class="page-header">
+      <div>
+        <h1>Reviews</h1>
+        <p>Manage customer reviews and ratings.</p>
+      </div>
+
+      <button class="refresh-btn" onclick="loadReviews()">
+        ↻ Refresh
+      </button>
+    </div>
+
+    <!-- Stats -->
+
+    <div class="stats">
+
+      <div class="stat-card">
+        <div class="stat-title">Total Reviews</div>
+        <div class="stat-value" id="totalReviews">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Active Reviews</div>
+        <div class="stat-value" id="activeReviews">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Inactive Reviews</div>
+        <div class="stat-value" id="inactiveReviews">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Average Rating</div>
+        <div class="stat-value" id="averageRating">0.0</div>
+      </div>
+
+    </div>
+
+    <!-- Filters -->
+
+    <div class="toolbar">
+
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search customer, review or product..."
+          oninput="applyFilters()"
+        />
+      </div>
+
+      <div style="width: 170px;">
+        <select id="ratingFilter" onchange="applyFilters()">
+          <option value="all">All Ratings</option>
+          <option value="5">5 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="2">2 Stars</option>
+          <option value="1">1 Star</option>
+        </select>
+      </div>
+
+      <div style="width: 170px;">
+        <select id="statusFilter" onchange="applyFilters()">
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Reviews Table -->
+
+    <div class="table-container">
+
+      <div id="loading" class="loading">
+        Loading reviews...
+      </div>
+
+      <table id="reviewsTable" style="display:none;">
+
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Product</th>
+            <th>Rating</th>
+            <th>Review</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="reviewsBody"></tbody>
+
+      </table>
+
+      <div id="emptyState" class="empty" style="display:none;">
+        No reviews found.
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Review Details Modal -->
+
+  <div class="modal-overlay" id="reviewModal">
+
+    <div class="modal">
+
+      <div class="modal-header">
+        <h2>Review Details</h2>
+
+        <button class="close-btn" onclick="closeModal()">
+          ×
+        </button>
+      </div>
+
+      <div id="reviewDetails"></div>
+
+      <div class="modal-actions">
+
+        <button
+          class="action-btn"
+          id="modalStatusBtn"
+          onclick="toggleCurrentReview()">
+        </button>
+
+        <button
+          class="action-btn danger"
+          onclick="deleteCurrentReview()">
+          Delete Review
+        </button>
+
+        <button
+          class="action-btn secondary"
+          onclick="closeModal()">
+          Close
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+<script>
+
+  /* =====================================================
+     SUPABASE
+  ===================================================== */
+
+  const SUPABASE_URL =
+    "https://rcablyesxkzvxzolwvyz.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "sb_publishable_7WueOf83yr4MDgHOz506iA_wGZ3uzcB";
+
+  const { createClient } =
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+
+  /* =====================================================
+     VARIABLES
+  ===================================================== */
+
+  let allReviews = [];
+  let filteredReviews = [];
+  let currentReview = null;
+
+
+  /* =====================================================
+     LOAD REVIEWS
+  ===================================================== */
+
+  async function loadReviews() {
+
+    const loading =
+      document.getElementById("loading");
+
+    const table =
+      document.getElementById("reviewsTable");
+
+    const empty =
+      document.getElementById("emptyState");
+
+    loading.style.display = "block";
+    table.style.display = "none";
+    empty.style.display = "none";
+
+    try {
+
+      /*
+        Reviews + products + customers
+
+        We only use columns that actually exist
+        in the supplied database schema.
+      */
+
+      const { data, error } =
+        await supabaseClient
+          .from("reviews")
+          .select(`
+            id,
+            product_id,
+            customer_id,
+            customer_name,
+            rating,
+            review_text,
+            active,
+            created_at,
+            updated_at
+          `)
+          .order("created_at", {
+            ascending: false
+          });
+
+      if (error) {
+        throw error;
+      }
+
+      allReviews = data || [];
+
+      /*
+        Fetch product names separately.
+        This avoids assuming a specific FK relationship.
+      */
+
+      const productIds = [
+        ...new Set(
+          allReviews
+            .map(r => r.product_id)
+            .filter(Boolean)
+        )
+      ];
+
+      let productsMap = {};
+
+      if (productIds.length > 0) {
+
+        const { data: products, error: productError } =
+          await supabaseClient
+            .from("products")
+            .select("id,name")
+            .in("id", productIds);
+
+        if (!productError && products) {
+
+          products.forEach(product => {
+            productsMap[product.id] =
+              product.name;
+          });
+
+        }
+      }
+
+      /*
+        Attach product name for display only.
+      */
+
+      allReviews = allReviews.map(review => ({
+        ...review,
+        product_name:
+          productsMap[review.product_id] ||
+          "Product #" + review.product_id
+      }));
+
+      updateStats();
+
+      applyFilters();
+
+      loading.style.display = "none";
+
+    } catch (error) {
+
+      loading.style.display = "none";
+
+      empty.style.display = "block";
+
+      empty.innerHTML = `
+        <strong>Reviews could not be loaded.</strong>
+        <br><br>
+        ${escapeHtml(error.message)}
+      `;
+
+      console.error(error);
+    }
+  }
+
+
+  /* =====================================================
+     STATS
+  ===================================================== */
+
+  function updateStats() {
+
+    const total =
+      allReviews.length;
+
+    const active =
+      allReviews.filter(r => r.active === true).length;
+
+    const inactive =
+      allReviews.filter(r => r.active !== true).length;
+
+    const ratings =
+      allReviews
+        .map(r => Number(r.rating))
+        .filter(r => !isNaN(r));
+
+    let average = 0;
+
+    if (ratings.length) {
+
+      average =
+        ratings.reduce(
+          (sum, rating) =>
+            sum + rating,
+          0
+        ) / ratings.length;
+    }
+
+    document.getElementById("totalReviews")
+      .textContent = total;
+
+    document.getElementById("activeReviews")
+      .textContent = active;
+
+    document.getElementById("inactiveReviews")
+      .textContent = inactive;
+
+    document.getElementById("averageRating")
+      .textContent = average.toFixed(1);
+  }
+
+
+  /* =====================================================
+     FILTERS
+  ===================================================== */
+
+  function applyFilters() {
+
+    const search =
+      document.getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const rating =
+      document.getElementById("ratingFilter")
+        .value;
+
+    const status =
+      document.getElementById("statusFilter")
+        .value;
+
+    filteredReviews =
+      allReviews.filter(review => {
+
+        const matchesSearch =
+          !search ||
+          String(review.customer_name || "")
+            .toLowerCase()
+            .includes(search) ||
+
+          String(review.review_text || "")
+            .toLowerCase()
+            .includes(search) ||
+
+          String(review.product_name || "")
+            .toLowerCase()
+            .includes(search);
+
+        const matchesRating =
+          rating === "all" ||
+          Number(review.rating) === Number(rating);
+
+        const matchesStatus =
+          status === "all" ||
+          (status === "active" && review.active === true) ||
+          (status === "inactive" && review.active !== true);
+
+        return (
+          matchesSearch &&
+          matchesRating &&
+          matchesStatus
+        );
+      });
+
+    renderReviews();
+  }
+
+
+  /* =====================================================
+     RENDER
+  ===================================================== */
+
+  function renderReviews() {
+
+    const body =
+      document.getElementById("reviewsBody");
+
+    const table =
+      document.getElementById("reviewsTable");
+
+    const empty =
+      document.getElementById("emptyState");
+
+    body.innerHTML = "";
+
+    if (!filteredReviews.length) {
+
+      table.style.display = "none";
+      empty.style.display = "block";
+
+      return;
+    }
+
+    table.style.display = "table";
+    empty.style.display = "none";
+
+    filteredReviews.forEach(review => {
+
+      const tr =
+        document.createElement("tr");
+
+      const stars =
+        getStars(review.rating);
+
+      const statusClass =
+        review.active
+          ? "active"
+          : "inactive";
+
+      const statusText =
+        review.active
+          ? "Active"
+          : "Inactive";
+
+      tr.innerHTML = `
+
+        <td>
+          <div class="customer-name">
+            ${escapeHtml(
+              review.customer_name ||
+              "Customer"
+            )}
+          </div>
+          <small style="color:#888;">
+            ID: ${escapeHtml(
+              String(review.customer_id ?? "-")
+            )}
+          </small>
+        </td>
+
+        <td>
+          <div class="product-name">
+            ${escapeHtml(
+              review.product_name
+            )}
+          </div>
+        </td>
+
+        <td>
+          <span class="stars">
+            ${stars}
+          </span>
+
+          <span class="rating-number">
+            ${escapeHtml(
+              String(review.rating)
+            )}/5
+          </span>
+        </td>
+
+        <td>
+          <div class="review-text"
+               title="${escapeHtml(
+                 review.review_text || ""
+               )}">
+            ${escapeHtml(
+              review.review_text ||
+              "No review text"
+            )}
+          </div>
+        </td>
+
+        <td>
+          <span class="status ${statusClass}">
+            ${statusText}
+          </span>
+        </td>
+
+        <td>
+          ${formatDate(review.created_at)}
+        </td>
+
+        <td>
+
+          <button
+            class="action-btn"
+            onclick="viewReview(${review.id})">
+            View
+          </button>
+
+          <button
+            class="action-btn secondary"
+            onclick="toggleReview(${review.id})">
+            ${review.active ? "Hide" : "Activate"}
+          </button>
+
+          <button
+            class="action-btn danger"
+            onclick="deleteReview(${review.id})">
+            Delete
+          </button>
+
+        </td>
+      `;
+
+      body.appendChild(tr);
+    });
+  }
+
+
+  /* =====================================================
+     VIEW REVIEW
+  ===================================================== */
+
+  function viewReview(id) {
+
+    const review =
+      allReviews.find(
+        r => Number(r.id) === Number(id)
+      );
+
+    if (!review) return;
+
+    currentReview = review;
+
+    document.getElementById("reviewDetails")
+      .innerHTML = `
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Customer
+          </div>
+
+          <div class="detail-value">
+            <strong>
+              ${escapeHtml(
+                review.customer_name ||
+                "Customer"
+              )}
+            </strong>
+
+            <br>
+
+            <small style="color:#888;">
+              Customer ID:
+              ${escapeHtml(
+                String(review.customer_id ?? "-")
+              )}
+            </small>
+          </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Product
+          </div>
+
+          <div class="detail-value">
+            ${escapeHtml(
+              review.product_name
+            )}
+
+            <br>
+
+            <small style="color:#888;">
+              Product ID:
+              ${escapeHtml(
+                String(review.product_id ?? "-")
+              )}
+            </small>
+          </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Rating
+          </div>
+
+          <div class="detail-value">
+            <span class="stars">
+              ${getStars(review.rating)}
+            </span>
+
+            ${escapeHtml(
+              String(review.rating)
+            )}/5
+          </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Review
+          </div>
+
+          <div class="full-review">
+            ${escapeHtml(
+              review.review_text ||
+              "No review text"
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Status
+          </div>
+
+          <div class="detail-value">
+
+            <span class="status ${
+              review.active
+                ? "active"
+                : "inactive"
+            }">
+              ${
+                review.active
+                  ? "Active"
+                  : "Inactive"
+              }
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Created
+          </div>
+
+          <div class="detail-value">
+            ${formatDate(review.created_at)}
+          </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+          <div class="detail-label">
+            Updated
+          </div>
+
+          <div class="detail-value">
+            ${formatDate(review.updated_at)}
+          </div>
+
+        </div>
+      `;
+
+    document.getElementById("modalStatusBtn")
+      .textContent =
+        review.active
+          ? "Hide Review"
+          : "Activate Review";
+
+    document
+      .getElementById("reviewModal")
+      .classList.add("show");
+  }
+
+
+  /* =====================================================
+     CLOSE MODAL
+  ===================================================== */
+
+  function closeModal() {
+
+    document
+      .getElementById("reviewModal")
+      .classList.remove("show");
+
+    currentReview = null;
+  }
+
+
+  /* =====================================================
+     TOGGLE REVIEW
+  ===================================================== */
+
+  async function toggleReview(id) {
+
+    const review =
+      allReviews.find(
+        r => Number(r.id) === Number(id)
+      );
+
+    if (!review) return;
+
+    const newStatus =
+      !review.active;
+
+    const action =
+      newStatus
+        ? "activate"
+        : "hide";
+
+    const confirmed =
+      confirm(
+        `Are you sure you want to ${action} this review?`
+      );
+
+    if (!confirmed) return;
+
+    try {
+
+      const { error } =
+        await supabaseClient
+          .from("reviews")
+          .update({
+            active: newStatus,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", review.id);
+
+      if (error) {
+        throw error;
+      }
+
+      alert(
+        newStatus
+          ? "Review activated successfully."
+          : "Review hidden successfully."
+      );
+
+      await loadReviews();
+
+    } catch (error) {
+
+      alert(
+        "Could not update review:\n" +
+        error.message
+      );
+
+      console.error(error);
+    }
+  }
+
+
+  /* =====================================================
+     TOGGLE CURRENT REVIEW
+  ===================================================== */
+
+  async function toggleCurrentReview() {
+
+    if (!currentReview) return;
+
+    const id =
+      currentReview.id;
+
+    await toggleReview(id);
+
+    closeModal();
+  }
+
+
+  /* =====================================================
+     DELETE REVIEW
+  ===================================================== */
+
+  async function deleteReview(id) {
+
+    const review =
+      allReviews.find(
+        r => Number(r.id) === Number(id)
+      );
+
+    if (!review) return;
+
+    const confirmed =
+      confirm(
+        "Are you sure you want to permanently delete this review?"
+      );
+
+    if (!confirmed) return;
+
+    try {
+
+      const { error } =
+        await supabaseClient
+          .from("reviews")
+          .delete()
+          .eq("id", review.id);
+
+      if (error) {
+        throw error;
+      }
+
+      alert("Review deleted successfully.");
+
+      await loadReviews();
+
+    } catch (error) {
+
+      alert(
+        "Could not delete review:\n" +
+        error.message
+      );
+
+      console.error(error);
+    }
+  }
+
+
+  /* =====================================================
+     DELETE CURRENT REVIEW
+  ===================================================== */
+
+  async function deleteCurrentReview() {
+
+    if (!currentReview) return;
+
+    const id =
+      currentReview.id;
+
+    closeModal();
+
+    await deleteReview(id);
+  }
+
+
+  /* =====================================================
+     STARS
+  ===================================================== */
+
+  function getStars(rating) {
+
+    const value =
+      Number(rating) || 0;
+
+    let stars = "";
+
+    for (let i = 1; i <= 5; i++) {
+
+      stars +=
+        i <= value
+          ? "★"
+          : "☆";
+    }
+
+    return stars;
+  }
+
+
+  /* =====================================================
+     DATE
+  ===================================================== */
+
+  function formatDate(date) {
+
+    if (!date) return "-";
+
+    const d =
+      new Date(date);
+
+    if (isNaN(d.getTime())) {
+      return "-";
+    }
+
+    return d.toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }
+    );
+  }
+
+
+  /* =====================================================
+     ESCAPE HTML
+  ===================================================== */
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  /* =====================================================
+     SUPABASE CLIENT
+  ===================================================== */
+
+  const supabaseClient =
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+
+  /* =====================================================
+     MODAL OUTSIDE CLICK
+  ===================================================== */
+
+  document
+    .getElementById("reviewModal")
+    .addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          event.target === this
+        ) {
+          closeModal();
+        }
+      }
+    );
+
+
+  /* =====================================================
+     INITIAL LOAD
+  ===================================================== */
+
+  loadReviews();
+
+</script>
+
+</body>
+</html>
