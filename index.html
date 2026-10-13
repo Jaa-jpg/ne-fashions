@@ -893,205 +893,136 @@
 
     <div id="cartItems"></div>
 
-    <div class="cart-bottom">
+    
+<div class="cart-bottom">
 
-      <div class="cart-total">
+  <div class="cart-total-breakdown">
 
-        <span>
-          Total
-        </span>
-
-        <strong id="cartTotal">
-          ₹0
-        </strong>
-
-      </div>
-
-      <button
-        class="checkout-btn"
-        onclick="checkout()"
-      >
-        CHECKOUT
-      </button>
-
+    <div class="cart-total-row">
+      <span>Product Subtotal</span>
+      <strong id="cartSubtotal">₹0</strong>
     </div>
+
+    <div class="cart-total-row">
+      <span>Shipping Fee</span>
+      <strong id="cartShipping">₹100</strong>
+    </div>
+
+    <div class="cart-total cart-grand-total">
+      <span>Grand Total</span>
+      <strong id="cartTotal">₹0</strong>
+    </div>
+
+  </div>
+
+  <button
+    class="checkout-btn"
+    onclick="checkout()"
+  >
+    CHECKOUT
+  </button>
+
+</div>
+
 
   </div>
 
 </div>
 
 <!-- CHECKOUT -->
-<div
-  id="checkoutOverlay"
-  class="overlay"
->
+<div id="checkoutOverlay" class="overlay">
   <div class="modal-card checkout-card">
+    <button class="close-btn" onclick="closeCheckout()">×</button>
 
-    <button
-      class="close-btn"
-      onclick="closeCheckout()"
-    >
-      ×
-    </button>
+    <h2>Checkout</h2>
 
-    <div class="section-heading left">
-
-      <span>COMPLETE YOUR ORDER</span>
-
-      <h2>Checkout</h2>
-
-    </div>
-
-    <form
-      id="checkoutForm"
-      onsubmit="continueCheckout(event)"
-    >
-
+    <form id="checkoutForm" onsubmit="continueCheckout(event)">
       <div class="checkout-summary">
-
         <div>
-          <span>Order Total</span>
+          <span>Product Subtotal</span>
+          <strong id="checkoutSubtotal">₹0</strong>
+        </div>
+        <div>
+          <span>Shipping Fee</span>
+          <strong id="checkoutShipping">₹100</strong>
+        </div>
+        <div>
+          <span>Grand Total</span>
           <strong id="checkoutTotal">₹0</strong>
         </div>
-
       </div>
-
 
       <div class="checkout-fields">
-
         <div class="checkout-field">
-
-          <label for="customerName">
-            Full Name
-          </label>
-
-          <input
-            type="text"
-            id="customerName"
-            placeholder="Enter your full name"
-            required
-          >
-
+          <label for="customerName">Full Name</label>
+          <input id="customerName" type="text" placeholder="Full name" required>
         </div>
 
-
         <div class="checkout-field">
-
-          <label for="customerPhone">
-            Mobile Number
-          </label>
-
-          <input
-            type="tel"
-            id="customerPhone"
-            placeholder="Enter your mobile number"
-            inputmode="numeric"
-            pattern="[0-9]{10}"
-            maxlength="10"
-            required
-          >
-
+          <label for="customerPhone">Mobile Number</label>
+          <input id="customerPhone" type="tel" inputmode="numeric"
+            pattern="[0-9]{10}" maxlength="10"
+            placeholder="10-digit mobile number" required>
         </div>
 
-
         <div class="checkout-field">
-
-          <label for="customerEmail">
-            Email Address
-          </label>
-
-          <input
-            type="email"
-            id="customerEmail"
-            placeholder="Enter your email"
-            required
-          >
-
+          <label for="orderUpdateMethod">Order updates via</label>
+          <select id="orderUpdateMethod" required>
+            <option value="whatsapp" selected>WhatsApp</option>
+            <option value="email">Email</option>
+          </select>
         </div>
 
+<div class="checkout-field" id="updateWhatsAppField">
+  <label for="customerWhatsApp">WhatsApp Number</label>
+  <input
+    id="customerWhatsApp"
+    type="tel"
+    inputmode="numeric"
+    pattern="[0-9]{10}"
+    maxlength="10"
+    placeholder="10-digit WhatsApp number"
+    required
+  >
+</div>
+
+        <div class="checkout-field" id="emailUpdateField" style="display:none;">
+          <label for="customerEmail">Email Address</label>
+          <input id="customerEmail" type="email"
+            placeholder="Enter email address" disabled>
+        </div>
 
         <div class="checkout-field">
-
-          <label for="customerAddress">
-            Delivery Address
-          </label>
-
-          <textarea
-            id="customerAddress"
+          <label for="customerAddress">Delivery Address</label>
+          <textarea id="customerAddress"
             placeholder="House / Flat, Street, Area"
-            rows="3"
-            required
-          ></textarea>
-
+            rows="3" required></textarea>
         </div>
-
 
         <div class="checkout-row">
-
           <div class="checkout-field">
-
-            <label for="customerCity">
-              City
-            </label>
-
-            <input
-              type="text"
-              id="customerCity"
-              placeholder="City"
-              required
-            >
-
+            <label for="customerCity">City</label>
+            <input id="customerCity" type="text" placeholder="City" required>
           </div>
 
-
           <div class="checkout-field">
-
-            <label for="customerState">
-              State
-            </label>
-
-            <input
-              type="text"
-              id="customerState"
-              placeholder="State"
-              required
-            >
-
+            <label for="customerState">State</label>
+            <input id="customerState" type="text" placeholder="State" required>
           </div>
-
         </div>
-
 
         <div class="checkout-field">
-
-          <label for="customerPincode">
-            Pincode
-          </label>
-
-          <input
-            type="text"
-            id="customerPincode"
-            placeholder="6-digit pincode"
-            inputmode="numeric"
-            pattern="[0-9]{6}"
-            maxlength="6"
-            required
-          >
-
+          <label for="customerPincode">Pincode</label>
+          <input id="customerPincode" type="text" inputmode="numeric"
+            pattern="[0-9]{6}" maxlength="6"
+            placeholder="6-digit pincode" required>
         </div>
-
       </div>
 
-
-      <button
-        type="submit"
-        class="checkout-continue-btn"
-      >
+      <button type="submit" class="checkout-continue-btn">
         CONTINUE
       </button>
-
     </form>
-
 
     <!-- ORDER OPTIONS -->
 

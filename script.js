@@ -429,6 +429,85 @@ function saveWishlist() {
 }
 
 
+async function loadStoreProducts() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("products")
+      .select(`
+        id,
+        name,
+        price,
+        active,
+        categories(name),
+        product_variants(
+          id,
+          color_name,
+          active,
+          product_images(
+            image_url,
+            sort_order,
+            is_primary
+          )
+        )
+      `)
+      .eq("active", true)
+      .order("id", { ascending: false });
+
+    if (error) {
+      console.error("Store products loading error:", error);
+      return;
+    }
+
+    if (!Array.isArray(data)) return;
+
+    data.forEach((item) => {
+      const alreadyExists = products.some(
+        (p) => p.name.trim().toLowerCase() ===
+               String(item.name || "").trim().toLowerCase()
+      );
+
+      if (alreadyExists) return;
+
+      const colors = (item.product_variants || [])
+        .filter((variant) => variant.active !== false)
+        .map((variant) => {
+          const images = (variant.product_images || [])
+            .filter((img) => img.image_url)
+            .sort((a, b) => {
+              if (a.is_primary !== b.is_primary) {
+                return a.is_primary ? -1 : 1;
+              }
+              return (a.sort_order ?? 0) - (b.sort_order ?? 0);
+            })
+            .map((img) => img.image_url);
+
+          return {
+            name: variant.color_name || "Default",
+            images
+          };
+        })
+        .filter((color) => color.images.length > 0);
+
+      if (!colors.length) return;
+
+      products.push({
+        id: `db-product-${item.id}`,
+        name: item.name,
+        category: item.categories?.name || "Sets",
+        price: Number(item.price),
+        description: "",
+        material: "",
+        colors
+      });
+    });
+
+    renderProducts();
+
+  } catch (err) {
+    console.error("Store products error:", err);
+  }
+}
+
 /* =========================================================
    RENDER PRODUCTS
 ========================================================= */
@@ -583,6 +662,7 @@ function renderProductDetail() {
 }
 
 
+
 /* =========================================================
    COLOR CIRCLES
 ========================================================= */
@@ -590,6 +670,8 @@ function renderProductDetail() {
 function getColorValue(colorName) {
 
   const colors = {
+    "Red": "#FF0000",
+    "Dark Red": "#8B0000",
     "Purple": "#8E4585",
     "Orange": "#E87532",
     "Blue": "#3F6FA8",
@@ -603,12 +685,22 @@ function getColorValue(colorName) {
     "Blue Grey": "#71808C",
     "Rani Pink": "#D94F83",
     "Mauve": "#A77B8E",
-    "Grey": "#808080"
+    "Grey": "#808080",
+    "Black": "#000000",
+    "Green": "#008000",
+    "Pink": "#FFC0CB",
+    "Brown": "#8B4513",
+    "Cream": "#FFFDD0"
   };
 
-  return colors[colorName] || "#CCCCCC";
-}
+ const key = String(colorName || "").trim();
+const normalizedKey =
+  Object.keys(colors).find(
+    name => name.toLowerCase() === key.toLowerCase()
+  );
 
+return colors[normalizedKey] || "#CCCCCC";
+}
 
 /* =========================================================
    THUMBNAILS
@@ -1444,11 +1536,18 @@ function renderCart() {
 
     `;
 
-    document.getElementById("cartTotal").textContent =
-      "₹0";
+    document.getElementById("cartSubtotal").textContent =
+  money(0);
 
-    return;
+document.getElementById("cartShipping").textContent =
+  money(0);
+
+document.getElementById("cartTotal").textContent =
+  money(0);
+
+return;
   }
+  
 
   container.innerHTML =
     cart.map((item, index) => `
@@ -1535,11 +1634,19 @@ function renderCart() {
   0
 );
 
-const total = subtotal + SHIPPING_FEE;
+const shipping = subtotal > 0 ? SHIPPING_FEE : 0;
+const total = subtotal + shipping;
 
-  document.getElementById("cartTotal").textContent =
-    money(total);
+document.getElementById("cartSubtotal").textContent =
+  money(subtotal);
+
+document.getElementById("cartShipping").textContent =
+  money(shipping);
+
+document.getElementById("cartTotal").textContent =
+  money(total);
 }
+
 function changeCartSize(index, newSize) {
 
   if (!cart[index]) return;
@@ -1631,15 +1738,22 @@ function checkout() {
     document.getElementById("checkoutOverlay");
 
   if (!checkoutOverlay) return;
+  
+  /* Update checkout total */
 
-  /* Update total */
+  const subtotal = cart.reduce(
+    (sum, item) => sum + Number(item.price) * Number(item.quantity),
+    0
+  );
 
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.price * item.quantity,
-      0
-    );
+  const shipping = subtotal > 0 ? SHIPPING_FEE : 0;
+  const total = subtotal + shipping;
+
+  document.getElementById("checkoutSubtotal").textContent =
+    money(subtotal);
+
+  document.getElementById("checkoutShipping").textContent =
+    money(shipping);
 
   document.getElementById("checkoutTotal").textContent =
     money(total);
@@ -1674,97 +1788,89 @@ function closeCheckout() {
 
 }
 
+/* ---------------- ORDER UPDATE METHOD ---------------- */
+
+window.addEventListener("DOMContentLoaded", function () {
+  const method = document.getElementById("orderUpdateMethod");
+  const whatsappField = document.getElementById("updateWhatsAppField");
+  const whatsappInput = document.getElementById("customerWhatsApp");
+  const emailField = document.getElementById("emailUpdateField");
+  const emailInput = document.getElementById("customerEmail");
+
+  if (!method || !whatsappField || !whatsappInput || !emailField || !emailInput) return;
+
+  function toggleUpdateFields() {
+    const useWhatsApp = method.value === "whatsapp";
+    const useEmail = method.value === "email";
+
+    whatsappField.style.display = useWhatsApp ? "block" : "none";
+    whatsappInput.disabled = !useWhatsApp;
+    whatsappInput.required = useWhatsApp;
+
+    emailField.style.display = useEmail ? "block" : "none";
+    emailInput.disabled = !useEmail;
+    emailInput.required = useEmail;
+
+    if (!useWhatsApp) whatsappInput.value = "";
+    if (!useEmail) emailInput.value = "";
+  }
+
+  method.addEventListener("change", toggleUpdateFields);
+  toggleUpdateFields();
+});
+
 
 /* ---------------- CUSTOMER DETAILS ---------------- */
 
 function continueCheckout(event) {
-
   event.preventDefault();
 
   if (!cart.length) {
-
     alert("Your cart is empty.");
-
     closeCheckout();
-
     return;
   }
 
-  const phone =
-    document.getElementById("customerPhone").value.trim();
-
-  const pincode =
-    document.getElementById("customerPincode").value.trim();
-
-
-  /* Validate phone */
+  const phone = document.getElementById("customerPhone").value.trim();
+  const pincode = document.getElementById("customerPincode").value.trim();
+  const updateMethod = document.getElementById("orderUpdateMethod").value;
+  const email = document.getElementById("customerEmail").value.trim();
+  const whatsapp = document.getElementById("customerWhatsApp").value.trim();
 
   if (!/^[0-9]{10}$/.test(phone)) {
-
     alert("Please enter a valid 10-digit mobile number.");
-
     return;
   }
-
-
-  /* Validate pincode */
 
   if (!/^[0-9]{6}$/.test(pincode)) {
-
     alert("Please enter a valid 6-digit pincode.");
-
     return;
   }
 
-
-  /* Save customer details temporarily */
-
-  checkoutCustomer = {
-
-    name:
-      document.getElementById("customerName")
-        .value
-        .trim(),
-
-    phone:
-      phone,
-
-    email:
-      document.getElementById("customerEmail")
-        .value
-        .trim(),
-
-    address:
-      document.getElementById("customerAddress")
-        .value
-        .trim(),
-
-    city:
-      document.getElementById("customerCity")
-        .value
-        .trim(),
-
-    state:
-      document.getElementById("customerState")
-        .value
-        .trim(),
-
-    pincode:
-      pincode
-
-  };
-
-
-  /* Show order options */
-
-  document.getElementById("checkoutForm").style.display =
-    "none";
-
-  document.getElementById("checkoutOptions").style.display =
-    "block";
-
+  if (updateMethod === "email" && !email) {
+    alert("Please enter your email address for order updates.");
+    return;
+  }
+if (updateMethod === "whatsapp" && !/^[0-9]{10}$/.test(whatsapp)) {
+  alert("Please enter a valid 10-digit WhatsApp number.");
+  return;
 }
 
+  checkoutCustomer = {
+    name: document.getElementById("customerName").value.trim(),
+    phone: phone,
+    email: updateMethod === "email" ? email : "",
+    updateMethod: updateMethod,
+    whatsapp: updateMethod === "whatsapp" ? whatsapp : "",
+    address: document.getElementById("customerAddress").value.trim(),
+    city: document.getElementById("customerCity").value.trim(),
+    state: document.getElementById("customerState").value.trim(),
+    pincode: pincode
+  };
+
+  document.getElementById("checkoutForm").style.display = "none";
+  document.getElementById("checkoutOptions").style.display = "block";
+}
 
 /* ---------------- BACK TO DETAILS ---------------- */
 
@@ -2135,24 +2241,32 @@ if (!addressId) {
   throw new Error("No address ID was returned.");
 }
 
+   
     // --------------------------------------------------
     // 3. CALCULATE ORDER TOTAL
     // --------------------------------------------------
 
     const subtotal = cart.reduce(
-  (sum, item) => sum + item.price * item.quantity,
-  0
-);
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
 
-const total = subtotal + SHIPPING_FEE;
-
-document.getElementById("checkoutTotal").textContent =
-  money(total);
-
-    const shippingFee = SHIPPING_FEE;
+    const shippingFee = subtotal > 0 ? SHIPPING_FEE : 0;
     const discount = 0;
     const totalAmount = subtotal + shippingFee - discount;
+    console.log("Cart:", cart);
+console.log("Subtotal:", subtotal);
+console.log("Shipping:", shippingFee);
+console.log("Total:", totalAmount);
 
+    document.getElementById("checkoutSubtotal").textContent =
+      money(subtotal);
+
+    document.getElementById("checkoutShipping").textContent =
+      money(shippingFee);
+
+    document.getElementById("checkoutTotal").textContent =
+      money(totalAmount);
 
     // --------------------------------------------------
     // 4. GENERATE UNIQUE ORDER NUMBER
@@ -2899,11 +3013,30 @@ function contactForOrder() {
    INITIALIZE WEBSITE
 ========================================================= */
 
+
 document.addEventListener("DOMContentLoaded", function () {
-
   renderProducts();
-
   updateCartCount();
   updateWishlistCount();
 
+  loadStoreProducts();
+});
+
+const orderUpdateMethod = document.getElementById("orderUpdateMethod");
+const updateWhatsAppField = document.getElementById("updateWhatsAppField");
+const updateEmailField = document.getElementById("updateEmailField");
+const customerWhatsApp = document.getElementById("customerWhatsApp");
+const customerEmail = document.getElementById("customerEmail");
+
+orderUpdateMethod.addEventListener("change", function () {
+  const useEmail = this.value === "email";
+
+  updateEmailField.style.display = useEmail ? "" : "none";
+  updateWhatsAppField.style.display = useEmail ? "none" : "";
+
+  customerEmail.disabled = !useEmail;
+  customerEmail.required = useEmail;
+
+  customerWhatsApp.disabled = useEmail;
+  customerWhatsApp.required = !useEmail;
 });

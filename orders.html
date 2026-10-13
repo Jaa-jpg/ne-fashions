@@ -2437,32 +2437,43 @@ document.addEventListener("DOMContentLoaded", async function () {
        UPDATE ORDER STATUS
     ===================================================== */
 
- 
 async function updateOrderStatus() {
   if (!currentOrderId) return;
 
-  const paymentStatus =
-    document.getElementById("editPaymentStatus").value;
-
-  const orderStatus =
-    document.getElementById("editOrderStatus").value;
-
+  const paymentSelect = document.getElementById("editPaymentStatus");
+  const orderSelect = document.getElementById("editOrderStatus");
   const saveButton = document.getElementById("saveStatusBtn");
+
+  const paymentStatus = paymentSelect.value.toLowerCase();
+  const orderStatus = orderSelect.value.toLowerCase();
 
   saveButton.disabled = true;
   saveButton.textContent = "Saving...";
 
   try {
-    // Keep the order/customer details before updating.
     const existingOrder = allOrders.find(
       order => Number(order.id) === Number(currentOrderId)
     );
 
     if (!existingOrder) {
-      throw new Error("Order details not found. Refresh and try again.");
+      throw new Error("Order not found. Refresh and try again.");
     }
 
-    // 1. Update order in Supabase first.
+    const previousPaymentStatus =
+      String(existingOrder.payment_status || "").toLowerCase();
+
+    const previousOrderStatus =
+      String(existingOrder.order_status || "").toLowerCase();
+
+    const paymentChanged = previousPaymentStatus !== paymentStatus;
+    const orderChanged = previousOrderStatus !== orderStatus;
+    const statusActuallyChanged = paymentChanged || orderChanged;
+
+    if (!statusActuallyChanged) {
+      showToast("No status change. No notification sent.");
+      return;
+    }
+
     const { data: updatedOrder, error } = await supabaseClient
       .from("orders")
       .update({
@@ -2480,7 +2491,6 @@ async function updateOrderStatus() {
       throw new Error("Order was not updated. Check admin permissions.");
     }
 
-    // 2. Update the page with the saved statuses.
     const index = allOrders.findIndex(
       order => Number(order.id) === Number(updatedOrder.id)
     );
@@ -2500,52 +2510,38 @@ async function updateOrderStatus() {
     document.getElementById("detailOrderStatus").innerHTML =
       statusBadge(updatedOrder.order_status);
 
-    document.getElementById("editPaymentStatus").value =
-      updatedOrder.payment_status;
+    paymentSelect.value = updatedOrder.payment_status;
+    orderSelect.value = updatedOrder.order_status;
 
-    document.getElementById("editOrderStatus").value =
-      updatedOrder.order_status;
-
-    // 3. Send email through the existing Supabase Edge Function.
-    // Email failure must not undo the successful database update.
+    // One notification request per save, even if both statuses changed.
     try {
-      const { data: emailResult, error: emailError } =
+      const { data: notificationResult, error: notificationError } =
         await supabaseClient.functions.invoke("send-order-email", {
           body: {
             orderNumber:
               existingOrder.order_number || `#${existingOrder.id}`,
-
-            customerName:
-              existingOrder.customer?.name || "Customer",
-
-            customerEmail:
-              existingOrder.customer?.email || "",
-
-            customerPhone:
-              existingOrder.customer?.phone || "",
-
-            totalAmount:
-              Number(existingOrder.total_amount || 0),
-
-            paymentStatus:
-              updatedOrder.payment_status,
-
-            orderStatus:
-              updatedOrder.order_status,
-
+            customerName: existingOrder.customer?.name || "Customer",
+            customerEmail: existingOrder.customer?.email || "",
+            customerPhone: existingOrder.customer?.phone || "",
+            totalAmount: Number(existingOrder.total_amount || 0),
+            previousPaymentStatus,
+            previousOrderStatus,
+            paymentStatus: updatedOrder.payment_status,
+            orderStatus: updatedOrder.order_status,
             eventType: "admin_status_updated"
           }
         });
 
-      if (emailError) throw emailError;
+      if (notificationError) throw notificationError;
 
-      console.log("Email function response:", emailResult);
-
-      showToast("Order saved. Email request sent.");
-    } catch (emailError) {
-      console.error("Order saved, but email failed:", emailError);
-
-      showToast("Order saved, but email failed. Check Edge Function logs.");
+      if (notificationResult?.skipped) {
+        showToast("Order saved. Notification skipped; check notification settings.");
+      } else {
+        showToast("Order saved. Notification request sent.");
+      }
+    } catch (notificationError) {
+      console.error("Notification failed:", notificationError);
+      showToast("Order saved, but notification failed. Check function logs.");
     }
 
   } catch (error) {
@@ -2557,41 +2553,21 @@ async function updateOrderStatus() {
   }
 }
 
-    /* =====================================================
-       CLOSE MODAL
-    ===================================================== */
 
-    function closeOrderModal() {
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
 
-      document
-        .getElementById(
-          "orderModal"
-        )
-        .classList.remove(
-          "show"
-        );
+function closeOrderModal() {
+  document.getElementById("orderModal").classList.remove("show");
+  currentOrderId = null;
+}
 
-
-      currentOrderId =
-        null;
-
-    }
-
-
-    function closeModalOutside(
-      event
-    ) {
-
-      if (
-        event.target.id ===
-        "orderModal"
-      ) {
-
-        closeOrderModal();
-
-      }
-
-    }
+function closeModalOutside(event) {
+  if (event.target.id === "orderModal") {
+    closeOrderModal();
+  }
+}
 
 
     /* =====================================================
