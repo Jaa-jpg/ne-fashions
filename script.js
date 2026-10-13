@@ -429,6 +429,85 @@ function saveWishlist() {
 }
 
 
+async function loadStoreProducts() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("products")
+      .select(`
+        id,
+        name,
+        price,
+        active,
+        categories(name),
+        product_variants(
+          id,
+          color_name,
+          active,
+          product_images(
+            image_url,
+            sort_order,
+            is_primary
+          )
+        )
+      `)
+      .eq("active", true)
+      .order("id", { ascending: false });
+
+    if (error) {
+      console.error("Store products loading error:", error);
+      return;
+    }
+
+    if (!Array.isArray(data)) return;
+
+    data.forEach((item) => {
+      const alreadyExists = products.some(
+        (p) => p.name.trim().toLowerCase() ===
+               String(item.name || "").trim().toLowerCase()
+      );
+
+      if (alreadyExists) return;
+
+      const colors = (item.product_variants || [])
+        .filter((variant) => variant.active !== false)
+        .map((variant) => {
+          const images = (variant.product_images || [])
+            .filter((img) => img.image_url)
+            .sort((a, b) => {
+              if (a.is_primary !== b.is_primary) {
+                return a.is_primary ? -1 : 1;
+              }
+              return (a.sort_order ?? 0) - (b.sort_order ?? 0);
+            })
+            .map((img) => img.image_url);
+
+          return {
+            name: variant.color_name || "Default",
+            images
+          };
+        })
+        .filter((color) => color.images.length > 0);
+
+      if (!colors.length) return;
+
+      products.push({
+        id: `db-product-${item.id}`,
+        name: item.name,
+        category: item.categories?.name || "Sets",
+        price: Number(item.price),
+        description: "",
+        material: "",
+        colors
+      });
+    });
+
+    renderProducts();
+
+  } catch (err) {
+    console.error("Store products error:", err);
+  }
+}
+
 /* =========================================================
    RENDER PRODUCTS
 ========================================================= */
@@ -583,6 +662,7 @@ function renderProductDetail() {
 }
 
 
+
 /* =========================================================
    COLOR CIRCLES
 ========================================================= */
@@ -590,6 +670,8 @@ function renderProductDetail() {
 function getColorValue(colorName) {
 
   const colors = {
+    "Red": "#FF0000",
+    "Dark Red": "#8B0000",
     "Purple": "#8E4585",
     "Orange": "#E87532",
     "Blue": "#3F6FA8",
@@ -603,12 +685,22 @@ function getColorValue(colorName) {
     "Blue Grey": "#71808C",
     "Rani Pink": "#D94F83",
     "Mauve": "#A77B8E",
-    "Grey": "#808080"
+    "Grey": "#808080",
+    "Black": "#000000",
+    "Green": "#008000",
+    "Pink": "#FFC0CB",
+    "Brown": "#8B4513",
+    "Cream": "#FFFDD0"
   };
 
-  return colors[colorName] || "#CCCCCC";
-}
+ const key = String(colorName || "").trim();
+const normalizedKey =
+  Object.keys(colors).find(
+    name => name.toLowerCase() === key.toLowerCase()
+  );
 
+return colors[normalizedKey] || "#CCCCCC";
+}
 
 /* =========================================================
    THUMBNAILS
@@ -1444,11 +1536,18 @@ function renderCart() {
 
     `;
 
-    document.getElementById("cartTotal").textContent =
-      "₹0";
+    document.getElementById("cartSubtotal").textContent =
+  money(0);
 
-    return;
+document.getElementById("cartShipping").textContent =
+  money(0);
+
+document.getElementById("cartTotal").textContent =
+  money(0);
+
+return;
   }
+  
 
   container.innerHTML =
     cart.map((item, index) => `
@@ -1530,16 +1629,24 @@ function renderCart() {
 
     `).join("");
 
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.price * item.quantity,
-      0
-    );
+  const subtotal = cart.reduce(
+  (sum, item) => sum + item.price * item.quantity,
+  0
+);
 
-  document.getElementById("cartTotal").textContent =
-    money(total);
+const shipping = subtotal > 0 ? SHIPPING_FEE : 0;
+const total = subtotal + shipping;
+
+document.getElementById("cartSubtotal").textContent =
+  money(subtotal);
+
+document.getElementById("cartShipping").textContent =
+  money(shipping);
+
+document.getElementById("cartTotal").textContent =
+  money(total);
 }
+
 function changeCartSize(index, newSize) {
 
   if (!cart[index]) return;
@@ -1613,6 +1720,7 @@ function removeCartItem(index) {
 ========================================================= */
 
 let checkoutCustomer = null;
+const SHIPPING_FEE = 100;
 
 
 /* ---------------- OPEN CHECKOUT ---------------- */
@@ -1630,15 +1738,22 @@ function checkout() {
     document.getElementById("checkoutOverlay");
 
   if (!checkoutOverlay) return;
+  
+  /* Update checkout total */
 
-  /* Update total */
+  const subtotal = cart.reduce(
+    (sum, item) => sum + Number(item.price) * Number(item.quantity),
+    0
+  );
 
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.price * item.quantity,
-      0
-    );
+  const shipping = subtotal > 0 ? SHIPPING_FEE : 0;
+  const total = subtotal + shipping;
+
+  document.getElementById("checkoutSubtotal").textContent =
+    money(subtotal);
+
+  document.getElementById("checkoutShipping").textContent =
+    money(shipping);
 
   document.getElementById("checkoutTotal").textContent =
     money(total);
@@ -2134,19 +2249,32 @@ if (!addressId) {
   throw new Error("No address ID was returned.");
 }
 
+   
     // --------------------------------------------------
     // 3. CALCULATE ORDER TOTAL
     // --------------------------------------------------
 
     const subtotal = cart.reduce(
-      (sum, item) => sum + (Number(item.price) * Number(item.quantity)),
+      (sum, item) => sum + item.price * item.quantity,
       0
     );
 
-    const shippingFee = 0;
+    const shippingFee = subtotal > 0 ? SHIPPING_FEE : 0;
     const discount = 0;
     const totalAmount = subtotal + shippingFee - discount;
+    console.log("Cart:", cart);
+console.log("Subtotal:", subtotal);
+console.log("Shipping:", shippingFee);
+console.log("Total:", totalAmount);
 
+    document.getElementById("checkoutSubtotal").textContent =
+      money(subtotal);
+
+    document.getElementById("checkoutShipping").textContent =
+      money(shippingFee);
+
+    document.getElementById("checkoutTotal").textContent =
+      money(totalAmount);
 
     // --------------------------------------------------
     // 4. GENERATE UNIQUE ORDER NUMBER
@@ -2217,6 +2345,7 @@ if (!addressId) {
     if (orderError) {
       throw orderError;
     }
+
 
 // SAVE ORDER ITEMS
 const orderItems = [];
@@ -2302,6 +2431,7 @@ if (orderItems.length > 0) {
     throw new Error("Order items save failed: " + orderItemsError.message);
   }
 }
+
 
     // --------------------------------------------------
     // 7. SHOW SUCCESS SCREEN
@@ -2807,11 +2937,15 @@ function showOrderSuccess(orderNumber) {
     return;
   }
 
-  const total = cart.reduce(
-    (sum, item) =>
-      sum + Number(item.price) * Number(item.quantity),
-    0
-  );
+  
+const subtotal = cart.reduce(
+  (sum, item) =>
+    sum + Number(item.price) * Number(item.quantity),
+  0
+);
+
+const total = subtotal + SHIPPING_FEE;
+
 
   document.getElementById("successOrderNumber").textContent =
     orderNumber || "NEF-0001";
@@ -2887,11 +3021,11 @@ function contactForOrder() {
    INITIALIZE WEBSITE
 ========================================================= */
 
+
 document.addEventListener("DOMContentLoaded", function () {
-
   renderProducts();
-
   updateCartCount();
   updateWishlistCount();
 
+  loadStoreProducts();
 });

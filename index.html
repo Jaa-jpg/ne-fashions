@@ -893,28 +893,37 @@
 
     <div id="cartItems"></div>
 
-    <div class="cart-bottom">
+    
+<div class="cart-bottom">
 
-      <div class="cart-total">
+  <div class="cart-total-breakdown">
 
-        <span>
-          Total
-        </span>
-
-        <strong id="cartTotal">
-          ₹0
-        </strong>
-
-      </div>
-
-      <button
-        class="checkout-btn"
-        onclick="checkout()"
-      >
-        CHECKOUT
-      </button>
-
+    <div class="cart-total-row">
+      <span>Product Subtotal</span>
+      <strong id="cartSubtotal">₹0</strong>
     </div>
+
+    <div class="cart-total-row">
+      <span>Shipping Fee</span>
+      <strong id="cartShipping">₹100</strong>
+    </div>
+
+    <div class="cart-total cart-grand-total">
+      <span>Grand Total</span>
+      <strong id="cartTotal">₹0</strong>
+    </div>
+
+  </div>
+
+  <button
+    class="checkout-btn"
+    onclick="checkout()"
+  >
+    CHECKOUT
+  </button>
+
+</div>
+
 
   </div>
 
@@ -947,14 +956,26 @@
       onsubmit="continueCheckout(event)"
     >
 
-      <div class="checkout-summary">
+     
+<div class="checkout-summary">
 
-        <div>
-          <span>Order Total</span>
-          <strong id="checkoutTotal">₹0</strong>
-        </div>
+  <div>
+    <span>Product Subtotal</span>
+    <strong id="checkoutSubtotal">₹0</strong>
+  </div>
 
-      </div>
+  <div>
+    <span>Shipping Fee</span>
+    <strong id="checkoutShipping">₹100</strong>
+  </div>
+
+  <div>
+    <span>Grand Total</span>
+    <strong id="checkoutTotal">₹0</strong>
+  </div>
+
+</div>
+
 
 
       <div class="checkout-fields">

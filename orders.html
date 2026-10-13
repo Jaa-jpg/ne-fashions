@@ -1150,19 +1150,22 @@
     ];
 
 
-    /* =====================================================
-       PAGE LOAD
-    ===================================================== */
+    
+/* =====================================================
+   PAGE LOAD
+===================================================== */
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      async function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  const { data: { session }, error } =
+    await supabaseClient.auth.getSession();
 
-        await loadOrders();
+  if (error || !session) {
+    window.location.href = "admin.html";
+    return;
+  }
 
-      }
-    );
-
+  await loadOrders();
+});
 
     /* =====================================================
        LOAD ORDERS
@@ -2434,22 +2437,56 @@
        UPDATE ORDER STATUS
     ===================================================== */
 
-    
 async function updateOrderStatus() {
   if (!currentOrderId) return;
 
-  const paymentStatus =
-    document.getElementById("editPaymentStatus").value;
-
-  const orderStatus =
-    document.getElementById("editOrderStatus").value;
-
+  const paymentSelect = document.getElementById("editPaymentStatus");
+  const orderSelect = document.getElementById("editOrderStatus");
   const saveButton = document.getElementById("saveStatusBtn");
+
+  let paymentStatus = paymentSelect.value;
+  let orderStatus = orderSelect.value;
 
   saveButton.disabled = true;
   saveButton.textContent = "Saving...";
 
   try {
+    const existingOrder = allOrders.find(
+      order => Number(order.id) === Number(currentOrderId)
+    );
+
+    if (!existingOrder) {
+      throw new Error("Order details not found. Refresh and try again.");
+    }
+
+    const previousPaymentStatus =
+      String(existingOrder.payment_status || "").toLowerCase();
+
+    const previousOrderStatus =
+      String(existingOrder.order_status || "").toLowerCase();
+
+    // Automatically match order status when payment status changes.
+    if (paymentStatus === "failed" || paymentStatus === "refunded") {
+      orderStatus = "cancelled";
+    } else if (
+      paymentStatus === "paid" &&
+      previousPaymentStatus !== "paid"
+    ) {
+      orderStatus = "confirmed";
+    } else if (
+      paymentStatus === "pending" &&
+      previousPaymentStatus !== "pending"
+    ) {
+      orderStatus = "pending";
+    }
+
+    const statusActuallyChanged =
+      previousPaymentStatus !== paymentStatus ||
+      previousOrderStatus !== orderStatus;
+
+    // Keep the dropdown in sync with the status being saved.
+    orderSelect.value = orderStatus;
+
     const { data: updatedOrder, error } = await supabaseClient
       .from("orders")
       .update({
@@ -2464,9 +2501,7 @@ async function updateOrderStatus() {
     if (error) throw error;
 
     if (!updatedOrder) {
-      throw new Error(
-        "No order was updated. Check admin login and orders UPDATE policy."
-      );
+      throw new Error("Order was not updated. Check admin permissions.");
     }
 
     const index = allOrders.findIndex(
@@ -2488,13 +2523,42 @@ async function updateOrderStatus() {
     document.getElementById("detailOrderStatus").innerHTML =
       statusBadge(updatedOrder.order_status);
 
-    document.getElementById("editPaymentStatus").value =
-      updatedOrder.payment_status;
+    paymentSelect.value = updatedOrder.payment_status;
+    orderSelect.value = updatedOrder.order_status;
 
-    document.getElementById("editOrderStatus").value =
-      updatedOrder.order_status;
+    if (!statusActuallyChanged) {
+      showToast("Order saved. No status change; no email requested.");
+      return;
+    }
 
-    showToast("Order status saved successfully.");
+    // Save succeeds independently of email delivery.
+    try {
+      const { data: emailResult, error: emailError } =
+        await supabaseClient.functions.invoke("send-order-email", {
+          body: {
+            orderNumber:
+              existingOrder.order_number || `#${existingOrder.id}`,
+            customerName: existingOrder.customer?.name || "Customer",
+            customerEmail: existingOrder.customer?.email || "",
+            customerPhone: existingOrder.customer?.phone || "",
+            totalAmount: Number(existingOrder.total_amount || 0),
+            paymentStatus: updatedOrder.payment_status,
+            orderStatus: updatedOrder.order_status,
+            eventType: "admin_status_updated"
+          }
+        });
+
+      if (emailError) throw emailError;
+
+      if (emailResult?.skipped) {
+        showToast("Order saved, but email was skipped. Check email rules.");
+      } else {
+        showToast("Order saved. Email request accepted.");
+      }
+    } catch (emailError) {
+      console.error("Order saved, but email failed:", emailError);
+      showToast("Order saved, but email failed. Check function logs.");
+    }
 
   } catch (error) {
     console.error("Order status update error:", error);
@@ -2506,41 +2570,20 @@ async function updateOrderStatus() {
 }
 
 
-    /* =====================================================
-       CLOSE MODAL
-    ===================================================== */
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
 
-    function closeOrderModal() {
+function closeOrderModal() {
+  document.getElementById("orderModal").classList.remove("show");
+  currentOrderId = null;
+}
 
-      document
-        .getElementById(
-          "orderModal"
-        )
-        .classList.remove(
-          "show"
-        );
-
-
-      currentOrderId =
-        null;
-
-    }
-
-
-    function closeModalOutside(
-      event
-    ) {
-
-      if (
-        event.target.id ===
-        "orderModal"
-      ) {
-
-        closeOrderModal();
-
-      }
-
-    }
+function closeModalOutside(event) {
+  if (event.target.id === "orderModal") {
+    closeOrderModal();
+  }
+}
 
 
     /* =====================================================
