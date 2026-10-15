@@ -502,10 +502,36 @@ async function loadStoreProducts() {
     });
 
     renderProducts();
+   openSharedProduct();
 
   } catch (err) {
     console.error("Store products error:", err);
   }
+}
+
+function openSharedProduct() {
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get("product");
+
+  if (!productId) return;
+
+  const colorIndex = Number(params.get("color") || 0);
+
+  const productExists = products.some(
+    product => String(product.id) === productId
+  );
+
+ 
+console.log("Shared product ID:", productId);
+console.log("Available product IDs:", products.map(p => p.id));
+console.log("Product found:", productExists);
+
+if (productExists) {
+  openProduct(productId, colorIndex);
+} else {
+  console.error("Shared product ID does not match any product.");
+}
+
 }
 
 /* =========================================================
@@ -2452,51 +2478,44 @@ showOrderSuccess(newOrder.order_number);
 }
 
 
+
 /* =========================================================
    SHARE
 ========================================================= */
 
-
 async function shareProduct() {
-
   if (!currentProduct) return;
 
   const color = getCurrentColor();
 
+  const productUrl = new URL(
+  "https://nefashions.in/"
+);
+
+  productUrl.searchParams.set("product", currentProduct.id);
+  productUrl.searchParams.set("color", currentColorIndex);
+
   const shareData = {
     title: currentProduct.name,
-    text:
-      `${currentProduct.name} - ${color.name} | NE FASHIONS`,
-    url: window.location.href
+    text: `${currentProduct.name} - ${color.name} | NE FASHIONS`,
+    url: productUrl.href
   };
 
   if (navigator.share) {
-
     try {
       await navigator.share(shareData);
     } catch (error) {
       // User closed share sheet.
     }
-
   } else {
-
     try {
-
-      await navigator.clipboard.writeText(
-        window.location.href
-      );
-
+      await navigator.clipboard.writeText(productUrl.href);
       alert("Product link copied.");
-
     } catch (error) {
-
-      alert("Copy the website link to share this product.");
-
+      alert("Unable to copy product link.");
     }
-
   }
 }
-
 
 /* =========================================================
    PRODUCT CLOSE
