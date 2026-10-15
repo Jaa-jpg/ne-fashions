@@ -2401,10 +2401,22 @@ img {
   letter-spacing: .5px;
 }
 
+
+/* Checkout amount typography */
+
 .checkout-summary strong {
-  font-size: 17px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--black);
+}
+
+.checkout-summary > div:last-child strong {
+  font-size: 21px;
   font-weight: 700;
 }
+
 
 /* Checkout fields */
 
