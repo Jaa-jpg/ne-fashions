@@ -640,20 +640,33 @@
         </div>
 
 
-        <div class="detail-actions">
+<div class="detail-actions">
 
-          <button
-            id="detailWishlistBtn"
-            onclick="toggleCurrentWishlist()"
-          >
-            ♡
-          </button>
+  <button
+    id="detailWishlistBtn"
+    onclick="toggleCurrentWishlist()"
+    aria-label="Add to wishlist"
+  >
+    ♡
+  </button>
 
-          <button onclick="shareProduct()">
-            ↗
-          </button>
+  <button
+    onclick="shareProduct()"
+    aria-label="Share product"
+  >
+    ↗
+  </button>
+<button
+  type="button"
+  class="detail-similar-btn"
+  onclick="showSimilarProducts()"
+  aria-label="Similar products"
+  title="Similar Products"
+>
+  🛍️
+</button>
 
-        </div>
+</div>
 
       </div>
 
@@ -807,23 +820,106 @@
             <span>+</span>
           </summary>
 
-          <p>
-            Eligible items can be returned or exchanged
-            according to our return policy.
-          </p>
+         <p>
+         <strong>NO EXCHANGE · NO RETURN</strong><br>
+         Please review our Return & Exchange Policy before placing your order.
+         For assistance with your purchase, contact NE FASHIONS through WhatsApp.
+        </p>
+
 
         </details>
 
       </div>
 
+      <!-- CUSTOMER REVIEWS -->
+      <div id="productReviewsSection" class="product-reviews-section">
+
+        <div class="reviews-heading">
+          <h3>Customer Reviews</h3>
+
+          <button
+            type="button"
+            class="write-review-btn"
+            onclick="openProductReviews()"
+          >
+            ★ Write a Review
+          </button>
+        </div>
+
+        <div id="productReviewsList">
+          <p class="reviews-empty">
+            No reviews yet. Be the first to share your experience!
+          </p>
+             
+        </div>
+    </div>
     </div>
 
   </div>
 
 </div>
 
+<!-- WRITE A REVIEW MODAL -->
+<div id="writeReviewOverlay" class="overlay">
+  <div class="modal-card review-form-card">
+
+    <button type="button" class="close-btn" onclick="closeProductReviews()">×</button>
+
+    <h2>Write a Review</h2>
+    <p id="reviewProductName"></p>
+
+    <form id="productReviewForm" onsubmit="submitProductReview(event)">
+
+      <label for="reviewCustomerName">Your Name</label>
+      <input
+        id="reviewCustomerName"
+        type="text"
+        maxlength="100"
+        placeholder="Enter your name"
+        required
+      >
+
+      <label>Your Rating</label>
+      <div class="review-star-picker" id="reviewStarPicker">
+        <button type="button" data-rating="1" aria-label="1 star">★</button>
+        <button type="button" data-rating="2" aria-label="2 stars">★</button>
+        <button type="button" data-rating="3" aria-label="3 stars">★</button>
+        <button type="button" data-rating="4" aria-label="4 stars">★</button>
+        <button type="button" data-rating="5" aria-label="5 stars">★</button>
+      </div>
+
+      <input type="hidden" id="reviewRating" value="0">
+
+      <label for="reviewText">Your Review</label>
+      <textarea
+        id="reviewText"
+        rows="4"
+        maxlength="2000"
+        placeholder="Share your experience with this product"
+        required
+      ></textarea>
+
+      <label for="reviewImage">Photo (optional)</label>
+      <input
+        id="reviewImage"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+      >
+      <small>JPG, PNG or WebP; maximum 5 MB.</small>
+
+      <p id="reviewFormMessage" role="status"></p>
+
+      <button type="submit" class="checkout-continue-btn">
+        SUBMIT REVIEW
+      </button>
+
+    </form>
+  </div>
+</div>
 
 <!-- IMAGE VIEWER -->
+
+
 <div
   id="imageViewer"
   class="image-viewer"

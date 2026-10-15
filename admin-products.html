@@ -583,7 +583,14 @@
     });
   }
 
-  async function loadCategories() {
+  
+async function loadCategories() {
+  const allowedCategories = [
+    "Kurtis",
+    "Cord Sets",
+    "3 Piece Sets",
+    "Frocks"
+  ];
 
   const { data, error } = await supabaseClient
     .from("categories")
@@ -601,14 +608,23 @@
   categorySelect.innerHTML =
     `<option value="">Select category</option>`;
 
-  data.forEach(category => {
-    categorySelect.innerHTML += `
-      <option value="${category.id}">
-        ${category.name}
-      </option>
-    `;
-  });
+  data
+    .filter(category =>
+      allowedCategories.includes(category.name.trim())
+    )
+    .sort((a, b) =>
+      allowedCategories.indexOf(a.name.trim()) -
+      allowedCategories.indexOf(b.name.trim())
+    )
+    .forEach(category => {
+      categorySelect.innerHTML += `
+        <option value="${category.id}">
+          ${category.name}
+        </option>
+      `;
+    });
 }
+
 
 function addColor() {
 

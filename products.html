@@ -317,19 +317,109 @@
       }
     }
 
-    @media (max-width: 650px) {
-      .layout {
-        flex-direction: column;
-      }
+    
+.menu-toggle {
+  display: none;
+}
 
-      .sidebar {
-        width: 100%;
-      }
+.sidebar-overlay {
+  display: none;
+}
 
-      .main {
-        padding: 15px;
-      }
-    }
+@media (max-width: 650px) {
+  .layout {
+    display: block;
+    min-height: 100vh;
+  }
+
+  .menu-toggle {
+    display: block;
+    flex-shrink: 0;
+    border: none;
+    background: transparent;
+    color: #222;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    max-width: 85vw;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  body.menu-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body.menu-open .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .main {
+    width: 100%;
+    margin-left: 0;
+    padding: 15px;
+    min-width: 0;
+  }
+
+  .topbar {
+    justify-content: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .topbar h2 {
+    font-size: 22px;
+  }
+
+  .add-btn {
+    padding: 10px 12px;
+  }
+
+  .product-form {
+    padding: 16px;
+  }
+
+  .table-box {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 700px;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
+  }
+}
+
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -387,11 +477,26 @@
   </aside>
 
 
+<button
+  class="sidebar-overlay"
+  type="button"
+  onclick="closeAdminMenu()"
+  aria-label="Close menu">
+</button>
+
   <!-- MAIN -->
 
   <main class="main">
 
     <div class="topbar">
+
+<button
+  class="menu-toggle"
+  type="button"
+  onclick="toggleAdminMenu()"
+  aria-label="Open menu">
+  ☰
+</button>
 
       <h2>Products</h2>
 
@@ -2527,6 +2632,14 @@ for (const image of removedImages) {
       "admin.html";
 
   }
+
+function toggleAdminMenu() {
+  document.body.classList.toggle("menu-open");
+}
+
+function closeAdminMenu() {
+  document.body.classList.remove("menu-open");
+}
 
 
   /* START */

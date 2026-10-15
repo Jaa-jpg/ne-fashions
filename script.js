@@ -624,6 +624,7 @@ function openProduct(productId, colorIndex = 0) {
   document.getElementById("productDetail").classList.add("active");
 
   renderProductDetail();
+  loadProductReviews();
 }
 
 function renderProductDetail() {
@@ -1887,93 +1888,68 @@ function backToCustomerDetails() {
 
 /* ---------------- ORDER VIA WHATSAPP ---------------- */
 
+/* ---------------- ORDER VIA WHATSAPP ---------------- */
+
 function orderViaWhatsApp() {
 
   if (!checkoutCustomer) {
-
     alert("Please enter your customer details first.");
-
     return;
   }
 
   if (!cart.length) {
-
     alert("Your cart is empty.");
-
     return;
   }
 
+  const whatsappNumber = "919392888728";
 
-  const whatsappNumber =
-    "919392888728";
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
-
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.price * item.quantity,
-      0
-    );
-
+  const shipping = subtotal > 0 ? SHIPPING_FEE : 0;
+  const total = subtotal + shipping;
 
   let message =
     `Hi NE Fashions,%0A%0A` +
-
     `I would like to place an order.%0A%0A` +
-
     `*Customer Details*%0A` +
-
     `Name: ${encodeURIComponent(checkoutCustomer.name)}%0A` +
-
     `Phone: ${encodeURIComponent(checkoutCustomer.phone)}%0A` +
-
-    `Email: ${encodeURIComponent(checkoutCustomer.email)}%0A` +
-
+    `Email: ${encodeURIComponent(checkoutCustomer.email || "Not provided")}%0A` +
     `Address: ${encodeURIComponent(checkoutCustomer.address)}%0A` +
-
     `City: ${encodeURIComponent(checkoutCustomer.city)}%0A` +
-
     `State: ${encodeURIComponent(checkoutCustomer.state)}%0A` +
-
     `Pincode: ${encodeURIComponent(checkoutCustomer.pincode)}%0A%0A` +
-
     `*Order Details*%0A`;
-
 
   cart.forEach((item, index) => {
 
-    const subtotal =
-      item.price * item.quantity;
+    const itemSubtotal = item.price * item.quantity;
 
     message +=
       `${index + 1}. ${encodeURIComponent(item.name)}%0A` +
-
       `Color: ${encodeURIComponent(item.color)}%0A` +
-
       `Size: ${encodeURIComponent(item.size)}%0A` +
-
       `Qty: ${item.quantity}%0A` +
-
       `Price: ${encodeURIComponent(money(item.price))}%0A` +
-
-      `Subtotal: ${encodeURIComponent(money(subtotal))}%0A%0A`;
+      `Subtotal: ${encodeURIComponent(money(itemSubtotal))}%0A%0A`;
 
   });
 
-
   message +=
+    `Subtotal: ${encodeURIComponent(money(subtotal))}%0A` +
+    `Shipping Fee: ${encodeURIComponent(money(shipping))}%0A` +
     `*Order Total: ${encodeURIComponent(money(total))}*%0A%0A` +
-
     `Please confirm my order. Thank you!`;
 
+  const whatsappURL =
+    `https://wa.me/${whatsappNumber}?text=${message}`;
 
-  window.open(
-    `https://wa.me/${whatsappNumber}?text=${message}`,
-    "_blank"
-  );
-
+  window.open(whatsappURL, "_blank");
 }
-
 
 /* =========================================================
    UPI PAYMENT
@@ -1991,12 +1967,16 @@ function payViaUPI() {
     return;
   }
 
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.price * item.quantity,
-      0
-    );
+  
+const subtotal = cart.reduce(
+  (sum, item) =>
+    sum + item.price * item.quantity,
+  0
+);
+
+const shipping = subtotal > 0 ? SHIPPING_FEE : 0;
+const total = subtotal + shipping;
+
 
   const checkoutOptions =
     document.getElementById("checkoutOptions");
@@ -2780,81 +2760,48 @@ function closeSizeGuide() {
 ========================================================= */
 
 function openPolicy(type) {
+  const content = document.getElementById("policyContent");
+  const modal = document.getElementById("policyModal");
 
-  const content =
-    document.getElementById("policyContent");
+  if (!content || !modal) return;
 
   if (type === "return") {
-
     content.innerHTML = `
-      <h2>Return & Exchange</h2>
-
-      <h3>Easy Returns</h3>
+      <h2>Return & Exchange Policy</h2>
+      <p><strong>NO EXCHANGE · NO RETURN</strong></p>
       <p>
-        We want you to love your NE FASHIONS purchase.
-        Eligible products can be returned or exchanged
-        within the specified return period.
+        Please check the product details, images, colour and size
+        carefully before placing your order.
       </p>
-
-      <h3>Condition</h3>
       <p>
-        Products must be unused, unworn, unwashed and
-        returned with the original tags and packaging.
-      </p>
-
-      <h3>Exchange</h3>
-      <p>
-        Size exchanges may be available depending on stock.
-      </p>
-
-      <h3>Important</h3>
-      <p>
-        This is a sample policy. Replace this section with
-        your final business return policy before launch.
+        For assistance with your purchase, contact NE FASHIONS
+        through WhatsApp.
       </p>
     `;
-
   } else {
-
     content.innerHTML = `
       <h2>Shipping Policy</h2>
-
-      <h3>Processing</h3>
-      <p>
-        Orders are generally processed within the stated
-        processing period after payment confirmation.
-      </p>
-
+      <h3>Shipping Fee</h3>
+      <p>A flat shipping fee of ₹100 is applicable to orders.</p>
+      <h3>Order Processing</h3>
+      <p>Orders are processed after payment confirmation.</p>
       <h3>Delivery</h3>
-      <p>
-        Delivery timelines depend on the destination and
-        courier service.
-      </p>
-
+      <p>Delivery time depends on the delivery location and courier service.</p>
       <h3>Tracking</h3>
-      <p>
-        Tracking details can be shared once the order is
-        dispatched.
-      </p>
-
-      <h3>Important</h3>
-      <p>
-        This is a sample policy. Replace this section with
-        your final NE FASHIONS shipping policy.
-      </p>
+      <p>Tracking details will be shared once the order is dispatched.</p>
     `;
   }
 
-  document.getElementById("policyModal")
-    .classList.add("active");
+  modal.classList.add("active");
 }
 
 function closePolicy() {
+  const modal = document.getElementById("policyModal");
 
-  document.getElementById("policyModal")
-    .classList.remove("active");
+  if (modal) {
+    modal.classList.remove("active");
+  }
 }
-
 
 /* =========================================================
    IMAGE ERROR
@@ -2887,11 +2834,9 @@ if (event.key === "Escape") {
   closeImageViewer();
 }
 
+  const imageViewer = document.getElementById("imageViewer");
 
-  if (
-    document.getElementById("imageViewer")
-      .classList.contains("active")
-  ) {
+  if (imageViewer && imageViewer.classList.contains("active")) {
 
     if (event.key === "ArrowRight") {
       nextImage();
@@ -2965,6 +2910,231 @@ const total = subtotal + SHIPPING_FEE;
   document.body.classList.add("no-scroll");
 }
 
+// =========================================================
+// CUSTOMER PRODUCT REVIEWS
+// =========================================================
+
+let selectedReviewRating = 0;
+
+function openProductReviews() {
+  if (!currentProduct) {
+    alert("Please select a product first.");
+    return;
+  }
+
+  const overlay = document.getElementById("writeReviewOverlay");
+  const productName = document.getElementById("reviewProductName");
+  const form = document.getElementById("productReviewForm");
+  const message = document.getElementById("reviewFormMessage");
+
+  if (!overlay || !form) {
+    alert("Review form is not available. Please refresh the page.");
+    return;
+  }
+
+  form.reset();
+  selectedReviewRating = 0;
+
+  document.getElementById("reviewRating").value = "0";
+  document.querySelectorAll("#reviewStarPicker button").forEach(button => {
+    button.style.color = "#bdb6ae";
+  });
+
+  if (productName) {
+    productName.textContent = currentProduct.name || currentProduct.title || "";
+  }
+
+  if (message) message.textContent = "";
+
+  overlay.classList.add("active");
+  document.body.classList.add("no-scroll");
+}
+
+function closeProductReviews() {
+  const overlay = document.getElementById("writeReviewOverlay");
+
+  if (overlay) overlay.classList.remove("active");
+
+  document.body.classList.remove("no-scroll");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const starPicker = document.getElementById("reviewStarPicker");
+
+  if (starPicker) {
+    starPicker.addEventListener("click", function (event) {
+      const button = event.target.closest("button[data-rating]");
+      if (!button) return;
+
+      selectedReviewRating = Number(button.dataset.rating);
+      document.getElementById("reviewRating").value =
+        String(selectedReviewRating);
+
+      starPicker.querySelectorAll("button").forEach(star => {
+        star.style.color =
+          Number(star.dataset.rating) <= selectedReviewRating
+            ? "#c49a55"
+            : "#bdb6ae";
+      });
+    });
+  }
+});
+
+async function submitProductReview(event) {
+  event.preventDefault();
+
+  const message = document.getElementById("reviewFormMessage");
+  const submitButton = event.submitter;
+
+  const customerName = document.getElementById("reviewCustomerName").value.trim();
+  const reviewText = document.getElementById("reviewText").value.trim();
+  const imageInput = document.getElementById("reviewImage");
+  const imageFile = imageInput.files[0];
+
+  if (!currentProduct) {
+    message.textContent = "Please select a product first.";
+    return;
+  }
+
+  if (selectedReviewRating < 1 || selectedReviewRating > 5) {
+    message.textContent = "Please select a star rating.";
+    return;
+  }
+
+  if (!customerName || customerName.length > 100) {
+    message.textContent = "Enter your name (maximum 100 characters).";
+    return;
+  }
+
+  if (!reviewText || reviewText.length > 2000) {
+    message.textContent = "Enter a review (maximum 2000 characters).";
+    return;
+  }
+
+  if (imageFile) {
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+    if (!allowedTypes.includes(imageFile.type)) {
+      message.textContent = "Please choose a JPG, PNG or WebP image.";
+      return;
+    }
+
+    if (imageFile.size > 5 * 1024 * 1024) {
+      message.textContent = "Image must be smaller than 5 MB.";
+      return;
+    }
+  }
+
+  if (
+    typeof supabaseClient === "undefined" ||
+    !supabaseClient
+  ) {
+    message.textContent = "Review service is unavailable. Please try again later.";
+    return;
+  }
+
+  if (submitButton) submitButton.disabled = true;
+  message.textContent = "Submitting your review...";
+
+  try {
+    // Resolve the numeric Supabase product ID.
+    let dbProductId = null;
+    const currentId = String(currentProduct.id || "");
+
+    if (/^db-product-\d+$/.test(currentId)) {
+      dbProductId = Number(currentId.replace("db-product-", ""));
+    } else if (/^\d+$/.test(currentId)) {
+      dbProductId = Number(currentId);
+    } else {
+      const productName =
+        currentProduct.name || currentProduct.title || "";
+
+      if (productName) {
+        const { data: matchedProducts, error: matchError } =
+          await supabaseClient
+            .from("products")
+            .select("id")
+            .eq("name", productName)
+            .limit(2);
+
+        if (matchError) throw matchError;
+
+        if (matchedProducts && matchedProducts.length === 1) {
+          dbProductId = matchedProducts[0].id;
+        } else {
+          throw new Error(
+            "This product could not be matched to the store database. Please contact NE Fashions."
+          );
+        }
+      }
+    }
+
+    if (!dbProductId) {
+      throw new Error(
+        "This product is not linked to the review database yet."
+      );
+    }
+
+    let imageUrl = null;
+
+    if (imageFile) {
+      const safeName = imageFile.name
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]/g, "-");
+
+      const filePath =
+        `${dbProductId}/${Date.now()}-${safeName}`;
+
+      const { error: uploadError } = await supabaseClient.storage
+        .from("review-images")
+        .upload(filePath, imageFile, {
+          upsert: false,
+          contentType: imageFile.type
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabaseClient.storage
+        .from("review-images")
+        .getPublicUrl(filePath);
+
+      imageUrl = publicUrlData.publicUrl;
+    }
+
+    const { error: insertError } = await supabaseClient
+      .from("reviews")
+      .insert({
+        product_id: dbProductId,
+        customer_name: customerName,
+        rating: selectedReviewRating,
+      review_text: reviewText,
+      image_url: imageUrl,
+      active: false
+      });
+
+    if (insertError) throw insertError;
+
+    message.textContent =
+      "Thank you! Your review was submitted.";
+
+    document.getElementById("productReviewForm").reset();
+    selectedReviewRating = 0;
+    document.getElementById("reviewRating").value = "0";
+
+    document.querySelectorAll("#reviewStarPicker button").forEach(star => {
+      star.style.color = "#bdb6ae";
+    });
+
+  
+
+  } catch (error) {
+    console.error("Review submission failed:", error);
+    message.textContent =
+      error.message || "Could not submit your review. Please try again.";
+  } finally {
+    if (submitButton) submitButton.disabled = false;
+  }
+}
 
 function closeOrderSuccess() {
 
@@ -3022,21 +3192,184 @@ document.addEventListener("DOMContentLoaded", function () {
   loadStoreProducts();
 });
 
-const orderUpdateMethod = document.getElementById("orderUpdateMethod");
-const updateWhatsAppField = document.getElementById("updateWhatsAppField");
-const updateEmailField = document.getElementById("updateEmailField");
-const customerWhatsApp = document.getElementById("customerWhatsApp");
-const customerEmail = document.getElementById("customerEmail");
 
-orderUpdateMethod.addEventListener("change", function () {
-  const useEmail = this.value === "email";
+async function loadProductReviews() {
+  const list = document.getElementById("productReviewsList");
 
-  updateEmailField.style.display = useEmail ? "" : "none";
-  updateWhatsAppField.style.display = useEmail ? "none" : "";
+  if (!list || !currentProduct) return;
 
-  customerEmail.disabled = !useEmail;
-  customerEmail.required = useEmail;
+  list.innerHTML = '<p class="reviews-empty">Loading reviews...</p>';
 
-  customerWhatsApp.disabled = useEmail;
-  customerWhatsApp.required = !useEmail;
-});
+  try {
+    if (typeof supabaseClient === "undefined" || !supabaseClient) {
+      throw new Error("Review service unavailable");
+    }
+
+    let productId = null;
+    const currentId = String(currentProduct.id || "");
+
+    if (/^db-product-\d+$/.test(currentId)) {
+      productId = Number(currentId.replace("db-product-", ""));
+    } else if (/^\d+$/.test(currentId)) {
+      productId = Number(currentId);
+    } else {
+      const productName = currentProduct.name || currentProduct.title || "";
+
+      const { data: products, error: productError } =
+        await supabaseClient
+          .from("products")
+          .select("id")
+          .eq("name", productName)
+          .limit(2);
+
+      if (productError) throw productError;
+
+      if (products && products.length === 1) {
+        productId = products[0].id;
+      }
+    }
+
+    if (!productId) {
+      list.innerHTML =
+        '<p class="reviews-empty">No reviews yet.</p>';
+      return;
+    }
+
+    const { data: reviews, error } = await supabaseClient
+      .from("reviews")
+      .select("customer_name, rating, review_text, image_url, created_at")
+      .eq("product_id", productId)
+      .eq("active", true)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    if (!reviews || reviews.length === 0) {
+      list.innerHTML =
+        '<p class="reviews-empty">No reviews yet.</p>';
+      return;
+    }
+
+    list.innerHTML = reviews.map(review => {
+      const name = String(review.customer_name || "Customer")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      const text = String(review.review_text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      const rating = Math.max(0, Math.min(5, Number(review.rating) || 0));
+      const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+
+      const photo = review.image_url
+        ? `<img src="${String(review.image_url).replace(/"/g, "&quot;")}" alt="Customer review photo" style="max-width:180px;height:auto;border-radius:8px;margin-top:10px;">`
+        : "";
+
+      return `
+       <article class="customer-review">
+    <div style="color:#c49a55;">${stars}</div>
+    <p>${text}</p>
+    <strong>— ${name}</strong>
+    ${photo}
+  </article>
+      `;
+    }).join("");
+  } catch (error) {
+    console.error("Could not load product reviews:", error);
+    list.innerHTML =
+      '<p class="reviews-empty">Reviews could not be loaded. Please try again.</p>';
+  }
+}
+
+/* =========================================================
+   SIMILAR PRODUCTS
+========================================================= */
+
+let originalProductGridHTML = null;
+
+function showSimilarProducts() {
+  if (!currentProduct) return;
+
+  const category = String(currentProduct.category || "")
+    .trim()
+    .toLowerCase();
+
+  const similarProducts = products.filter(product =>
+    product.id !== currentProduct.id &&
+    String(product.category || "").trim().toLowerCase() === category
+  );
+
+  if (similarProducts.length === 0) {
+    alert("No similar products available in this category yet.");
+    return;
+  }
+
+  const grid = document.getElementById("productGrid");
+  if (!grid) return;
+
+  // Save the original collection only once
+  if (originalProductGridHTML === null) {
+    originalProductGridHTML = grid.innerHTML;
+  }
+
+  closeProduct();
+
+  grid.innerHTML = `
+    <div class="similar-products-header">
+      <button type="button" onclick="backToAllProducts()">
+        ← Back to Products
+      </button>
+      <h2>Similar Products</h2>
+    </div>
+    <div class="product-grid similar-products-grid">
+      ${similarProducts.map(product => {
+        const firstColor = product.colors && product.colors[0];
+
+        if (!firstColor || !firstColor.images || !firstColor.images[0]) {
+          return "";
+        }
+
+        return `
+          <article class="product-card">
+            <div
+              class="product-image-wrap"
+              onclick="openProduct('${product.id}', 0)"
+            >
+              <img
+                src="${firstColor.images[0]}"
+                alt="${product.name}"
+                onerror="handleImageError(this)"
+              >
+            </div>
+            <div class="product-info">
+              <h3>${product.name}</h3>
+              <div class="product-price">${money(product.price)}</div>
+            </div>
+          </article>
+        `;
+      }).join("")}
+    </div>
+  `;
+
+  const shop = document.getElementById("shop");
+  if (shop) {
+    shop.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function backToAllProducts() {
+  const grid = document.getElementById("productGrid");
+
+  if (!grid || originalProductGridHTML === null) return;
+
+  grid.innerHTML = originalProductGridHTML;
+  originalProductGridHTML = null;
+
+  const shop = document.getElementById("shop");
+  if (shop) {
+    shop.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}

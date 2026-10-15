@@ -232,6 +232,124 @@
         grid-template-columns: 1fr;
       }
     }
+    
+/* Mobile hamburger menu */
+.menu-toggle {
+  display: none;
+  border: none;
+  background: transparent;
+  color: #222;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 650px) {
+  .layout {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    max-width: 85vw;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  body.menu-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body.menu-open .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .main {
+    margin-left: 0;
+    width: 100%;
+    padding: 16px;
+  }
+
+  .topbar {
+    justify-content: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .topbar h2 {
+    font-size: 22px;
+  }
+
+  .topbar-right {
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    padding: 15px;
+    min-width: 0;
+  }
+
+  .card h3 {
+    font-size: 21px;
+    overflow-wrap: anywhere;
+  }
+
+  .section {
+    padding: 15px;
+    min-width: 0;
+  }
+
+  .order-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -295,9 +413,24 @@
     </aside>
 
 
+<button
+  class="sidebar-overlay"
+  type="button"
+  onclick="closeAdminMenu()"
+  aria-label="Close menu">
+</button>
+
     <main class="main">
 
       <div class="topbar">
+       
+<button
+  class="menu-toggle"
+  type="button"
+  onclick="toggleAdminMenu()"
+  aria-label="Open menu">
+  ☰
+</button>
 
         <h2>Dashboard</h2>
 
@@ -850,6 +983,15 @@
   /* =====================================================
      START
   ===================================================== */
+
+  
+function toggleAdminMenu() {
+  document.body.classList.toggle("menu-open");
+}
+
+function closeAdminMenu() {
+  document.body.classList.remove("menu-open");
+}
 
   checkAdminLogin();
 
