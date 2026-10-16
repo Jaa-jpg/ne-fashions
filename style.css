@@ -2402,19 +2402,34 @@ img {
 }
 
 
-/* Checkout amount typography */
 
+/* Checkout amount typography */
 .checkout-summary strong {
   font-family: "DM Sans", sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
-  letter-spacing: 0.2px;
-  color: var(--black);
+  letter-spacing: 0;
+  color: #26221e;
+  font-variant-numeric: tabular-nums;
+}
+
+.checkout-summary > div:last-child {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.checkout-summary > div:last-child span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #26221e;
+  letter-spacing: 0.6px;
 }
 
 .checkout-summary > div:last-child strong {
-  font-size: 21px;
+  font-size: 25px;
   font-weight: 700;
+  color: #9a7137;
 }
 
 
