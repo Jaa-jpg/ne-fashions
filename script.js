@@ -1914,9 +1914,11 @@ function backToCustomerDetails() {
 
 /* ---------------- ORDER VIA WHATSAPP ---------------- */
 
-/* ---------------- ORDER VIA WHATSAPP ---------------- */
 
-function orderViaWhatsApp() {
+let whatsappOrderSaving = false;
+
+async function orderViaWhatsApp() {
+  if (whatsappOrderSaving) return;
 
   if (!checkoutCustomer) {
     alert("Please enter your customer details first.");
@@ -1930,52 +1932,127 @@ function orderViaWhatsApp() {
 
   const whatsappNumber = "919392888728";
 
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
+  // Take a snapshot so the saved order and message match.
+  const orderCart = cart.map(item => ({
+    name: item.name,
+    color: item.color,
+    size: item.size,
+    quantity: Number(item.quantity)
+  }));
+
+  const customer = { ...checkoutCustomer };
+
+  const button = document.querySelector(
+    'button[onclick*="orderViaWhatsApp"]'
   );
 
-  const shipping = subtotal > 0 ? SHIPPING_FEE : 0;
-  const total = subtotal + shipping;
+  const originalText = button?.textContent;
 
-  let message =
-    `Hi NE Fashions,%0A%0A` +
-    `I would like to place an order.%0A%0A` +
-    `*Customer Details*%0A` +
-    `Name: ${encodeURIComponent(checkoutCustomer.name)}%0A` +
-    `Phone: ${encodeURIComponent(checkoutCustomer.phone)}%0A` +
-    `Email: ${encodeURIComponent(checkoutCustomer.email || "Not provided")}%0A` +
-    `Address: ${encodeURIComponent(checkoutCustomer.address)}%0A` +
-    `City: ${encodeURIComponent(checkoutCustomer.city)}%0A` +
-    `State: ${encodeURIComponent(checkoutCustomer.state)}%0A` +
-    `Pincode: ${encodeURIComponent(checkoutCustomer.pincode)}%0A%0A` +
-    `*Order Details*%0A`;
+  // Open a blank tab immediately to avoid popup blockers
+  const whatsappTab = window.open("about:blank", "_blank");
 
-  cart.forEach((item, index) => {
+  try {
+    whatsappOrderSaving = true;
 
-    const itemSubtotal = item.price * item.quantity;
+    if (button) {
+      button.disabled = true;
+      button.textContent = "SAVING ORDER...";
+    }
 
-    message +=
-      `${index + 1}. ${encodeURIComponent(item.name)}%0A` +
-      `Color: ${encodeURIComponent(item.color)}%0A` +
-      `Size: ${encodeURIComponent(item.size)}%0A` +
-      `Qty: ${item.quantity}%0A` +
-      `Price: ${encodeURIComponent(money(item.price))}%0A` +
-      `Subtotal: ${encodeURIComponent(money(itemSubtotal))}%0A%0A`;
+    const { data, error } = await supabaseClient.rpc(
+      "create_whatsapp_order",
+      {
+        p_customer: customer,
+        p_items: orderCart
+      }
+    );
 
-  });
+    if (error) throw error;
 
-  message +=
-    `Subtotal: ${encodeURIComponent(money(subtotal))}%0A` +
-    `Shipping Fee: ${encodeURIComponent(money(shipping))}%0A` +
-    `*Order Total: ${encodeURIComponent(money(total))}*%0A%0A` +
-    `Please confirm my order. Thank you!`;
+    if (!data?.order_number || !Array.isArray(data.items)) {
+      throw new Error("Order saved, but response was incomplete.");
+    }
 
-  const whatsappURL =
-    `https://wa.me/${whatsappNumber}?text=${message}`;
+    const formatPrice = value =>
+      "₹" + Number(value).toLocaleString("en-IN");
 
-  window.open(whatsappURL, "_blank");
+    const itemLines = data.items.map((item, index) =>
+      `${index + 1}. ${item.name}\n` +
+      `Color: ${item.color}\n` +
+      `Size: ${item.size}\n` +
+      `Qty: ${item.quantity}\n` +
+      `Price: ${formatPrice(item.unit_price)}\n` +
+      `Subtotal: ${formatPrice(item.total_price)}`
+    ).join("\n\n");
+
+    const message =
+      `Hi NE Fashions,\n\n` +
+      `I would like to confirm my order.\n\n` +
+      `*Order Number:* ${data.order_number}\n\n` +
+      `*Customer Details*\n` +
+      `Name: ${customer.name}\n` +
+      `Phone: ${customer.phone}\n` +
+      `Email: ${customer.email || "Not provided"}\n` +
+      `Address: ${customer.address}\n` +
+      `City: ${customer.city}\n` +
+      `State: ${customer.state}\n` +
+      `Pincode: ${customer.pincode}\n\n` +
+      `*Order Details*\n${itemLines}\n\n` +
+      `Subtotal: ${formatPrice(data.subtotal)}\n` +
+      `Shipping Fee: ${formatPrice(data.shipping_fee)}\n` +
+      `*Order Total: ${formatPrice(data.total_amount)}*\n\n` +
+      `Payment Status: Pending\n` +
+      `Please confirm my order. Thank you!`;
+
+    const whatsappURL =
+      `https://wa.me/${whatsappNumber}?text=` +
+      encodeURIComponent(message);
+
+    // Do not clear the cart.
+    // Do not change the UPI or email checkout flow.
+    if (whatsappTab && !whatsappTab.closed) {
+      whatsappTab.location.replace(whatsappURL);
+    } else {
+      // Popup blocked: give the customer a way to open WhatsApp
+      const openManually = confirm(
+        `Order ${data.order_number} saved as Pending.\n` +
+        "WhatsApp popup was blocked. Open WhatsApp now?"
+      );
+
+      if (openManually) {
+        window.location.href = whatsappURL;
+      }
+    }
+
+    alert(
+      `Order ${data.order_number} saved as Pending.\n\n` +
+      "Please press Send in WhatsApp to contact NE Fashions.\n" +
+      "Your cart has been kept unchanged."
+    );
+
+  } catch (error) {
+    console.error("WHATSAPP ORDER ERROR:", error);
+
+    if (whatsappTab && !whatsappTab.closed) {
+      whatsappTab.close();
+    }
+
+    alert(
+      "Unable to complete WhatsApp checkout.\n\n" +
+      (error?.message || "Please try again.") +
+      "\n\nCheck Admin Orders before retrying to avoid duplicates."
+    );
+
+  } finally {
+    whatsappOrderSaving = false;
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = originalText;
+    }
+  }
 }
+
 
 /* =========================================================
    UPI PAYMENT
