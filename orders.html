@@ -2674,7 +2674,21 @@ async function updateOrderStatus() {
 function openProductImage(url) {
   if (!url) return;
 
-  window.open(url, "_blank", "noopener,noreferrer");
+  const popup = document.getElementById("productImagePopup");
+  const image = document.getElementById("productPopupImage");
+
+  image.src = url;
+  popup.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function closeProductImage() {
+  const popup = document.getElementById("productImagePopup");
+  const image = document.getElementById("productPopupImage");
+
+  popup.style.display = "none";
+  image.src = "";
+  document.body.style.overflow = "";
 }
 
 function closeOrderModal() {
@@ -3052,6 +3066,48 @@ function closeModalOutside(event) {
     );
 
   </script>
+<!-- PRODUCT IMAGE POPUP -->
+<div
+  id="productImagePopup"
+  onclick="if(event.target === this) closeProductImage()"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  "
+>
+  <button
+    type="button"
+    onclick="closeProductImage()"
+    aria-label="Close image"
+    style="
+      position:absolute;
+      top:20px;
+      right:25px;
+      background:transparent;
+      border:none;
+      color:white;
+      font-size:36px;
+      cursor:pointer;
+    "
+  >×</button>
+
+  <img
+    id="productPopupImage"
+    alt="Full product image"
+    style="
+      max-width:95%;
+      max-height:85vh;
+      object-fit:contain;
+      border-radius:10px;
+    "
+  >
+</div>
 
 </body>
 </html>
