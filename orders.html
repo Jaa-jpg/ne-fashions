@@ -519,6 +519,35 @@
       padding: 12px;
     }
 
+/* Order product images */
+.order-thumbnails {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.order-thumb {
+  width: 48px;
+  height: 58px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  background: #f5f5f5;
+}
+
+.order-item-product {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.order-item-product .order-thumb {
+  width: 60px;
+  height: 75px;
+  flex-shrink: 0;
+}
+
     .product-name {
       font-weight: 600;
     }
@@ -1167,6 +1196,39 @@ document.addEventListener("DOMContentLoaded", async function () {
   await loadOrders();
 });
 
+async function loadVariantImages(variantIds) {
+  if (!variantIds.length) return {};
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("product_images")
+      .select("variant_id, image_url, is_primary, sort_order")
+      .in("variant_id", variantIds)
+      .order("is_primary", { ascending: false })
+      .order("sort_order", { ascending: true });
+
+    if (error) throw error;
+
+    const images = {};
+
+    for (const photo of data || []) {
+      const url = String(photo.image_url || "").trim();
+
+      if (
+        !images[photo.variant_id] &&
+        /^https?:\/\//i.test(url)
+      ) {
+        images[photo.variant_id] = url;
+      }
+    }
+
+    return images;
+
+  } catch (error) {
+    console.warn("Order images unavailable:", error);
+    return {};
+  }
+}
     /* =====================================================
        LOAD ORDERS
     ===================================================== */
@@ -1292,6 +1354,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
         let itemCounts = {};
+let orderVariants = {};
 
 
         if (orderIds.length > 0) {
@@ -1302,7 +1365,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           } = await supabaseClient
             .from("order_items")
             .select(
-              "id, order_id, quantity"
+              "id, order_id, quantity, variant_id"
             )
             .in(
               "order_id",
@@ -1317,7 +1380,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
           (items || []).forEach(
             item => {
-
+if (item.variant_id != null) {
+  (orderVariants[item.order_id] ||= []).push(item.variant_id);
+}
               if (
                 !itemCounts[item.order_id]
               ) {
@@ -1339,7 +1404,11 @@ document.addEventListener("DOMContentLoaded", async function () {
           );
 
         }
+const listVariantIds = [
+  ...new Set(Object.values(orderVariants).flat())
+];
 
+const listImages = await loadVariantImages(listVariantIds);
 
         /*
           Attach customer + item count
@@ -1357,10 +1426,18 @@ document.addEventListener("DOMContentLoaded", async function () {
                   order.customer_id
                 ] || null,
 
-              item_count:
-                itemCounts[
-                  order.id
-                ] || 0
+             item_count:
+  itemCounts[
+    order.id
+  ] || 0,
+
+image_urls: [
+  ...new Set(
+    (orderVariants[order.id] || [])
+      .map(variantId => listImages[variantId])
+      .filter(Boolean)
+  )
+]
 
             })
           );
@@ -1739,11 +1816,20 @@ document.addEventListener("DOMContentLoaded", async function () {
                   </td>
 
 
-                  <td>
-                    ${Number(
-                      order.item_count || 0
-                    )}
-                  </td>
+                 <td>
+  <div class="order-thumbnails">
+    ${(order.image_urls || []).map(url => `
+      <img
+        class="order-thumb"
+        src="${escapeHtml(url)}"
+        alt="Ordered dress"
+        loading="lazy"
+      >
+    `).join("")}
+  </div>
+
+  ${Number(order.item_count || 0)} item(s)
+</td>
 
 
                   <td>
@@ -2054,7 +2140,15 @@ document.addEventListener("DOMContentLoaded", async function () {
           Add product + variant
           information to items.
         */
-
+const detailImages = await loadVariantImages(
+  [
+    ...new Set(
+      (items || [])
+        .map(item => item.variant_id)
+        .filter(id => id != null)
+    )
+  ]
+);
         const detailedItems =
           (items || [])
             .map(
@@ -2068,10 +2162,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                   ] || null,
 
                 variant:
-                  variantMap[
-                    item.variant_id
-                  ] || null
+                variantMap[
+                item.variant_id
+                ] || null,
 
+              image_url: detailImages[item.variant_id] || null
               })
             );
 
@@ -2223,13 +2318,25 @@ document.addEventListener("DOMContentLoaded", async function () {
                 return `
                   <tr>
 
-                    <td>
-                      <div class="product-name">
-                        ${escapeHtml(
-                          productName
-                        )}
-                      </div>
-                    </td>
+                   <td>
+  <div class="order-item-product">
+
+    ${item.image_url
+      ? `<img
+          class="order-thumb"
+          src="${escapeHtml(item.image_url)}"
+          alt="${escapeHtml(productName)}"
+          loading="lazy"
+        >`
+      : ""
+    }
+
+    <div class="product-name">
+      ${escapeHtml(productName)}
+    </div>
+
+  </div>
+</td>
 
                     <td>
                       ${escapeHtml(
