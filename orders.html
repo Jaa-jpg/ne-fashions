@@ -1820,11 +1820,14 @@ image_urls: [
   <div class="order-thumbnails">
     ${(order.image_urls || []).map(url => `
       <img
-        class="order-thumb"
-        src="${escapeHtml(url)}"
-        alt="Ordered dress"
-        loading="lazy"
-      >
+  class="order-thumb"
+  src="${escapeHtml(url)}"
+  alt="Ordered dress"
+  loading="lazy"
+  style="cursor:pointer"
+  onclick="openProductImage(this.src)"
+  title="Click to view full image"
+>
     `).join("")}
   </div>
 
@@ -2319,6 +2322,7 @@ const detailImages = await loadVariantImages(
                   <tr>
 
                    <td>
+
   <div class="order-item-product">
 
     ${item.image_url
@@ -2327,6 +2331,9 @@ const detailImages = await loadVariantImages(
           src="${escapeHtml(item.image_url)}"
           alt="${escapeHtml(productName)}"
           loading="lazy"
+          style="cursor:pointer"
+          onclick="openProductImage(this.src)"
+          title="Click to view full image"
         >`
       : ""
     }
@@ -2664,6 +2671,11 @@ async function updateOrderStatus() {
 /* =====================================================
    CLOSE MODAL
 ===================================================== */
+function openProductImage(url) {
+  if (!url) return;
+
+  window.open(url, "_blank", "noopener,noreferrer");
+}
 
 function closeOrderModal() {
   document.getElementById("orderModal").classList.remove("show");
