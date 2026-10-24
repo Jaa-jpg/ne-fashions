@@ -2650,52 +2650,62 @@ if (orderItems.length > 0) {
 }
 
 
+   
     // --------------------------------------------------
-    // 7. SHOW SUCCESS SCREEN
+    // 7. SEND EMAIL ONLY IF CUSTOMER SELECTED EMAIL
     // --------------------------------------------------
 
-    try {
-  const { data: emailResult, error: emailError } =
-    await supabaseClient.functions.invoke("send-order-email", {
-      body: {
-        orderNumber: newOrder.order_number,
-        customerName: checkoutCustomer.name,
-        customerEmail: checkoutCustomer.email,
-        customerPhone: checkoutCustomer.phone,
-        totalAmount: totalAmount,
-        paymentStatus: "Payment verification pending"
+    if (
+      checkoutCustomer.updateMethod === "email" &&
+      checkoutCustomer.email &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(checkoutCustomer.email)
+    ) {
+      try {
+        const { data: emailResult, error: emailError } =
+          await supabaseClient.functions.invoke("send-order-email", {
+            body: {
+              orderNumber: newOrder.order_number,
+              customerName: checkoutCustomer.name,
+              customerEmail: checkoutCustomer.email,
+              customerPhone: checkoutCustomer.phone,
+              totalAmount: totalAmount,
+              paymentStatus: "Payment verification pending"
+            }
+          });
+
+        if (emailError) {
+          console.error("Email notification error:", emailError);
+        } else {
+          console.log("Order email sent:", emailResult);
+        }
+
+      } catch (emailError) {
+        console.error("Email function error:", emailError);
       }
-    });
+    }
 
-  if (emailError) {
-    console.error("Email notification error:", emailError);
-  } else {
-    console.log("Order email sent:", emailResult);
-  }
-} catch (emailError) {
+    // --------------------------------------------------
+    // 8. SHOW ORDER SUCCESS
+    // --------------------------------------------------
 
-  console.error("Email function error:", emailError);
+    showOrderSuccess(newOrder.order_number);
 
-}
+  } catch (error) {
 
-showOrderSuccess(newOrder.order_number);
+    console.error("UPI ORDER ERROR:", error);
 
-} catch (error) {
+    alert(
+      "ORDER ERROR:\n\n" +
+      (error?.message || error?.details || JSON.stringify(error))
+    );
 
-  console.error("UPI ORDER ERROR:", error);
-
-  alert(
-    "ORDER ERROR:\n\n" +
-    (error?.message || error?.details || JSON.stringify(error))
-  );
-
-} finally {
+  } finally {
 
     submitButton.disabled = false;
     submitButton.textContent = originalButtonText;
+
   }
 }
-
 
 
 /* =========================================================
