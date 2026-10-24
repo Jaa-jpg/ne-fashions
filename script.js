@@ -1808,10 +1808,15 @@ function updateCheckoutCouponTotal() {
 
   const row = document.getElementById("checkoutDiscountRow");
 
+  if (row) {
   row.style.display = appliedCoupon ? "flex" : "none";
+}
 
-  document.getElementById("checkoutDiscount").textContent =
-    "−" + money(discount);
+  const discountElement = document.getElementById("checkoutDiscount");
+
+if (discountElement) {
+  discountElement.textContent = "−" + money(discount);
+}
 
   return { subtotal, shipping, discount, total };
 }
