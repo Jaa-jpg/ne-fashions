@@ -1748,33 +1748,54 @@ function removeCartItem(index) {
 
 let checkoutCustomer = null;
 const SHIPPING_FEE = 100;
+let appliedCoupon = null;
 
-
-/* ---------------- OPEN CHECKOUT ---------------- */
-
-function checkout() {
-
-  if (!cart.length) {
-
-    alert("Your cart is empty.");
-
-    return;
-  }
-
-  const checkoutOverlay =
-    document.getElementById("checkoutOverlay");
-
-  if (!checkoutOverlay) return;
-  
-  /* Update checkout total */
-
-  const subtotal = cart.reduce(
-    (sum, item) => sum + Number(item.price) * Number(item.quantity),
+function getCheckoutSubtotal() {
+  return cart.reduce(
+    (sum, item) =>
+      sum + Number(item.price) * Number(item.quantity),
     0
   );
+}
 
+function calculateCouponDiscount(coupon, subtotal) {
+  if (!coupon) return 0;
+
+  let discount = 0;
+
+  if (
+    coupon.discount_type === "percentage" ||
+    coupon.discount_type === "percent"
+  ) {
+    discount = subtotal * Number(coupon.discount_value) / 100;
+  } else {
+    discount = Number(coupon.discount_value);
+  }
+
+  if (coupon.max_discount_amount != null) {
+    discount = Math.min(
+      discount,
+      Number(coupon.max_discount_amount)
+    );
+  }
+
+  return Math.round(
+    Math.max(0, Math.min(discount, subtotal)) * 100
+  ) / 100;
+}
+
+function updateCheckoutCouponTotal() {
+  const subtotal = getCheckoutSubtotal();
   const shipping = subtotal > 0 ? SHIPPING_FEE : 0;
-  const total = subtotal + shipping;
+
+  const discount = calculateCouponDiscount(
+    appliedCoupon,
+    subtotal
+  );
+
+  const total = Math.round(
+    (subtotal + shipping - discount) * 100
+  ) / 100;
 
   document.getElementById("checkoutSubtotal").textContent =
     money(subtotal);
@@ -1784,6 +1805,123 @@ function checkout() {
 
   document.getElementById("checkoutTotal").textContent =
     money(total);
+
+  const row = document.getElementById("checkoutDiscountRow");
+
+  row.style.display = appliedCoupon ? "flex" : "none";
+
+  document.getElementById("checkoutDiscount").textContent =
+    "−" + money(discount);
+
+  return { subtotal, shipping, discount, total };
+}
+
+async function applyCheckoutCoupon() {
+  const input = document.getElementById("checkoutCouponCode");
+  const message = document.getElementById("couponMessage");
+  const button = document.getElementById("applyCouponBtn");
+
+  const code = input.value.trim().toUpperCase();
+  const subtotal = getCheckoutSubtotal();
+
+  appliedCoupon = null;
+  updateCheckoutCouponTotal();
+
+  if (!code) {
+    message.textContent = "Please enter a coupon code.";
+    return;
+  }
+
+  button.disabled = true;
+  message.textContent = "Checking coupon...";
+
+  try {
+    const { data: coupon, error } = await supabaseClient
+      .from("coupons")
+      .select("*")
+      .eq("code", code)
+      .eq("active", true)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!coupon) {
+      throw new Error("Invalid or inactive coupon.");
+    }
+
+    const now = Date.now();
+
+    if (coupon.start_date &&
+        now < new Date(coupon.start_date).getTime()) {
+      throw new Error("Coupon is not active yet.");
+    }
+
+    if (coupon.expiry_date &&
+        now > new Date(coupon.expiry_date).getTime()) {
+      throw new Error("Coupon has expired.");
+    }
+
+    if (subtotal < Number(coupon.minimum_order_amount || 0)) {
+      throw new Error(
+        "Minimum order amount is " +
+        money(Number(coupon.minimum_order_amount))
+      );
+    }
+
+    if (
+      coupon.usage_limit != null &&
+      Number(coupon.used_count || 0) >=
+      Number(coupon.usage_limit)
+    ) {
+      throw new Error("Coupon usage limit reached.");
+    }
+
+    if (
+      Number(coupon.discount_value) <= 0 ||
+      (
+        coupon.discount_type === "percentage" &&
+        Number(coupon.discount_value) > 100
+      )
+    ) {
+      throw new Error("Invalid coupon discount.");
+    }
+
+    appliedCoupon = coupon;
+    updateCheckoutCouponTotal();
+
+    message.textContent = "✓ Coupon applied successfully!";
+    message.style.color = "green";
+
+  } catch (error) {
+    appliedCoupon = null;
+    updateCheckoutCouponTotal();
+
+    message.textContent = error.message;
+    message.style.color = "red";
+
+  } finally {
+    button.disabled = false;
+  }
+}
+
+
+
+/* ---------------- OPEN CHECKOUT ---------------- */
+
+function checkout() {
+
+  if (!cart.length) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const checkoutOverlay =
+    document.getElementById("checkoutOverlay");
+
+  if (!checkoutOverlay) return;
+
+  /* Update checkout total with coupon discount */
+  updateCheckoutCouponTotal();
 
   /* Reset checkout view */
 
@@ -1798,7 +1936,6 @@ function checkout() {
   document.body.classList.add("no-scroll");
 
 }
-
 
 /* ---------------- CLOSE CHECKOUT ---------------- */
 
@@ -2071,14 +2208,7 @@ function payViaUPI() {
   }
 
   
-const subtotal = cart.reduce(
-  (sum, item) =>
-    sum + item.price * item.quantity,
-  0
-);
-
-const shipping = subtotal > 0 ? SHIPPING_FEE : 0;
-const total = subtotal + shipping;
+const { total } = updateCheckoutCouponTotal();
 
 
   const checkoutOptions =
