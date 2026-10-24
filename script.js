@@ -2367,57 +2367,64 @@ async function submitUPIOrder(event) {
     // 1. CREATE / FIND CUSTOMER
     // --------------------------------------------------
 
-    let customerId = null;
+let customerId = null;
 
-    const { data: existingCustomer, error: customerFindError } =
-      await supabaseClient
-        .from("customers")
-        .select("id")
-        .eq("phone", checkoutCustomer.phone)
-        .maybeSingle();
+const { data: existingCustomers, error: customerFindError } =
+  await supabaseClient
+    .from("customers")
+    .select("id")
+    .eq("phone", checkoutCustomer.phone)
+    .order("id", { ascending: true })
+    .limit(1);
 
-    if (customerFindError) {
-      throw customerFindError;
-    }
+if (customerFindError) {
+  throw new Error("Customer lookup: " + customerFindError.message);
+}
 
-    if (existingCustomer) {
-      customerId = existingCustomer.id;
+const existingCustomer = existingCustomers?.[0] || null;
 
-          } else {
+if (existingCustomer) {
 
-      const { error: customerInsertError } =
-        await supabaseClient
-          .from("customers")
-          .insert({
-            name: checkoutCustomer.name,
-            phone: checkoutCustomer.phone,
-            email: checkoutCustomer.email
-          });
+  // Existing customer - reuse same customer ID
+  customerId = existingCustomer.id;
 
-      if (customerInsertError) {
-        throw customerInsertError;
-      }
+} else {
 
-      // Get the newly created customer's ID
-      const { data: insertedCustomer, error: insertedCustomerError } =
-        await supabaseClient
-          .from("customers")
-          .select("id")
-          .eq("phone", checkoutCustomer.phone)
-          .maybeSingle();
+  // New customer - create record
+  const { error: customerInsertError } =
+    await supabaseClient
+      .from("customers")
+      .insert({
+        name: checkoutCustomer.name,
+        phone: checkoutCustomer.phone,
+        email: checkoutCustomer.email
+      });
 
-      if (insertedCustomerError) {
-        throw insertedCustomerError;
-      }
+  if (customerInsertError) {
+    throw new Error("Customer insert: " + customerInsertError.message);
+  }
 
-      if (!insertedCustomer) {
-        throw new Error(
-          "Customer was created, but customer ID could not be found."
-        );
-      }
+  // Retrieve newly created customer
+  const { data: insertedCustomers, error: insertedCustomerError } =
+    await supabaseClient
+      .from("customers")
+      .select("id")
+      .eq("phone", checkoutCustomer.phone)
+      .order("id", { ascending: false })
+      .limit(1);
 
-      customerId = insertedCustomer.id;
-    }
+  if (insertedCustomerError) {
+    throw new Error("New customer lookup: " + insertedCustomerError.message);
+  }
+
+  const insertedCustomer = insertedCustomers?.[0] || null;
+
+  if (!insertedCustomer) {
+    throw new Error("Customer was created, but ID could not be found.");
+  }
+
+  customerId = insertedCustomer.id;
+}
     
     // --------------------------------------------------
 // 2. SAVE CUSTOMER ADDRESS
@@ -2458,18 +2465,27 @@ if (!addressId) {
     // --------------------------------------------------
     // 3. CALCULATE ORDER TOTAL
     // --------------------------------------------------
+const subtotal = cart.reduce(
+  (sum, item) =>
+    sum + Number(item.price) * Number(item.quantity),
+  0
+);
 
-    const subtotal = cart.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+const shippingFee = subtotal > 0 ? SHIPPING_FEE : 0;
 
-    const shippingFee = subtotal > 0 ? SHIPPING_FEE : 0;
-    const discount = 0;
-    const totalAmount = subtotal + shippingFee - discount;
+const discount = calculateCouponDiscount(
+  appliedCoupon,
+  subtotal
+);
+
+const totalAmount = Math.round(
+  (subtotal + shippingFee - discount) * 100
+) / 100;
     console.log("Cart:", cart);
 console.log("Subtotal:", subtotal);
 console.log("Shipping:", shippingFee);
+console.log("Coupon:", appliedCoupon?.code || "None");
+console.log("Discount:", discount);
 console.log("Total:", totalAmount);
 
     document.getElementById("checkoutSubtotal").textContent =
@@ -2521,36 +2537,27 @@ console.log("Total:", totalAmount);
     // --------------------------------------------------
     // 6. CREATE ORDER
     // --------------------------------------------------
+const { data: newOrder, error: orderError } =
+  await supabaseClient.rpc("create_upi_order", {
+    p_order_number: orderNumber,
+    p_customer_id: customerId,
+    p_address_id: addressId,
+    p_subtotal: subtotal,
+    p_shipping_fee: shippingFee,
+    p_discount: discount,
+    p_total_amount: totalAmount,
+    p_payment_screenshot_url: filePath,
+    p_payment_name: paymentName,
+    p_payment_phone: paymentPhone
+  });
 
-    const { data: newOrder, error: orderError } =
-      await supabaseClient
-        .from("orders")
-        .insert({
-          order_number: orderNumber,
-          customer_id: customerId,
-          address_id: addressId,
+if (orderError) {
+  throw orderError;
+}
 
-          subtotal: subtotal,
-          shipping_fee: shippingFee,
-          discount: discount,
-          total_amount: totalAmount,
-
-          payment_status: "pending",
-          order_status: "pending",
-
-          payment_screenshot_url: filePath,
-          payment_name: paymentName,
-          payment_phone: paymentPhone,
-
-          notes: "UPI payment submitted. Payment verification pending."
-        })
-        .select("id, order_number")
-        .single();
-
-    if (orderError) {
-      throw orderError;
-    }
-
+if (!newOrder?.id) {
+  throw new Error("Order ID was not returned.");
+}
 
 // SAVE ORDER ITEMS
 const orderItems = [];
