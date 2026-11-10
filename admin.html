@@ -87,6 +87,64 @@
       font-size: 13px;
       color: #b00020;
     }
+
+.login-box {
+  margin: 16px;
+}
+
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 70px;
+}
+
+.show-password {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: auto;
+  padding: 2px;
+  background: transparent;
+  color: #333;
+  font-size: 13px;
+}
+
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: 12px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.remember-label input {
+  width: auto;
+  margin: 0;
+}
+
+.forgot-link {
+  font-size: 12px;
+  color: #333;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.message.success {
+  color: #167a3e;
+}
+
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -102,67 +160,212 @@
       <p>Admin Panel</p>
     </div>
 
-    <form id="adminLoginForm">
+    
+<form id="adminLoginForm">
 
-      <label for="adminEmail">Email</label>
-      <input
-        type="email"
-        id="adminEmail"
-        placeholder="Admin email"
-        required
-      >
+  <label for="adminEmail">Email</label>
+  <input
+    type="email"
+    id="adminEmail"
+    placeholder="Admin email"
+    autocomplete="username"
+    required
+  >
 
-      <label for="adminPassword">Password</label>
-      <input
-        type="password"
-        id="adminPassword"
-        placeholder="Password"
-        required
-      >
+  <label for="adminPassword">Password</label>
 
-      <button type="submit">Login</button>
+  <div class="password-wrap">
+    <input
+      type="password"
+      id="adminPassword"
+      placeholder="Password"
+      autocomplete="current-password"
+      required
+    >
 
-      <div class="message" id="loginMessage"></div>
+    <button
+      type="button"
+      class="show-password"
+      onclick="togglePassword()"
+    >
+      Show
+    </button>
+  </div>
 
-    </form>
+  <div class="login-options">
+    <label class="remember-label">
+      <input type="checkbox" id="rememberMe">
+      Remember email
+    </label>
+
+    <a href="#" class="forgot-link"
+       onclick="forgotPassword(event)">
+      Forgot Password?
+    </a>
+  </div>
+
+  <button type="submit" id="loginButton">Login</button>
+
+  <div class="message" id="loginMessage" role="status"></div>
+
+</form>
+
+<form id="resetForm" style="display:none;">
+  <label for="newPassword">New Password</label>
+  <input
+    type="password"
+    id="newPassword"
+    placeholder="Enter new password"
+    autocomplete="new-password"
+    minlength="8"
+    required
+  >
+
+  <button type="submit">Update Password</button>
+  <div class="message" id="resetMessage" role="status"></div>
+</form>
+
 
   </div>
 <script>
 
-  const SUPABASE_URL = "https://rcablyesxkzvxzolwvyz.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_7WueOf83yr4MDgHOz506iA_wGZ3uzcB";
+  
+const SUPABASE_URL = "https://rcablyesxkzvxzolwvyz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_7WueOf83yr4MDgHOz506iA_wGZ3uzcB";
 
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-  const loginForm = document.getElementById("adminLoginForm");
-  const loginMessage = document.getElementById("loginMessage");
+const loginForm = document.getElementById("adminLoginForm");
+const loginMessage = document.getElementById("loginMessage");
+const rememberMe = document.getElementById("rememberMe");
 
-  loginForm.addEventListener("submit", async function (e) {
+const savedEmail = localStorage.getItem("nefAdminEmail");
+if (savedEmail) {
+  document.getElementById("adminEmail").value = savedEmail;
+  rememberMe.checked = true;
+}
 
-    e.preventDefault();
+function togglePassword() {
+  const input = document.getElementById("adminPassword");
+  const button = document.querySelector(".show-password");
 
-    const email = document.getElementById("adminEmail").value.trim();
-    const password = document.getElementById("adminPassword").value;
+  const visible = input.type === "password";
+  input.type = visible ? "text" : "password";
+  button.textContent = visible ? "Hide" : "Show";
+}
 
-    loginMessage.textContent = "Logging in...";
+loginForm.addEventListener("submit", async function(e) {
+  e.preventDefault();
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password
+  const email = document.getElementById("adminEmail").value.trim();
+  const password = document.getElementById("adminPassword").value;
+  const button = document.getElementById("loginButton");
+
+  loginMessage.classList.remove("success");
+  loginMessage.textContent = "Logging in...";
+  button.disabled = true;
+
+  try {
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
     });
 
-    if (error) {
-      console.error("Login error:", error);
-      loginMessage.textContent = error.message;
-      return;
+    if (error) throw error;
+
+    if (rememberMe.checked) {
+      localStorage.setItem("nefAdminEmail", email);
+    } else {
+      localStorage.removeItem("nefAdminEmail");
     }
 
     window.location.href = "admin-dashboard.html";
+  } catch (error) {
+    loginMessage.textContent = error.message || "Login failed.";
+  } finally {
+    button.disabled = false;
+  }
+});
 
+async function forgotPassword(event) {
+  event.preventDefault();
+
+  const email = document.getElementById("adminEmail").value.trim();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    loginMessage.textContent = "Enter your admin email first.";
+    return;
+  }
+
+  loginMessage.classList.remove("success");
+  loginMessage.textContent = "Requesting password reset...";
+
+  try {
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo: "https://nefashions.in/admin.html"
+      }
+    );
+
+    if (error) throw error;
+
+    loginMessage.classList.add("success");
+    loginMessage.textContent =
+      "If this email is registered, a password reset link will be sent.";
+  } catch (error) {
+    loginMessage.textContent =
+      error.message || "Unable to request password reset.";
+  }
+}
+
+let passwordRecoveryMode = false;
+
+supabaseClient.auth.onAuthStateChange((event) => {
+  if (event === "PASSWORD_RECOVERY") {
+    passwordRecoveryMode = true;
+    loginForm.style.display = "none";
+    document.getElementById("resetForm").style.display = "block";
+  }
+});
+
+document.getElementById("resetForm")
+  .addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    if (!passwordRecoveryMode) return;
+
+    const password = document.getElementById("newPassword").value;
+    const message = document.getElementById("resetMessage");
+
+    message.classList.remove("success");
+    message.textContent = "Updating password...";
+
+    try {
+      const { error } = await supabaseClient.auth.updateUser({
+        password
+      });
+
+      if (error) throw error;
+
+      message.classList.add("success");
+      message.textContent =
+        "Password updated successfully. Redirecting...";
+
+      passwordRecoveryMode = false;
+
+      await supabaseClient.auth.signOut();
+
+      window.location.replace("admin.html");
+    } catch (error) {
+      message.textContent =
+        error.message || "Unable to update password.";
+    }
   });
+
 
 </script>
 
