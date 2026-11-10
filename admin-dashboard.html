@@ -178,6 +178,11 @@
       color: #555;
     }
 
+.status.pending {
+  background: #fff3cd;
+  color: #946200;
+}
+
     .refresh-btn {
       border: 1px solid #ddd;
       background: white;
@@ -863,7 +868,7 @@
 
           <div>
 
-            <span class="status">
+            <span class="status ${String(order.order_status || 'pending').toLowerCase() === 'pending' ? 'pending' : ''}">
               ${escapeHtml(
                 order.order_status ||
                 "Pending"
