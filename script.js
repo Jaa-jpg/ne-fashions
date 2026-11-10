@@ -2031,12 +2031,14 @@ async function orderViaWhatsApp() {
   const whatsappNumber = "919392888728";
 
   // Take a snapshot so the saved order and message match.
+  const cartImages = cart.map(item => item.image || "");
+
   const orderCart = cart.map(item => ({
-    name: item.name,
-    color: item.color,
-    size: item.size,
-    quantity: Number(item.quantity)
-  }));
+  name: item.name,
+  color: item.color,
+  size: item.size,
+  quantity: Number(item.quantity)
+}));
 
   const customer = { ...checkoutCustomer };
 
@@ -2074,14 +2076,25 @@ async function orderViaWhatsApp() {
     const formatPrice = value =>
       "₹" + Number(value).toLocaleString("en-IN");
 
-    const itemLines = data.items.map((item, index) =>
-      `${index + 1}. ${item.name}\n` +
-      `Color: ${item.color}\n` +
-      `Size: ${item.size}\n` +
-      `Qty: ${item.quantity}\n` +
-      `Price: ${formatPrice(item.unit_price)}\n` +
-      `Subtotal: ${formatPrice(item.total_price)}`
-    ).join("\n\n");
+    
+const itemLines = data.items.map((item, index) => {
+  const cartItem = { image: cartImages[index] };
+
+  const imageUrl = cartItem?.image
+    ? new URL(cartItem.image, window.location.href).href
+    : "";
+
+  return (
+    `${index + 1}. ${item.name}\n` +
+    `Color: ${item.color}\n` +
+    `Size: ${item.size}\n` +
+    `Qty: ${item.quantity}\n` +
+    `Price: ${formatPrice(item.unit_price)}\n` +
+    `Subtotal: ${formatPrice(item.total_price)}` +
+    (imageUrl ? `\nProduct Image: ${imageUrl}` : "")
+  );
+}).join("\n\n");
+
 
     const message =
       `Hi NE Fashions,\n\n` +
