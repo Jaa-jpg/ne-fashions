@@ -3350,3 +3350,45 @@ img {
     min-height: 105px;
   }
 }
+
+
+/* WhatsApp checkout card - mobile layout fix */
+@media (max-width: 768px) {
+  #checkoutOptions button[onclick*="orderViaWhatsApp"] {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 12px !important;
+    text-align: left !important;
+  }
+
+  #checkoutOptions button[onclick*="orderViaWhatsApp"] > * {
+    min-width: 0;
+  }
+}
+
+/* Mobile checkout popup scrolling */
+@media (max-width: 768px) {
+  #checkoutOverlay {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #checkoutOverlay input,
+  #checkoutOverlay textarea,
+  #checkoutOverlay select {
+    font-size: 16px !important;
+  }
+
+  body.no-scroll {
+    overflow: hidden !important;
+  }
+}
