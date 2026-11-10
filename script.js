@@ -2155,7 +2155,8 @@ const itemLines = data.items.map((item, index) => {
 
     // Do not clear the cart.
     // Do not change the UPI or email checkout flow.
-     window.location.href = whatsappURL;
+     // Open WhatsApp using the current browser tab.
+window.location.replace(whatsappURL);
 
   } catch (error) {
     console.error("WHATSAPP ORDER ERROR:", error);
