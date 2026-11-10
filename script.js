@@ -2073,6 +2073,36 @@ async function orderViaWhatsApp() {
       throw new Error("Order saved, but response was incomplete.");
     }
 
+    // Send new order email to client and customer.
+    // Email failure must not affect the saved WhatsApp order.
+    try {
+      const { data: emailResult, error: emailError } =
+        await supabaseClient.functions.invoke(
+          "send-order-email",
+          {
+            body: {
+              orderNumber: data.order_number,
+              customerName: customer.name,
+              customerEmail: customer.email || "",
+              customerPhone: customer.phone,
+              totalAmount: Number(data.total_amount),
+              paymentStatus: "pending",
+              orderStatus: "pending",
+              eventType: "new_order"
+            }
+          }
+        );
+
+      if (emailError) {
+        console.error("ORDER EMAIL ERROR:", emailError);
+      } else {
+        console.log("ORDER EMAIL RESULT:", emailResult);
+      }
+    } catch (emailError) {
+      console.error("ORDER EMAIL ERROR:", emailError);
+    }
+
+
     const formatPrice = value =>
       "₹" + Number(value).toLocaleString("en-IN");
 
