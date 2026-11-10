@@ -1942,51 +1942,18 @@ function checkout() {
 
 }
 
+
 /* ---------------- CLOSE CHECKOUT ---------------- */
 
 function closeCheckout() {
-
   const checkoutOverlay =
     document.getElementById("checkoutOverlay");
 
   if (!checkoutOverlay) return;
 
   checkoutOverlay.classList.remove("active");
-
   document.body.classList.remove("no-scroll");
-
 }
-
-/* ---------------- ORDER UPDATE METHOD ---------------- */
-
-window.addEventListener("DOMContentLoaded", function () {
-  const method = document.getElementById("orderUpdateMethod");
-  const whatsappField = document.getElementById("updateWhatsAppField");
-  const whatsappInput = document.getElementById("customerWhatsApp");
-  const emailField = document.getElementById("emailUpdateField");
-  const emailInput = document.getElementById("customerEmail");
-
-  if (!method || !whatsappField || !whatsappInput || !emailField || !emailInput) return;
-
-  function toggleUpdateFields() {
-    const useWhatsApp = method.value === "whatsapp";
-    const useEmail = method.value === "email";
-
-    whatsappField.style.display = useWhatsApp ? "block" : "none";
-    whatsappInput.disabled = !useWhatsApp;
-    whatsappInput.required = useWhatsApp;
-
-    emailField.style.display = useEmail ? "block" : "none";
-    emailInput.disabled = !useEmail;
-    emailInput.required = useEmail;
-
-    if (!useWhatsApp) whatsappInput.value = "";
-    if (!useEmail) emailInput.value = "";
-  }
-
-  method.addEventListener("change", toggleUpdateFields);
-  toggleUpdateFields();
-});
 
 
 /* ---------------- CUSTOMER DETAILS ---------------- */
@@ -2002,9 +1969,7 @@ function continueCheckout(event) {
 
   const phone = document.getElementById("customerPhone").value.trim();
   const pincode = document.getElementById("customerPincode").value.trim();
-  const updateMethod = document.getElementById("orderUpdateMethod").value;
   const email = document.getElementById("customerEmail").value.trim();
-  const whatsapp = document.getElementById("customerWhatsApp").value.trim();
 
   if (!/^[0-9]{10}$/.test(phone)) {
     alert("Please enter a valid 10-digit mobile number.");
@@ -2016,21 +1981,12 @@ function continueCheckout(event) {
     return;
   }
 
-  if (updateMethod === "email" && !email) {
-    alert("Please enter your email address for order updates.");
-    return;
-  }
-if (updateMethod === "whatsapp" && !/^[0-9]{10}$/.test(whatsapp)) {
-  alert("Please enter a valid 10-digit WhatsApp number.");
-  return;
-}
-
   checkoutCustomer = {
     name: document.getElementById("customerName").value.trim(),
     phone: phone,
-    email: updateMethod === "email" ? email : "",
-    updateMethod: updateMethod,
-    whatsapp: updateMethod === "whatsapp" ? whatsapp : "",
+    email: email,
+    updateMethod: email ? "email" : "whatsapp",
+    whatsapp: phone,
     address: document.getElementById("customerAddress").value.trim(),
     city: document.getElementById("customerCity").value.trim(),
     state: document.getElementById("customerState").value.trim(),

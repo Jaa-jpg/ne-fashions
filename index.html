@@ -1089,32 +1089,14 @@
             placeholder="10-digit mobile number" required>
         </div>
 
-        <div class="checkout-field">
-          <label for="orderUpdateMethod">Order updates via</label>
-          <select id="orderUpdateMethod" required>
-            <option value="whatsapp" selected>WhatsApp</option>
-            <option value="email">Email</option>
-          </select>
-        </div>
-
-<div class="checkout-field" id="updateWhatsAppField">
-  <label for="customerWhatsApp">WhatsApp Number</label>
+<div class="checkout-field" id="emailUpdateField">
+  <label for="customerEmail">Email Address (Optional)</label>
   <input
-    id="customerWhatsApp"
-    type="tel"
-    inputmode="numeric"
-    pattern="[0-9]{10}"
-    maxlength="10"
-    placeholder="10-digit WhatsApp number"
-    required
+    id="customerEmail"
+    type="email"
+    placeholder="Enter email address (optional)"
   >
 </div>
-
-        <div class="checkout-field" id="emailUpdateField" style="display:none;">
-          <label for="customerEmail">Email Address</label>
-          <input id="customerEmail" type="email"
-            placeholder="Enter email address" disabled>
-        </div>
 
         <div class="checkout-field">
           <label for="customerAddress">Delivery Address</label>
