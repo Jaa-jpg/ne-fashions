@@ -2048,8 +2048,6 @@ async function orderViaWhatsApp() {
 
   const originalText = button?.textContent;
 
-  // Open a blank tab immediately to avoid popup blockers
-  const whatsappTab = window.open("about:blank", "_blank");
 
   try {
     whatsappOrderSaving = true;
@@ -2157,32 +2155,11 @@ const itemLines = data.items.map((item, index) => {
 
     // Do not clear the cart.
     // Do not change the UPI or email checkout flow.
-    if (whatsappTab && !whatsappTab.closed) {
-      whatsappTab.location.replace(whatsappURL);
-    } else {
-      // Popup blocked: give the customer a way to open WhatsApp
-      const openManually = confirm(
-        `Order ${data.order_number} saved as Pending.\n` +
-        "WhatsApp popup was blocked. Open WhatsApp now?"
-      );
-
-      if (openManually) {
-        window.location.href = whatsappURL;
-      }
-    }
-
-    alert(
-      `Order ${data.order_number} saved as Pending.\n\n` +
-      "Please press Send in WhatsApp to contact NE Fashions.\n" +
-      "Your cart has been kept unchanged."
-    );
+     window.location.href = whatsappURL;
 
   } catch (error) {
     console.error("WHATSAPP ORDER ERROR:", error);
 
-    if (whatsappTab && !whatsappTab.closed) {
-      whatsappTab.close();
-    }
 
     alert(
       "Unable to complete WhatsApp checkout.\n\n" +
@@ -2698,11 +2675,6 @@ if (orderItems.length > 0) {
   } catch (error) {
 
     console.error("UPI ORDER ERROR:", error);
-
-    alert(
-      "ORDER ERROR:\n\n" +
-      (error?.message || error?.details || JSON.stringify(error))
-    );
 
   } finally {
 
