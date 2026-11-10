@@ -1042,6 +1042,34 @@
           <span>Shipping Fee</span>
           <strong id="checkoutShipping">₹100</strong>
         </div>
+        <div class="checkout-coupon" style="margin:12px 0;">
+  <label for="checkoutCouponCode">Coupon Code</label>
+
+  <div style="display:flex;gap:8px;margin-top:8px;">
+    <input
+      type="text"
+      id="checkoutCouponCode"
+      placeholder="Enter coupon code"
+      style="flex:1;min-width:0;padding:10px;"
+    >
+
+    <button
+      type="button"
+      id="applyCouponBtn"
+      onclick="applyCheckoutCoupon()"
+    >
+      APPLY
+    </button>
+  </div>
+
+  <small id="couponMessage" role="status"></small>
+</div>
+
+<div id="checkoutDiscountRow"
+     style="display:none;justify-content:space-between;">
+  <span>Coupon Discount</span>
+  <strong id="checkoutDiscount">−₹0</strong>
+</div>
         <div>
           <span>Grand Total</span>
           <strong id="checkoutTotal">₹0</strong>
