@@ -2077,11 +2077,16 @@ async function orderViaWhatsApp() {
       "₹" + Number(value).toLocaleString("en-IN");
 
     
-const itemLines = data.items.map((item, index) => {
-  const cartItem = { image: cartImages[index] };
 
-  const imageUrl = cartItem?.image
-    ? new URL(cartItem.image, window.location.href).href
+const itemLines = data.items.map((item, index) => {
+  const matchingCartItem = cart.find(cartItem =>
+    cartItem.name === item.name &&
+    cartItem.color === item.color &&
+    cartItem.size === item.size
+  );
+
+  const imageUrl = matchingCartItem?.image
+    ? new URL(matchingCartItem.image, window.location.href).href
     : "";
 
   return (
@@ -2094,6 +2099,7 @@ const itemLines = data.items.map((item, index) => {
     (imageUrl ? `\nProduct Image: ${imageUrl}` : "")
   );
 }).join("\n\n");
+
 
 
     const message =
