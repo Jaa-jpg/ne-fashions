@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -317,108 +318,107 @@
       }
     }
 
-    
-.menu-toggle {
-  display: none;
-}
+    .menu-toggle {
+      display: none;
+    }
 
-.sidebar-overlay {
-  display: none;
-}
+    .sidebar-overlay {
+      display: none;
+    }
 
-@media (max-width: 650px) {
-  .layout {
-    display: block;
-    min-height: 100vh;
-  }
+    @media (max-width: 650px) {
+      .layout {
+        display: block;
+        min-height: 100vh;
+      }
 
-  .menu-toggle {
-    display: block;
-    flex-shrink: 0;
-    border: none;
-    background: transparent;
-    color: #222;
-    font-size: 28px;
-    cursor: pointer;
-    padding: 4px 8px;
-  }
+      .menu-toggle {
+        display: block;
+        flex-shrink: 0;
+        border: none;
+        background: transparent;
+        color: #222;
+        font-size: 28px;
+        cursor: pointer;
+        padding: 4px 8px;
+      }
 
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 260px;
-    max-width: 85vw;
-    height: 100vh;
-    overflow-y: auto;
-    z-index: 1001;
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
-  }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px;
+        max-width: 85vw;
+        height: 100vh;
+        overflow-y: auto;
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+      }
 
-  body.menu-open .sidebar {
-    transform: translateX(0);
-  }
+      body.menu-open .sidebar {
+        transform: translateX(0);
+      }
 
-  .sidebar-overlay {
-    display: block;
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
+      .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
 
-  body.menu-open .sidebar-overlay {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-  }
+      body.menu-open .sidebar-overlay {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
 
-  .main {
-    width: 100%;
-    margin-left: 0;
-    padding: 15px;
-    min-width: 0;
-  }
+      .main {
+        width: 100%;
+        margin-left: 0;
+        padding: 15px;
+        min-width: 0;
+      }
 
-  .topbar {
-    justify-content: flex-start;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+      .topbar {
+        justify-content: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
 
-  .topbar h2 {
-    font-size: 22px;
-  }
+      .topbar h2 {
+        font-size: 22px;
+      }
 
-  .add-btn {
-    padding: 10px 12px;
-  }
+      .add-btn {
+        padding: 10px 12px;
+      }
 
-  .product-form {
-    padding: 16px;
-  }
+      .product-form {
+        padding: 16px;
+      }
 
-  .table-box {
-    max-width: 100%;
-    overflow-x: auto;
-  }
+      .table-box {
+        max-width: 100%;
+        overflow-x: auto;
+      }
 
-  table {
-    min-width: 700px;
-  }
+      table {
+        min-width: 700px;
+      }
 
-  .form-actions {
-    flex-wrap: wrap;
-  }
-}
+      .form-actions {
+        flex-wrap: wrap;
+      }
+    }
 
   </style>
 
@@ -477,12 +477,12 @@
   </aside>
 
 
-<button
-  class="sidebar-overlay"
-  type="button"
-  onclick="closeAdminMenu()"
-  aria-label="Close menu">
-</button>
+  <button
+    class="sidebar-overlay"
+    type="button"
+    onclick="closeAdminMenu()"
+    aria-label="Close menu">
+  </button>
 
   <!-- MAIN -->
 
@@ -490,13 +490,13 @@
 
     <div class="topbar">
 
-<button
-  class="menu-toggle"
-  type="button"
-  onclick="toggleAdminMenu()"
-  aria-label="Open menu">
-  ☰
-</button>
+      <button
+        class="menu-toggle"
+        type="button"
+        onclick="toggleAdminMenu()"
+        aria-label="Open menu">
+        ☰
+      </button>
 
       <h2>Products</h2>
 
@@ -706,260 +706,260 @@
   }
 
 
- /* SHOW FORM */
+  /* SHOW FORM */
 
-window.showProductForm = function () {
+  window.showProductForm = function () {
 
-  document.getElementById("productFormTitle").textContent =
-    "Add New Product";
+    document.getElementById("productFormTitle").textContent =
+      "Add New Product";
 
-  document
-    .getElementById("productForm")
-    .classList.add("show");
+    document
+      .getElementById("productForm")
+      .classList.add("show");
 
-};
-
-
-/* HIDE FORM */
-
-window.hideProductForm = function () {
-
-  document
-    .getElementById("productForm")
-    .classList.remove("show");
-
-};
+  };
 
 
- /* LOAD PRODUCTS */
+  /* HIDE FORM */
 
-async function loadProducts() {
+  window.hideProductForm = function () {
 
-  const {
-    data,
-    error
-  } = await supabaseClient
+    document
+      .getElementById("productForm")
+      .classList.remove("show");
 
-    .from("products")
-
-    .select(`
-      id,
-      name,
-      price,
-      active,
-      categories (
-        name
-      ),
-      product_variants (
-        id,
-        color_name,
-        product_images (
-          id,
-          image_url,
-          sort_order,
-          is_primary
-        )
-      )
-    `)
-
-    .order("id", {
-      ascending: false
-    });
+  };
 
 
-  if (error) {
+  /* LOAD PRODUCTS */
 
-    console.error(
-      "Products loading error:",
+  async function loadProducts() {
+
+    const {
+      data,
       error
-    );
+    } = await supabaseClient
 
-    return;
+      .from("products")
 
-  }
+      .select(`
+        id,
+        name,
+        price,
+        active,
+        categories (
+          name
+        ),
+        product_variants (
+          id,
+          color_name,
+          product_images (
+            id,
+            image_url,
+            sort_order,
+            is_primary
+          )
+        )
+      `)
 
-
-  const tableBody =
-    document.getElementById(
-      "productsTableBody"
-    );
-
-
-  tableBody.innerHTML = "";
-
-
-  if (!data || data.length === 0) {
-
-    tableBody.innerHTML = `
-      <tr>
-        <td
-          colspan="7"
-          class="empty"
-        >
-          No products found.
-        </td>
-      </tr>
-    `;
-
-    return;
-
-  }
-
-
-  data.forEach(product => {
-
-    const row =
-      document.createElement("tr");
-
-
-    /* GET COLORS */
-
-    const colors =
-      product.product_variants || [];
-
-
-    const colorNames =
-      colors
-        .map(color => color.color_name)
-        .filter(Boolean);
-
-
-    /* GET ALL IMAGES */
-
-    const images =
-      colors.flatMap(
-        color =>
-          color.product_images || []
-      );
-
-
-    images.sort(
-      (a, b) =>
-        (a.sort_order ?? 0) -
-        (b.sort_order ?? 0)
-    );
-
-
-    /* IMAGE HTML */
-
-    let imageHTML = "";
-
-
-    if (images.length > 0) {
-
-      imageHTML = `
-        <div style="
-          display:flex;
-          gap:6px;
-          flex-wrap:wrap;
-          align-items:center;
-        ">
-      `;
-
-
-      images.forEach(image => {
-
-        imageHTML += `
-          <img
-            src="${image.image_url}"
-            alt="Product image"
-            style="
-              width:55px;
-              height:65px;
-              object-fit:cover;
-              border-radius:6px;
-              border:1px solid #eee;
-              display:block;
-            "
-          >
-        `;
-
+      .order("id", {
+        ascending: false
       });
 
 
-      imageHTML += `
-        </div>
-      `;
+    if (error) {
+
+      console.error(
+        "Products loading error:",
+        error
+      );
+
+      return;
 
     }
 
 
-    /* COLORS HTML */
-
-    const colorsHTML =
-      colorNames.length > 0
-        ? colorNames.join(", ")
-        : "No colors";
+    const tableBody =
+      document.getElementById(
+        "productsTableBody"
+      );
 
 
-    /* ROW HTML */
+    tableBody.innerHTML = "";
 
-    row.innerHTML = `
 
-      <td>
-        ${product.name || "-"}
-      </td>
+    if (!data || data.length === 0) {
 
-      <td>
-        ${imageHTML}
-      </td>
+      tableBody.innerHTML = `
+        <tr>
+          <td
+            colspan="7"
+            class="empty"
+          >
+            No products found.
+          </td>
+        </tr>
+      `;
 
-      <td>
-        ${colorsHTML}
-      </td>
+      return;
 
-      <td>
-        ${product.categories?.name || "-"}
-      </td>
+    }
 
-      <td>
-        ₹${product.price ?? 0}
-      </td>
 
-      <td>
+    data.forEach(product => {
 
-        <span class="status ${
-          product.active
-            ? "active-status"
-            : "inactive-status"
-        }">
+      const row =
+        document.createElement("tr");
 
-          ${
+
+      /* GET COLORS */
+
+      const colors =
+        product.product_variants || [];
+
+
+      const colorNames =
+        colors
+          .map(color => color.color_name)
+          .filter(Boolean);
+
+
+      /* GET ALL IMAGES */
+
+      const images =
+        colors.flatMap(
+          color =>
+            color.product_images || []
+        );
+
+
+      images.sort(
+        (a, b) =>
+          (a.sort_order ?? 0) -
+          (b.sort_order ?? 0)
+      );
+
+
+      /* IMAGE HTML */
+
+      let imageHTML = "";
+
+
+      if (images.length > 0) {
+
+        imageHTML = `
+          <div style="
+            display:flex;
+            gap:6px;
+            flex-wrap:wrap;
+            align-items:center;
+          ">
+        `;
+
+
+        images.forEach(image => {
+
+          imageHTML += `
+            <img
+              src="${image.image_url}"
+              alt="Product image"
+              style="
+                width:55px;
+                height:65px;
+                object-fit:cover;
+                border-radius:6px;
+                border:1px solid #eee;
+                display:block;
+              "
+            >
+          `;
+
+        });
+
+
+        imageHTML += `
+          </div>
+        `;
+
+      }
+
+
+      /* COLORS HTML */
+
+      const colorsHTML =
+        colorNames.length > 0
+          ? colorNames.join(", ")
+          : "No colors";
+
+
+      /* ROW HTML */
+
+      row.innerHTML = `
+
+        <td>
+          ${product.name || "-"}
+        </td>
+
+        <td>
+          ${imageHTML}
+        </td>
+
+        <td>
+          ${colorsHTML}
+        </td>
+
+        <td>
+          ${product.categories?.name || "-"}
+        </td>
+
+        <td>
+          ₹${product.price ?? 0}
+        </td>
+
+        <td>
+
+          <span class="status ${
             product.active
-              ? "Active"
-              : "Inactive"
-          }
+              ? "active-status"
+              : "inactive-status"
+          }">
 
-        </span>
+            ${
+              product.active
+                ? "Active"
+                : "Inactive"
+            }
 
-      </td>
+          </span>
 
-      <td>
+        </td>
 
-        <button
-          class="action-btn"
-          onclick="editProduct(${product.id})"
-        >
-          Edit
-        </button>
+        <td>
 
-        <button
-          class="action-btn"
-          onclick="deleteProduct(${product.id})"
-        >
-          Delete
-        </button>
+          <button
+            class="action-btn"
+            onclick="editProduct(${product.id})"
+          >
+            Edit
+          </button>
 
-      </td>
+          <button
+            class="action-btn"
+            onclick="deleteProduct(${product.id})"
+          >
+            Delete
+          </button>
 
-    `;
+        </td>
+
+      `;
 
 
-    tableBody.appendChild(row);
+      tableBody.appendChild(row);
 
-  });
+    });
 
-}
+  }
 
 
   /* LOAD CATEGORIES */
@@ -1021,202 +1021,246 @@ async function loadProducts() {
   }
 
 
+  /* ADD COLOR */
+
   function addColor() {
 
-  const colorList =
-    document.getElementById("colorList");
+    const colorList =
+      document.getElementById("colorList");
 
-  const colorRow =
-    document.createElement("div");
+    const colorRow =
+      document.createElement("div");
 
-  colorRow.className = "color-row";
+    colorRow.className = "color-row";
 
-  colorRow.innerHTML = `
+    colorRow.innerHTML = `
 
-    <div style="flex:1;">
+      <div style="flex:1;">
 
-     <div style="position:relative;">
+        <div style="position:relative;">
 
-  <input
-    type="text"
-    placeholder="Enter color name"
-    class="color-name"
-    style="width:100%;"
-  >
+          <input
+            type="text"
+            placeholder="Enter color name"
+            class="color-name"
+            style="width:100%;"
+          >
 
-  <button
-    type="button"
-    class="remove-color-small"
-    style="
-      position:absolute;
-      right:6px;
-      top:50%;
-      transform:translateY(-50%);
-      border:none;
-      background:#fff;
-      color:#888;
-      font-size:14px;
-      cursor:pointer;
-      padding:0 4px;
-      line-height:1;
-    "
-  >
-    ×
-  </button>
+          <button
+            type="button"
+            class="remove-color-small"
+            style="
+              position:absolute;
+              right:6px;
+              top:50%;
+              transform:translateY(-50%);
+              border:none;
+              background:#fff;
+              color:#888;
+              font-size:14px;
+              cursor:pointer;
+              padding:0 4px;
+              line-height:1;
+            "
+          >
+            ×
+          </button>
 
-</div>
+        </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        class="color-images"
-        style="display:none;"
-      >
+        <!-- ADD SIZES -->
 
-      <button
-        type="button"
-        class="add-color-btn"
-        style="margin-top:8px;"
-        onclick="this.previousElementSibling.click()"
-      >
-        + Add Images
-      </button>
+        <input
+          type="text"
+          class="variant-sizes"
+          placeholder="Sizes (e.g. S, M, L, XL)"
+          style="width:100%; margin-top:8px;"
+        >
 
-      <div
-        class="color-image-preview image-preview"
-      ></div>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          class="color-images"
+          style="display:none;"
+        >
 
-    </div>
+        <button
+          type="button"
+          class="add-color-btn"
+          style="margin-top:8px;"
+          onclick="this.previousElementSibling.click()"
+        >
+          + Add Images
+        </button>
 
-  `;
+        <div
+          class="color-image-preview image-preview"
+        ></div>
 
-  colorList.appendChild(colorRow);
+      </div>
 
-  const imageInput =
-    colorRow.querySelector(".color-images");
+    `;
 
-  const preview =
-    colorRow.querySelector(".color-image-preview");
+    colorList.appendChild(colorRow);
 
-   colorRow
-  .querySelector(".remove-color-small")
-  .addEventListener("click", function () {
+    const imageInput =
+      colorRow.querySelector(".color-images");
 
-    if (colorRow.dataset.variantId) {
+    const preview =
+      colorRow.querySelector(".color-image-preview");
 
-      if (!window.removedVariantIds) {
-        window.removedVariantIds = [];
-      }
+    colorRow
+      .querySelector(".remove-color-small")
+      .addEventListener("click", function () {
 
-      window.removedVariantIds.push(
-        Number(colorRow.dataset.variantId)
-      );
+        if (colorRow.dataset.variantId) {
 
-    }
+          if (!window.removedVariantIds) {
+            window.removedVariantIds = [];
+          }
 
-    colorRow.remove();
+          window.removedVariantIds.push(
+            Number(colorRow.dataset.variantId)
+          );
 
-  });
+        }
 
-  
+        colorRow.remove();
+
+      });
+
+
     colorRow.colorFiles = [];
 
-imageInput.addEventListener("change", function () {
+    imageInput.addEventListener("change", function () {
 
-  colorRow.colorFiles.push(
-    ...Array.from(this.files)
-  );
+      colorRow.colorFiles.push(
+        ...Array.from(this.files)
+      );
 
-  preview.innerHTML = "";
+      preview.innerHTML = "";
 
-  colorRow.colorFiles.forEach(file => {
+      colorRow.colorFiles.forEach(file => {
 
-    const reader =
-      new FileReader();
+        const reader =
+          new FileReader();
 
-    reader.onload =
-      function(event) {
+        reader.onload =
+          function(event) {
 
-        const wrapper =
-          document.createElement("div");
+            const wrapper =
+              document.createElement("div");
 
-        wrapper.className =
-          "image-preview-item";
+            wrapper.className =
+              "image-preview-item";
 
-       wrapper.innerHTML = `
+            wrapper.innerHTML = `
 
-  <img
-    src="${event.target.result}"
-    alt="Color image"
-  >
+              <img
+                src="${event.target.result}"
+                alt="Color image"
+              >
 
-  <button
-    type="button"
-    class="remove-image-small"
-    style="
-      position:absolute;
-      top:3px;
-      right:3px;
-      width:18px;
-      height:18px;
-      border:none;
-      border-radius:50%;
-      background:rgba(255,255,255,0.9);
-      color:#777;
-      font-size:13px;
-      line-height:16px;
-      padding:0;
-      cursor:pointer;
-    "
-  >
-    ×
-  </button>
+              <button
+                type="button"
+                class="remove-image-small"
+                style="
+                  position:absolute;
+                  top:3px;
+                  right:3px;
+                  width:18px;
+                  height:18px;
+                  border:none;
+                  border-radius:50%;
+                  background:rgba(255,255,255,0.9);
+                  color:#777;
+                  font-size:13px;
+                  line-height:16px;
+                  padding:0;
+                  cursor:pointer;
+                "
+              >
+                ×
+              </button>
 
-`;
+            `;
 
-        preview.appendChild(wrapper);
+            preview.appendChild(wrapper);
 
-        wrapper
-  .querySelector(".remove-image-small")
-  .addEventListener("click", function () {
+            wrapper
+              .querySelector(".remove-image-small")
+              .addEventListener("click", function () {
 
-    const index =
-      colorRow.colorFiles.indexOf(file);
+                const index =
+                  colorRow.colorFiles.indexOf(file);
 
-    if (index !== -1) {
-      colorRow.colorFiles.splice(index, 1);
+                if (index !== -1) {
+                  colorRow.colorFiles.splice(index, 1);
+                }
+
+                wrapper.remove();
+
+              });
+
+          };
+
+        reader.readAsDataURL(file);
+
+      });
+
+      this.value = "";
+
+    });
+
+  }
+
+
+  /* SAVE VARIANT SIZES */
+
+  async function saveVariantSizes(variantId, row) {
+
+    const sizeInput =
+      row.querySelector(".variant-sizes");
+
+    const sizes = [...new Set(
+      (sizeInput?.value || "")
+        .split(",")
+        .map(v => v.trim())
+        .filter(Boolean)
+    )];
+
+    const { error: deleteError } = await supabaseClient
+      .from("variant_sizes")
+      .delete()
+      .eq("variant_id", variantId);
+
+    if (deleteError) throw deleteError;
+
+    if (sizes.length) {
+
+      const { error: insertError } = await supabaseClient
+        .from("variant_sizes")
+        .insert(sizes.map(size => ({
+          variant_id: variantId,
+          size
+        })));
+
+      if (insertError) throw insertError;
+
     }
 
-    wrapper.remove();
-
-  });
-
-      };
-
-    reader.readAsDataURL(file);
-
-  });
-
-  /*
-    Clear input so the same
-    Add Images button can be
-    used again.
-  */
-
-  this.value = "";
-
-   });
-}
+  }
 
 
   /* SAVE PRODUCT */
 
   async function saveProduct() {
-      if (window.editingProductId) {
-    await updateProduct(window.editingProductId);
-    return;
-  }
+
+    if (window.editingProductId) {
+      await updateProduct(window.editingProductId);
+      return;
+    }
 
     const name =
       document
@@ -1316,196 +1360,219 @@ imageInput.addEventListener("change", function () {
 
 
     /*
-  SAVE COLORS + COLOR IMAGES
-*/
+      SAVE COLORS + COLOR IMAGES
+    */
 
-const colorRows =
-  document.querySelectorAll(".color-row");
-
-
-for (const row of colorRows) {
-
-  const colorInput =
-    row.querySelector(".color-name");
-
-  const imageInput =
-    row.querySelector(".color-images");
+    const colorRows =
+      document.querySelectorAll(".color-row");
 
 
-  const colorName =
-    colorInput.value.trim();
+    for (const row of colorRows) {
+
+      const colorInput =
+        row.querySelector(".color-name");
+
+      const imageInput =
+        row.querySelector(".color-images");
 
 
-  if (!colorName) {
-    continue;
-  }
+      const colorName =
+        colorInput.value.trim();
 
 
-  /* SAVE COLOR */
-
-  const {
-    data: variant,
-    error: variantError
-  } = await supabaseClient
-
-    .from("product_variants")
-
-    .insert({
-
-      product_id:
-        product.id,
-
-      color_name:
-        colorName,
-
-      active:
-        true
-
-    })
-
-    .select()
-    .single();
+      if (!colorName) {
+        continue;
+      }
 
 
-  if (variantError) {
+      /* SAVE COLOR */
 
-    console.error(
-      "Color save error:",
-      variantError
-    );
+      const {
+        data: variant,
+        error: variantError
+      } = await supabaseClient
 
-    alert(
-      "Product saved, but color could not be saved.\n\n" +
-      "Error: " + variantError.message
-    );
+        .from("product_variants")
 
-    return;
+        .insert({
 
-  }
+          product_id:
+            product.id,
 
+          color_name:
+            colorName,
 
-  /* UPLOAD IMAGES FOR THIS COLOR */
+          active:
+            true
 
-  const files =
-  row.colorFiles || [];
+        })
 
-
-  for (
-    let i = 0;
-    i < files.length;
-    i++
-  ) {
-
-    const file =
-      files[i];
+        .select()
+        .single();
 
 
-    const fileName =
-      `${Date.now()}-${Math.random()
-        .toString(36)
-        .substring(2)}-${file.name}`;
+      if (variantError) {
+
+        console.error(
+          "Color save error:",
+          variantError
+        );
+
+        alert(
+          "Product saved, but color could not be saved.\n\n" +
+          "Error: " + variantError.message
+        );
+
+        return;
+
+      }
 
 
-    const filePath =
-      `${product.id}/${variant.id}/${fileName}`;
+      /* SAVE SIZES FOR THIS COLOR */
+
+      try {
+
+        await saveVariantSizes(variant.id, row);
+
+      } catch (sizeError) {
+
+        console.error(
+          "Size save error:",
+          sizeError
+        );
+
+        alert(
+          "Color saved, but sizes could not be saved.\n\n" +
+          sizeError.message
+        );
+
+        return;
+
+      }
 
 
-    /* UPLOAD IMAGE */
+      /* UPLOAD IMAGES FOR THIS COLOR */
 
-    const {
-      error: uploadError
-    } = await supabaseClient
-
-      .storage
-
-      .from("product-images")
-
-      .upload(
-        filePath,
-        file
-      );
+      const files =
+        row.colorFiles || [];
 
 
-    if (uploadError) {
+      for (
+        let i = 0;
+        i < files.length;
+        i++
+      ) {
 
-      console.error(
-        "Image upload error:",
-        uploadError
-      );
+        const file =
+          files[i];
 
-      alert(
-        "Color saved, but image upload failed.\n\n" +
-        "Error: " + uploadError.message
-      );
 
-      return;
+        const fileName =
+          `${Date.now()}-${Math.random()
+            .toString(36)
+            .substring(2)}-${file.name}`;
+
+
+        const filePath =
+          `${product.id}/${variant.id}/${fileName}`;
+
+
+        /* UPLOAD IMAGE */
+
+        const {
+          error: uploadError
+        } = await supabaseClient
+
+          .storage
+
+          .from("product-images")
+
+          .upload(
+            filePath,
+            file
+          );
+
+
+        if (uploadError) {
+
+          console.error(
+            "Image upload error:",
+            uploadError
+          );
+
+          alert(
+            "Color saved, but image upload failed.\n\n" +
+            "Error: " + uploadError.message
+          );
+
+          return;
+
+        }
+
+
+        /* GET IMAGE URL */
+
+        const {
+          data: publicUrlData
+        } = supabaseClient
+
+          .storage
+
+          .from("product-images")
+
+          .getPublicUrl(
+            filePath
+          );
+
+
+        const imageUrl =
+          publicUrlData.publicUrl;
+
+
+        /* SAVE IMAGE IN DATABASE */
+
+        const {
+          error: imageError
+        } = await supabaseClient
+
+          .from("product_images")
+
+          .insert({
+
+            variant_id:
+              variant.id,
+
+            image_url:
+              imageUrl,
+
+            sort_order:
+              i,
+
+            is_primary:
+              i === 0
+
+          });
+
+
+        if (imageError) {
+
+          console.error(
+            "Product image save error:",
+            imageError
+          );
+
+          alert(
+            "Image uploaded, but image record could not be saved.\n\n" +
+            "Error: " + imageError.message
+          );
+
+          return;
+
+        }
+
+      }
 
     }
-
-
-    /* GET IMAGE URL */
-
-    const {
-      data: publicUrlData
-    } = supabaseClient
-
-      .storage
-
-      .from("product-images")
-
-      .getPublicUrl(
-        filePath
-      );
-
-
-    const imageUrl =
-      publicUrlData.publicUrl;
-
-
-    /* SAVE IMAGE IN DATABASE */
-
-    const {
-      error: imageError
-    } = await supabaseClient
-
-      .from("product_images")
-
-      .insert({
-
-        variant_id:
-          variant.id,
-
-        image_url:
-          imageUrl,
-
-        sort_order:
-          i,
-
-        is_primary:
-          i === 0
-
-      });
-
-
-    if (imageError) {
-
-      console.error(
-        "Product image save error:",
-        imageError
-      );
-
-      alert(
-        "Image uploaded, but image record could not be saved.\n\n" +
-        "Error: " + imageError.message
-      );
-
-      return;
-
-    }
-
-  }
-
-}
 
 
     /* CLEAR FORM */
@@ -1549,1063 +1616,1134 @@ for (const row of colorRows) {
 
   /* DELETE PRODUCT */
 
-async function deleteProduct(productId) {
+  async function deleteProduct(productId) {
 
-  const confirmDelete = confirm(
-    "Are you sure you want to delete this product?"
-  );
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this product?"
+    );
 
-  if (!confirmDelete) return;
+    if (!confirmDelete) return;
 
-  try {
+    try {
 
-    /* 1. Get variants */
+      /* 1. Get variants */
 
-    const { data: variants, error: variantError } =
-      await supabaseClient
-        .from("product_variants")
-        .select("id")
-        .eq("product_id", productId);
-
-    if (variantError) {
-      console.error("Variant fetch error:", variantError);
-      alert("Could not find product variants.");
-      return;
-    }
-
-    const variantIds =
-      (variants || []).map(v => v.id);
-
-
-    /* 2. Delete product images records */
-
-    if (variantIds.length > 0) {
-
-      const { error: imageError } =
-        await supabaseClient
-          .from("product_images")
-          .delete()
-          .in("variant_id", variantIds);
-
-      if (imageError) {
-        console.error("Image delete error:", imageError);
-        alert("Could not delete product images.");
-        return;
-      }
-
-
-      /* 3. Delete variants */
-
-      const { error: deleteVariantError } =
+      const { data: variants, error: variantError } =
         await supabaseClient
           .from("product_variants")
-          .delete()
+          .select("id")
           .eq("product_id", productId);
 
-      if (deleteVariantError) {
-        console.error(
-          "Variant delete error:",
-          deleteVariantError
-        );
-
-        alert("Could not delete product colors.");
+      if (variantError) {
+        console.error("Variant fetch error:", variantError);
+        alert("Could not find product variants.");
         return;
       }
-    }
 
+      const variantIds =
+        (variants || []).map(v => v.id);
 
-    /* 4. Delete product */
 
-    const { error: productError } =
-      await supabaseClient
-        .from("products")
-        .delete()
-        .eq("id", productId);
+      if (variantIds.length > 0) {
 
-    if (productError) {
+        /* DELETE PRODUCT SIZES */
 
-      console.error(
-        "Product delete error:",
-        productError
-      );
+        const { error: sizeError } =
+          await supabaseClient
+            .from("variant_sizes")
+            .delete()
+            .in("variant_id", variantIds);
 
-      alert(
-        "Product could not be deleted.\n\n" +
-        productError.message
-      );
-
-      return;
-    }
-
-
-    alert("Product deleted successfully.");
-
-    loadProducts();
-
-  } catch (error) {
-
-    console.error(
-      "Delete product error:",
-      error
-    );
-
-    alert(
-      "Something went wrong while deleting.\n\n" +
-      error.message
-    );
-  }
-}
-
-
- /* EDIT PRODUCT */
-
-async function editProduct(productId) {
-
-  window.removedVariantIds = [];
-
-  try {
-
-    const { data: product, error } =
-      await supabaseClient
-        .from("products")
-        .select(`
-          id,
-          name,
-          description,
-          material,
-          price,
-          category_id,
-          product_variants (
-            id,
-            color_name,
-            product_images (
-              id,
-              image_url,
-              sort_order,
-              is_primary
-            )
-          )
-        `)
-        .eq("id", productId)
-        .single();
-
-    if (error) {
-      console.error("Edit product fetch error:", error);
-      alert("Could not load product.");
-      return;
-    }
-
-    /* Fill product details */
-
-    document.getElementById("productName").value =
-      product.name || "";
-
-    document.getElementById("productCategory").value =
-      product.category_id || "";
-
-    document.getElementById("productPrice").value =
-      product.price || "";
-
-    document.getElementById("productMaterial").value =
-      product.material || "";
-
-    document.getElementById("productDescription").value =
-      product.description || "";
-
-
-    /* Clear existing colors */
-
-    const colorList =
-      document.getElementById("colorList");
-
-    colorList.innerHTML = "";
-
-
-    /* Add existing colors */
-
-    const variants =
-      product.product_variants || [];
-
-    variants.forEach(variant => {
-
-      const colorRow =
-        document.createElement("div");
-
-      colorRow.className = "color-row";
-
-      colorRow.dataset.variantId = variant.id;
-
-      colorRow.innerHTML = `
-
-        <div style="flex:1;">
-
-          <div style="position:relative;">
-
-  <input
-    type="text"
-    placeholder="Enter color name"
-    class="color-name"
-    value="${variant.color_name || ""}"
-    style="width:100%;"
-  >
-
-  <button
-    type="button"
-    class="remove-color-small"
-    style="
-      position:absolute;
-      right:6px;
-      top:50%;
-      transform:translateY(-50%);
-      border:none;
-      background:#fff;
-      color:#888;
-      font-size:14px;
-      cursor:pointer;
-      padding:0 4px;
-      line-height:1;
-    "
-  >
-    ×
-  </button>
-
-</div>
-
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            class="color-images"
-            style="display:none;"
-          >
-
-          <button
-            type="button"
-            class="add-color-btn"
-            style="margin-top:8px;"
-            onclick="this.previousElementSibling.click()"
-          >
-            + Add Images
-          </button>
-
-          <div class="color-image-preview image-preview"></div>
-
-        </div>
-
-      `;
-
-      colorList.appendChild(colorRow);
-
-      colorRow
-  .querySelector(".remove-color-small")
-  .addEventListener("click", function () {
-
-    if (colorRow.dataset.variantId) {
-
-      if (!window.removedVariantIds) {
-        window.removedVariantIds = [];
-      }
-
-      window.removedVariantIds.push(
-        Number(colorRow.dataset.variantId)
-      );
-
-    }
-
-    colorRow.remove();
-
-  });
-
-
-      /* Existing images */
-
-      const preview =
-        colorRow.querySelector(".color-image-preview");
-
-      const images =
-        variant.product_images || [];
-        colorRow.existingImages = images;
-        colorRow.removedImages = [];
-
-      images
-  .sort(
-    (a, b) =>
-      (a.sort_order ?? 0) -
-      (b.sort_order ?? 0)
-  )
-  .forEach(image => {
-
-    const wrapper =
-      document.createElement("div");
-
-    wrapper.className =
-      "image-preview-item";
-
-    wrapper.style.position = "relative";
-
-    wrapper.innerHTML = `
-      <img
-        src="${image.image_url}"
-        alt="Color image"
-      >
-
-      <button
-        type="button"
-        class="remove-existing-image"
-        style="
-          position:absolute;
-          top:3px;
-          right:3px;
-          width:18px;
-          height:18px;
-          border:none;
-          border-radius:50%;
-          background:rgba(255,255,255,0.9);
-          color:#777;
-          font-size:13px;
-          line-height:16px;
-          padding:0;
-          cursor:pointer;
-        "
-      >
-        ×
-      </button>
-    `;
-
-    preview.appendChild(wrapper);
-
-    wrapper
-      .querySelector(".remove-existing-image")
-      .addEventListener("click", function () {
-
-        if (!colorRow.removedImages) {
-          colorRow.removedImages = [];
+        if (sizeError) {
+          console.error("Size delete error:", sizeError);
+          alert("Could not delete product sizes. " + sizeError.message);
+          return;
         }
 
-        colorRow.removedImages.push(image);
 
-        wrapper.remove();
+        /* 2. Delete product images records */
 
-      });
+        const { error: imageError } =
+          await supabaseClient
+            .from("product_images")
+            .delete()
+            .in("variant_id", variantIds);
 
-  });
+        if (imageError) {
+          console.error("Image delete error:", imageError);
+          alert("Could not delete product images.");
+          return;
+        }
 
-      /* New image files */
 
-      colorRow.colorFiles = [];
+        /* 3. Delete variants */
 
-      const imageInput =
-        colorRow.querySelector(".color-images");
+        const { error: deleteVariantError } =
+          await supabaseClient
+            .from("product_variants")
+            .delete()
+            .eq("product_id", productId);
 
-      imageInput.addEventListener(
-        "change",
-        function () {
-
-          colorRow.colorFiles.push(
-            ...Array.from(this.files)
+        if (deleteVariantError) {
+          console.error(
+            "Variant delete error:",
+            deleteVariantError
           );
 
-          this.value = "";
-
+          alert("Could not delete product colors.");
+          return;
         }
-      );
 
-    });
-
-
-    /* Show form */
-
-    document.getElementById("productFormTitle").textContent =
-  "Edit Product";
-
-    document
-      .getElementById("productForm")
-      .classList.add("show");
+      }
 
 
-    /* Store editing product ID */
+      /* 4. Delete product */
 
-    window.editingProductId = productId;
+      const { error: productError } =
+        await supabaseClient
+          .from("products")
+          .delete()
+          .eq("id", productId);
 
-
-  } catch (error) {
-
-    console.error(
-      "Edit product error:",
-      error
-    );
-
-    alert("Something went wrong while loading the product.");
-
-  }
-
-}
-
-async function updateProduct(productId) {
-
-  const name =
-    document.getElementById("productName").value.trim();
-
-  const category =
-    document.getElementById("productCategory").value;
-
-  const price =
-    document.getElementById("productPrice").value;
-
-  const material =
-    document.getElementById("productMaterial").value.trim();
-
-  const description =
-    document.getElementById("productDescription").value.trim();
-
-
-  if (!name || !category || !price) {
-
-    alert("Please fill all required fields.");
-
-    return;
-  }
-
-
-  try {
-
-    /* =========================
-       1. UPDATE PRODUCT
-    ========================= */
-
-    const { error: productError } =
-      await supabaseClient
-
-        .from("products")
-
-        .update({
-          name: name,
-          category_id: Number(category),
-          price: Number(price),
-          material: material,
-          description: description,
-          updated_at: new Date().toISOString()
-        })
-
-        .eq("id", productId);
-
-
-    if (productError) {
-
-      console.error(
-        "Product update error:",
-        productError
-      );
-
-      alert(
-        "Product could not be updated.\n\n" +
-        productError.message
-      );
-
-      return;
-    }
-
-
-    /* =========================
-       2. GET CURRENT COLOR ROWS
-    ========================= */
-/* =========================
-   DELETE REMOVED COLORS
-========================= */
-
-const removedVariantIds =
-  window.removedVariantIds || [];
-
-for (const variantId of removedVariantIds) {
-
-  /* GET IMAGES OF REMOVED COLOR */
-
-  const {
-    data: imagesToDelete,
-    error: imageFetchError
-  } = await supabaseClient
-    .from("product_images")
-    .select("id, image_url")
-    .eq("variant_id", variantId);
-
-  if (imageFetchError) {
-
-    console.error(
-      "Removed color image fetch error:",
-      imageFetchError
-    );
-
-    alert(
-      "Color could not be deleted.\n\n" +
-      imageFetchError.message
-    );
-
-    return;
-  }
-
-
-  /* DELETE IMAGES FROM STORAGE */
-
-  for (const image of imagesToDelete || []) {
-
-    const marker =
-      "/storage/v1/object/public/product-images/";
-
-    const index =
-      image.image_url.indexOf(marker);
-
-    if (index !== -1) {
-
-      const storagePath =
-        decodeURIComponent(
-          image.image_url.substring(
-            index + marker.length
-          )
-        );
-
-      const {
-        error: storageError
-      } = await supabaseClient
-        .storage
-        .from("product-images")
-        .remove([storagePath]);
-
-      if (storageError) {
+      if (productError) {
 
         console.error(
-          "Removed color storage delete error:",
-          storageError
+          "Product delete error:",
+          productError
         );
 
         alert(
-          "Color image could not be deleted from storage.\n\n" +
-          storageError.message
+          "Product could not be deleted.\n\n" +
+          productError.message
         );
 
         return;
       }
-    }
-  }
 
 
-  /* DELETE IMAGE RECORDS */
+      alert("Product deleted successfully.");
 
-  const {
-    error: imageDeleteError
-  } = await supabaseClient
-    .from("product_images")
-    .delete()
-    .eq("variant_id", variantId);
+      loadProducts();
 
-  if (imageDeleteError) {
-
-    console.error(
-      "Removed color image database delete error:",
-      imageDeleteError
-    );
-
-    alert(
-      "Color images could not be deleted.\n\n" +
-      imageDeleteError.message
-    );
-
-    return;
-  }
-
-
-  /* DELETE COLOR / VARIANT */
-
-  const {
-    error: variantDeleteError
-  } = await supabaseClient
-    .from("product_variants")
-    .delete()
-    .eq("id", variantId);
-
-  if (variantDeleteError) {
-
-    console.error(
-      "Removed color delete error:",
-      variantDeleteError
-    );
-
-    alert(
-      "Color could not be deleted.\n\n" +
-      variantDeleteError.message
-    );
-
-    return;
-  }
-
-}
-    const colorRows =
-      document.querySelectorAll(".color-row");
-
-
-    /* =========================
-       3. PROCESS COLORS
-    ========================= */
-
-    for (const row of colorRows) {
-
-      const colorInput =
-        row.querySelector(".color-name");
-
-      const colorName =
-        colorInput.value.trim();
-
-
-      if (!colorName) {
-        continue;
-      }
-
-
-      const variantId =
-        row.dataset.variantId;
-
-
-      /* =========================
-         EXISTING COLOR
-      ========================= */
-
-      if (variantId) {
-/* =========================
-   DELETE REMOVED IMAGES
-========================= */
-
-const removedImages =
-  row.removedImages || [];
-
-for (const image of removedImages) {
-
-  const marker =
-    "/storage/v1/object/public/product-images/";
-
-  const index =
-    image.image_url.indexOf(marker);
-
-  if (index !== -1) {
-
-    const storagePath =
-      decodeURIComponent(
-        image.image_url.substring(
-          index + marker.length
-        )
-      );
-
-    const { error: storageError } =
-      await supabaseClient
-        .storage
-        .from("product-images")
-        .remove([storagePath]);
-
-    if (storageError) {
+    } catch (error) {
 
       console.error(
-        "Storage image delete error:",
-        storageError
+        "Delete product error:",
+        error
       );
 
       alert(
-        "Image could not be deleted from storage.\n\n" +
-        storageError.message
+        "Something went wrong while deleting.\n\n" +
+        error.message
       );
 
-      return;
     }
+
   }
 
 
-  const { error: imageDeleteError } =
-    await supabaseClient
-      .from("product_images")
-      .delete()
-      .eq("id", image.id);
+  /* EDIT PRODUCT */
 
+  async function editProduct(productId) {
 
-  if (imageDeleteError) {
+    window.removedVariantIds = [];
 
-    console.error(
-      "Image database delete error:",
-      imageDeleteError
-    );
+    try {
 
-    alert(
-      "Image was removed from storage, but database record could not be deleted.\n\n" +
-      imageDeleteError.message
-    );
-
-    return;
-  }
-
-}
-        /* UPDATE COLOR NAME */
-
-        const { error: variantError } =
-          await supabaseClient
-
-            .from("product_variants")
-
-            .update({
-              color_name: colorName
-            })
-
-            .eq("id", variantId);
-
-
-        if (variantError) {
-
-          console.error(
-            "Color update error:",
-            variantError
-          );
-
-          alert(
-            "Product updated, but color could not be updated.\n\n" +
-            variantError.message
-          );
-
-          return;
-        }
-
-
-        /* =========================
-           UPLOAD NEW IMAGES
-        ========================= */
-
-        const files =
-          row.colorFiles || [];
-
-
-        for (const file of files) {
-
-          const fileName =
-            `${Date.now()}-${Math.random()
-              .toString(36)
-              .substring(2)}-${file.name}`;
-
-
-          const filePath =
-            `${productId}/${variantId}/${fileName}`;
-
-
-          /* UPLOAD */
-
-          const {
-            error: uploadError
-          } = await supabaseClient
-
-            .storage
-
-            .from("product-images")
-
-            .upload(
-              filePath,
-              file
-            );
-
-
-          if (uploadError) {
-
-            console.error(
-              "Image upload error:",
-              uploadError
-            );
-
-            alert(
-              "Color updated, but image upload failed.\n\n" +
-              uploadError.message
-            );
-
-            return;
-          }
-
-
-          /* GET PUBLIC URL */
-
-          const {
-            data: publicUrlData
-          } = supabaseClient
-
-            .storage
-
-            .from("product-images")
-
-            .getPublicUrl(
-              filePath
-            );
-
-
-          const imageUrl =
-            publicUrlData.publicUrl;
-
-
-          /* GET EXISTING IMAGE COUNT */
-
-          const {
-            count: imageCount
-          } = await supabaseClient
-
-            .from("product_images")
-
-            .select(
-              "id",
-              {
-                count: "exact",
-                head: true
-              }
+      const { data: product, error } =
+        await supabaseClient
+          .from("products")
+          .select(`
+            id,
+            name,
+            description,
+            material,
+            price,
+            category_id,
+            product_variants (
+              id,
+              color_name,
+              variant_sizes (size),
+              product_images (
+                id,
+                image_url,
+                sort_order,
+                is_primary
+              )
             )
+          `)
+          .eq("id", productId)
+          .single();
 
-            .eq(
-              "variant_id",
-              variantId
-            );
+      if (error) {
+        console.error("Edit product fetch error:", error);
+        alert("Could not load product.");
+        return;
+      }
+
+      /* Fill product details */
+
+      document.getElementById("productName").value =
+        product.name || "";
+
+      document.getElementById("productCategory").value =
+        product.category_id || "";
+
+      document.getElementById("productPrice").value =
+        product.price || "";
+
+      document.getElementById("productMaterial").value =
+        product.material || "";
+
+      document.getElementById("productDescription").value =
+        product.description || "";
 
 
-          /* SAVE IMAGE RECORD */
+      /* Clear existing colors */
 
-          const { error: imageError } =
-            await supabaseClient
+      const colorList =
+        document.getElementById("colorList");
 
-              .from("product_images")
+      colorList.innerHTML = "";
 
-              .insert({
 
-                variant_id:
-                  Number(variantId),
+      /* Add existing colors */
 
-                image_url:
-                  imageUrl,
+      const variants =
+        product.product_variants || [];
 
-                sort_order:
-                  imageCount || 0,
+      variants.forEach(variant => {
 
-                is_primary:
-                  (imageCount || 0) === 0
+        const colorRow =
+          document.createElement("div");
+
+        colorRow.className = "color-row";
+
+        colorRow.dataset.variantId = variant.id;
+
+        colorRow.innerHTML = `
+
+          <div style="flex:1;">
+
+            <div style="position:relative;">
+
+              <input
+                type="text"
+                placeholder="Enter color name"
+                class="color-name"
+                value="${variant.color_name || ""}"
+                style="width:100%;"
+              >
+
+              <button
+                type="button"
+                class="remove-color-small"
+                style="
+                  position:absolute;
+                  right:6px;
+                  top:50%;
+                  transform:translateY(-50%);
+                  border:none;
+                  background:#fff;
+                  color:#888;
+                  font-size:14px;
+                  cursor:pointer;
+                  padding:0 4px;
+                  line-height:1;
+                "
+              >
+                ×
+              </button>
+
+            </div>
+
+            <!-- EXISTING SIZES -->
+
+            <input
+              type="text"
+              class="variant-sizes"
+              placeholder="Sizes (e.g. S, M, L, XL)"
+              style="width:100%; margin-top:8px;"
+            >
+
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              class="color-images"
+              style="display:none;"
+            >
+
+            <button
+              type="button"
+              class="add-color-btn"
+              style="margin-top:8px;"
+              onclick="this.previousElementSibling.click()"
+            >
+              + Add Images
+            </button>
+
+            <div class="color-image-preview image-preview"></div>
+
+          </div>
+
+        `;
+
+        colorList.appendChild(colorRow);
+
+
+        /* LOAD EXISTING SIZES */
+
+        colorRow.querySelector(".variant-sizes").value =
+          (variant.variant_sizes || [])
+            .map(item => item.size)
+            .join(", ");
+
+
+        colorRow
+          .querySelector(".remove-color-small")
+          .addEventListener("click", function () {
+
+            if (colorRow.dataset.variantId) {
+
+              if (!window.removedVariantIds) {
+                window.removedVariantIds = [];
+              }
+
+              window.removedVariantIds.push(
+                Number(colorRow.dataset.variantId)
+              );
+
+            }
+
+            colorRow.remove();
+
+          });
+
+
+        /* Existing images */
+
+        const preview =
+          colorRow.querySelector(".color-image-preview");
+
+        const images =
+          variant.product_images || [];
+
+        colorRow.existingImages = images;
+        colorRow.removedImages = [];
+
+        images
+          .sort(
+            (a, b) =>
+              (a.sort_order ?? 0) -
+              (b.sort_order ?? 0)
+          )
+          .forEach(image => {
+
+            const wrapper =
+              document.createElement("div");
+
+            wrapper.className =
+              "image-preview-item";
+
+            wrapper.style.position = "relative";
+
+            wrapper.innerHTML = `
+              <img
+                src="${image.image_url}"
+                alt="Color image"
+              >
+
+              <button
+                type="button"
+                class="remove-existing-image"
+                style="
+                  position:absolute;
+                  top:3px;
+                  right:3px;
+                  width:18px;
+                  height:18px;
+                  border:none;
+                  border-radius:50%;
+                  background:rgba(255,255,255,0.9);
+                  color:#777;
+                  font-size:13px;
+                  line-height:16px;
+                  padding:0;
+                  cursor:pointer;
+                "
+              >
+                ×
+              </button>
+            `;
+
+            preview.appendChild(wrapper);
+
+            wrapper
+              .querySelector(".remove-existing-image")
+              .addEventListener("click", function () {
+
+                if (!colorRow.removedImages) {
+                  colorRow.removedImages = [];
+                }
+
+                colorRow.removedImages.push(image);
+
+                wrapper.remove();
 
               });
 
+          });
 
-          if (imageError) {
 
-            console.error(
-              "Image database error:",
-              imageError
+        /* New image files */
+
+        colorRow.colorFiles = [];
+
+        const imageInput =
+          colorRow.querySelector(".color-images");
+
+        imageInput.addEventListener(
+          "change",
+          function () {
+
+            colorRow.colorFiles.push(
+              ...Array.from(this.files)
             );
 
-            alert(
-              "Image uploaded, but image record could not be saved.\n\n" +
-              imageError.message
-            );
+            this.value = "";
 
-            return;
           }
+        );
 
-        }
+      });
 
+
+      /* Show form */
+
+      document.getElementById("productFormTitle").textContent =
+        "Edit Product";
+
+      document
+        .getElementById("productForm")
+        .classList.add("show");
+
+
+      /* Store editing product ID */
+
+      window.editingProductId = productId;
+
+
+    } catch (error) {
+
+      console.error(
+        "Edit product error:",
+        error
+      );
+
+      alert("Something went wrong while loading the product.");
+
+    }
+
+  }
+
+
+  /* UPDATE PRODUCT */
+
+  async function updateProduct(productId) {
+
+    const name =
+      document.getElementById("productName").value.trim();
+
+    const category =
+      document.getElementById("productCategory").value;
+
+    const price =
+      document.getElementById("productPrice").value;
+
+    const material =
+      document.getElementById("productMaterial").value.trim();
+
+    const description =
+      document.getElementById("productDescription").value.trim();
+
+
+    if (!name || !category || !price) {
+
+      alert("Please fill all required fields.");
+
+      return;
+    }
+
+
+    try {
+
+      /* =========================
+         1. UPDATE PRODUCT
+      ========================= */
+
+      const { error: productError } =
+        await supabaseClient
+
+          .from("products")
+
+          .update({
+            name: name,
+            category_id: Number(category),
+            price: Number(price),
+            material: material,
+            description: description,
+            updated_at: new Date().toISOString()
+          })
+
+          .eq("id", productId);
+
+
+      if (productError) {
+
+        console.error(
+          "Product update error:",
+          productError
+        );
+
+        alert(
+          "Product could not be updated.\n\n" +
+          productError.message
+        );
+
+        return;
       }
 
 
       /* =========================
-         NEW COLOR
+         DELETE REMOVED COLORS
       ========================= */
 
-      else {
+      const removedVariantIds =
+        window.removedVariantIds || [];
+
+      for (const variantId of removedVariantIds) {
+
+        /* GET IMAGES OF REMOVED COLOR */
 
         const {
-          data: variant,
-          error: variantError
+          data: imagesToDelete,
+          error: imageFetchError
         } = await supabaseClient
+          .from("product_images")
+          .select("id, image_url")
+          .eq("variant_id", variantId);
 
-          .from("product_variants")
-
-          .insert({
-
-            product_id:
-              productId,
-
-            color_name:
-              colorName,
-
-            active:
-              true
-
-          })
-
-          .select()
-
-          .single();
-
-
-        if (variantError) {
+        if (imageFetchError) {
 
           console.error(
-            "New color error:",
-            variantError
+            "Removed color image fetch error:",
+            imageFetchError
           );
 
           alert(
-            "Product updated, but new color could not be saved.\n\n" +
-            variantError.message
+            "Color could not be deleted.\n\n" +
+            imageFetchError.message
           );
 
           return;
         }
 
 
+        /* DELETE IMAGES FROM STORAGE */
+
+        for (const image of imagesToDelete || []) {
+
+          const marker =
+            "/storage/v1/object/public/product-images/";
+
+          const index =
+            image.image_url.indexOf(marker);
+
+          if (index !== -1) {
+
+            const storagePath =
+              decodeURIComponent(
+                image.image_url.substring(
+                  index + marker.length
+                )
+              );
+
+            const {
+              error: storageError
+            } = await supabaseClient
+              .storage
+              .from("product-images")
+              .remove([storagePath]);
+
+            if (storageError) {
+
+              console.error(
+                "Removed color storage delete error:",
+                storageError
+              );
+
+              alert(
+                "Color image could not be deleted from storage.\n\n" +
+                storageError.message
+              );
+
+              return;
+            }
+
+          }
+
+        }
+
+
+        /* DELETE IMAGE RECORDS */
+
+        const {
+          error: imageDeleteError
+        } = await supabaseClient
+          .from("product_images")
+          .delete()
+          .eq("variant_id", variantId);
+
+        if (imageDeleteError) {
+
+          console.error(
+            "Removed color image database delete error:",
+            imageDeleteError
+          );
+
+          alert(
+            "Color images could not be deleted.\n\n" +
+            imageDeleteError.message
+          );
+
+          return;
+        }
+
+
+        /* DELETE SIZES */
+
+        const { error: sizeDeleteError } =
+          await supabaseClient
+            .from("variant_sizes")
+            .delete()
+            .eq("variant_id", variantId);
+
+        if (sizeDeleteError) {
+
+          alert(
+            "Sizes could not be deleted. " +
+            sizeDeleteError.message
+          );
+
+          return;
+        }
+
+
+        /* DELETE COLOR / VARIANT */
+
+        const {
+          error: variantDeleteError
+        } = await supabaseClient
+          .from("product_variants")
+          .delete()
+          .eq("id", variantId);
+
+        if (variantDeleteError) {
+
+          console.error(
+            "Removed color delete error:",
+            variantDeleteError
+          );
+
+          alert(
+            "Color could not be deleted.\n\n" +
+            variantDeleteError.message
+          );
+
+          return;
+        }
+
+      }
+
+
+      /* GET CURRENT COLOR ROWS */
+
+      const colorRows =
+        document.querySelectorAll(".color-row");
+
+
+      /* =========================
+         3. PROCESS COLORS
+      ========================= */
+
+      for (const row of colorRows) {
+
+        const colorInput =
+          row.querySelector(".color-name");
+
+        const colorName =
+          colorInput.value.trim();
+
+
+        if (!colorName) {
+          continue;
+        }
+
+
+        const variantId =
+          row.dataset.variantId;
+
+
         /* =========================
-           UPLOAD NEW COLOR IMAGES
+           EXISTING COLOR
         ========================= */
 
-        const files =
-          row.colorFiles || [];
+        if (variantId) {
+
+          /* DELETE REMOVED IMAGES */
+
+          const removedImages =
+            row.removedImages || [];
+
+          for (const image of removedImages) {
+
+            const marker =
+              "/storage/v1/object/public/product-images/";
+
+            const index =
+              image.image_url.indexOf(marker);
+
+            if (index !== -1) {
+
+              const storagePath =
+                decodeURIComponent(
+                  image.image_url.substring(
+                    index + marker.length
+                  )
+                );
+
+              const { error: storageError } =
+                await supabaseClient
+                  .storage
+                  .from("product-images")
+                  .remove([storagePath]);
+
+              if (storageError) {
+
+                console.error(
+                  "Storage image delete error:",
+                  storageError
+                );
+
+                alert(
+                  "Image could not be deleted from storage.\n\n" +
+                  storageError.message
+                );
+
+                return;
+              }
+
+            }
 
 
-        for (
-          let i = 0;
-          i < files.length;
-          i++
-        ) {
-
-          const file =
-            files[i];
+            const { error: imageDeleteError } =
+              await supabaseClient
+                .from("product_images")
+                .delete()
+                .eq("id", image.id);
 
 
-          const fileName =
-            `${Date.now()}-${Math.random()
-              .toString(36)
-              .substring(2)}-${file.name}`;
+            if (imageDeleteError) {
+
+              console.error(
+                "Image database delete error:",
+                imageDeleteError
+              );
+
+              alert(
+                "Image was removed from storage, but database record could not be deleted.\n\n" +
+                imageDeleteError.message
+              );
+
+              return;
+            }
+
+          }
 
 
-          const filePath =
-            `${productId}/${variant.id}/${fileName}`;
+          /* UPDATE COLOR NAME */
+
+          const { error: variantError } =
+            await supabaseClient
+
+              .from("product_variants")
+
+              .update({
+                color_name: colorName
+              })
+
+              .eq("id", variantId);
 
 
-          /* UPLOAD */
-
-          const {
-            error: uploadError
-          } = await supabaseClient
-
-            .storage
-
-            .from("product-images")
-
-            .upload(
-              filePath,
-              file
-            );
-
-
-          if (uploadError) {
+          if (variantError) {
 
             console.error(
-              "New color image upload error:",
-              uploadError
+              "Color update error:",
+              variantError
             );
 
             alert(
-              "New color saved, but image upload failed.\n\n" +
-              uploadError.message
+              "Product updated, but color could not be updated.\n\n" +
+              variantError.message
             );
 
             return;
           }
 
 
-          /* GET URL */
+          /* UPDATE SIZES */
 
-          const {
-            data: publicUrlData
-          } = supabaseClient
-
-            .storage
-
-            .from("product-images")
-
-            .getPublicUrl(
-              filePath
-            );
+          await saveVariantSizes(variantId, row);
 
 
-          const imageUrl =
-            publicUrlData.publicUrl;
+          /* UPLOAD NEW IMAGES */
+
+          const files =
+            row.colorFiles || [];
 
 
-          /* SAVE IMAGE */
+          for (const file of files) {
 
-          const { error: imageError } =
-            await supabaseClient
+            const fileName =
+              `${Date.now()}-${Math.random()
+                .toString(36)
+                .substring(2)}-${file.name}`;
+
+
+            const filePath =
+              `${productId}/${variantId}/${fileName}`;
+
+
+            /* UPLOAD */
+
+            const {
+              error: uploadError
+            } = await supabaseClient
+
+              .storage
+
+              .from("product-images")
+
+              .upload(
+                filePath,
+                file
+              );
+
+
+            if (uploadError) {
+
+              console.error(
+                "Image upload error:",
+                uploadError
+              );
+
+              alert(
+                "Color updated, but image upload failed.\n\n" +
+                uploadError.message
+              );
+
+              return;
+            }
+
+
+            /* GET PUBLIC URL */
+
+            const {
+              data: publicUrlData
+            } = supabaseClient
+
+              .storage
+
+              .from("product-images")
+
+              .getPublicUrl(
+                filePath
+              );
+
+
+            const imageUrl =
+              publicUrlData.publicUrl;
+
+
+            /* GET EXISTING IMAGE COUNT */
+
+            const {
+              count: imageCount
+            } = await supabaseClient
 
               .from("product_images")
 
-              .insert({
+              .select(
+                "id",
+                {
+                  count: "exact",
+                  head: true
+                }
+              )
 
-                variant_id:
-                  variant.id,
-
-                image_url:
-                  imageUrl,
-
-                sort_order:
-                  i,
-
-                is_primary:
-                  i === 0
-
-              });
+              .eq(
+                "variant_id",
+                variantId
+              );
 
 
-          if (imageError) {
+            /* SAVE IMAGE RECORD */
+
+            const { error: imageError } =
+              await supabaseClient
+
+                .from("product_images")
+
+                .insert({
+
+                  variant_id:
+                    Number(variantId),
+
+                  image_url:
+                    imageUrl,
+
+                  sort_order:
+                    imageCount || 0,
+
+                  is_primary:
+                    (imageCount || 0) === 0
+
+                });
+
+
+            if (imageError) {
+
+              console.error(
+                "Image database error:",
+                imageError
+              );
+
+              alert(
+                "Image uploaded, but image record could not be saved.\n\n" +
+                imageError.message
+              );
+
+              return;
+            }
+
+          }
+
+        }
+
+
+        /* =========================
+           NEW COLOR
+        ========================= */
+
+        else {
+
+          const {
+            data: variant,
+            error: variantError
+          } = await supabaseClient
+
+            .from("product_variants")
+
+            .insert({
+
+              product_id:
+                productId,
+
+              color_name:
+                colorName,
+
+              active:
+                true
+
+            })
+
+            .select()
+
+            .single();
+
+
+          if (variantError) {
 
             console.error(
-              "New color image database error:",
-              imageError
+              "New color error:",
+              variantError
             );
 
             alert(
-              "Image uploaded, but image record could not be saved.\n\n" +
-              imageError.message
+              "Product updated, but new color could not be saved.\n\n" +
+              variantError.message
             );
 
             return;
+          }
+
+
+          /* SAVE SIZES FOR NEW COLOR */
+
+          await saveVariantSizes(variant.id, row);
+
+
+          /* UPLOAD NEW COLOR IMAGES */
+
+          const files =
+            row.colorFiles || [];
+
+
+          for (
+            let i = 0;
+            i < files.length;
+            i++
+          ) {
+
+            const file =
+              files[i];
+
+
+            const fileName =
+              `${Date.now()}-${Math.random()
+                .toString(36)
+                .substring(2)}-${file.name}`;
+
+
+            const filePath =
+              `${productId}/${variant.id}/${fileName}`;
+
+
+            /* UPLOAD */
+
+            const {
+              error: uploadError
+            } = await supabaseClient
+
+              .storage
+
+              .from("product-images")
+
+              .upload(
+                filePath,
+                file
+              );
+
+
+            if (uploadError) {
+
+              console.error(
+                "New color image upload error:",
+                uploadError
+              );
+
+              alert(
+                "New color saved, but image upload failed.\n\n" +
+                uploadError.message
+              );
+
+              return;
+            }
+
+
+            /* GET URL */
+
+            const {
+              data: publicUrlData
+            } = supabaseClient
+
+              .storage
+
+              .from("product-images")
+
+              .getPublicUrl(
+                filePath
+              );
+
+
+            const imageUrl =
+              publicUrlData.publicUrl;
+
+
+            /* SAVE IMAGE */
+
+            const { error: imageError } =
+              await supabaseClient
+
+                .from("product_images")
+
+                .insert({
+
+                  variant_id:
+                    variant.id,
+
+                  image_url:
+                    imageUrl,
+
+                  sort_order:
+                    i,
+
+                  is_primary:
+                    i === 0
+
+                });
+
+
+            if (imageError) {
+
+              console.error(
+                "New color image database error:",
+                imageError
+              );
+
+              alert(
+                "Image uploaded, but image record could not be saved.\n\n" +
+                imageError.message
+              );
+
+              return;
+            }
+
           }
 
         }
 
       }
 
+
+      /* SUCCESS */
+
+      alert("Product updated successfully.");
+
+      window.editingProductId = null;
+
+      hideProductForm();
+
+      loadProducts();
+
+
+    } catch (error) {
+
+      console.error(
+        "Update product error:",
+        error
+      );
+
+      alert(
+        "Something went wrong while updating.\n\n" +
+        error.message
+      );
+
     }
-
-
-    /* =========================
-       SUCCESS
-    ========================= */
-
-    alert("Product updated successfully.");
-
-    window.editingProductId = null;
-
-    hideProductForm();
-
-    loadProducts();
-
-
-  } catch (error) {
-
-    console.error(
-      "Update product error:",
-      error
-    );
-
-    alert(
-      "Something went wrong while updating.\n\n" +
-      error.message
-    );
 
   }
 
-}
 
   /* LOGOUT */
 
@@ -2633,13 +2771,15 @@ for (const image of removedImages) {
 
   }
 
-function toggleAdminMenu() {
-  document.body.classList.toggle("menu-open");
-}
 
-function closeAdminMenu() {
-  document.body.classList.remove("menu-open");
-}
+  function toggleAdminMenu() {
+    document.body.classList.toggle("menu-open");
+  }
+
+
+  function closeAdminMenu() {
+    document.body.classList.remove("menu-open");
+  }
 
 
   /* START */
@@ -2668,4 +2808,3 @@ function closeAdminMenu() {
 
 </body>
 </html>
-```
