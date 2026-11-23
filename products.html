@@ -170,6 +170,26 @@
       cursor: pointer;
     }
 
+.size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.size-options label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.size-options input {
+  width: auto;
+  cursor: pointer;
+} 
+
     /* COLORS */
 
     .color-section {
@@ -419,6 +439,10 @@
         flex-wrap: wrap;
       }
     }
+.save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
   </style>
 
@@ -613,13 +637,14 @@
 
       <div class="form-actions">
 
-        <button
-          type="button"
-          class="save-btn"
-          onclick="saveProduct()"
-        >
-          Save Product
-        </button>
+       <button
+       type="button"
+       class="save-btn"
+       id="saveProductBtn"
+       onclick="saveProduct()"
+>
+  Save Product
+</button>
 
         <button
           type="button"
@@ -1070,13 +1095,18 @@
 
         <!-- ADD SIZES -->
 
-        <input
-          type="text"
-          class="variant-sizes"
-          placeholder="Sizes (e.g. S, M, L, XL)"
-          style="width:100%; margin-top:8px;"
-        >
+        <!-- ADD SIZES -->
 
+<div class="size-options variant-sizes" style="margin-top:12px;">
+
+  ${["S","M","L","XL","XXL","XXXL"].map(size => `
+    <label>
+      <input type="checkbox" value="${size}">
+      ${size}
+    </label>
+  `).join("")}
+
+</div>
         <input
           type="file"
           accept="image/*"
@@ -1218,49 +1248,53 @@
 
   /* SAVE VARIANT SIZES */
 
-  async function saveVariantSizes(variantId, row) {
+ async function saveVariantSizes(variantId, row) {
 
-    const sizeInput =
-      row.querySelector(".variant-sizes");
+  const sizes = Array.from(
+    row.querySelectorAll(".variant-sizes input:checked")
+  ).map(input => input.value);
 
-    const sizes = [...new Set(
-      (sizeInput?.value || "")
-        .split(",")
-        .map(v => v.trim())
-        .filter(Boolean)
-    )];
+  const { error: deleteError } = await supabaseClient
+    .from("variant_sizes")
+    .delete()
+    .eq("variant_id", variantId);
 
-    const { error: deleteError } = await supabaseClient
+  if (deleteError) throw deleteError;
+
+  if (sizes.length) {
+
+    const { error: insertError } = await supabaseClient
       .from("variant_sizes")
-      .delete()
-      .eq("variant_id", variantId);
+      .insert(sizes.map(size => ({
+        variant_id: variantId,
+        size
+      })));
 
-    if (deleteError) throw deleteError;
-
-    if (sizes.length) {
-
-      const { error: insertError } = await supabaseClient
-        .from("variant_sizes")
-        .insert(sizes.map(size => ({
-          variant_id: variantId,
-          size
-        })));
-
-      if (insertError) throw insertError;
-
-    }
+    if (insertError) throw insertError;
 
   }
-
+}
+let isSavingProduct = false;
 
   /* SAVE PRODUCT */
 
   async function saveProduct() {
 
-    if (window.editingProductId) {
-      await updateProduct(window.editingProductId);
-      return;
-    }
+    if (isSavingProduct) return;
+
+    isSavingProduct = true;
+
+    const saveBtn = document.getElementById("saveProductBtn");
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+
+    try {
+
+      if (window.editingProductId) {
+        await updateProduct(window.editingProductId);
+        return;
+      }
 
     const name =
       document
@@ -1609,7 +1643,24 @@
     hideProductForm();
 
 
-    loadProducts();
+        await loadProducts();
+
+    alert("Product saved successfully.");
+
+    } catch (error) {
+
+      console.error("Save product error:", error);
+
+      alert("Something went wrong.\n\n" + error.message);
+
+    } finally {
+
+      isSavingProduct = false;
+
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Save Product";
+
+    }
 
   }
 
@@ -1858,13 +1909,14 @@
             </div>
 
             <!-- EXISTING SIZES -->
-
-            <input
-              type="text"
-              class="variant-sizes"
-              placeholder="Sizes (e.g. S, M, L, XL)"
-              style="width:100%; margin-top:8px;"
-            >
+<div class="size-options variant-sizes" style="margin-top:12px;">
+  ${["S","M","L","XL","XXL","XXXL"].map(size => `
+    <label>
+      <input type="checkbox" value="${size}">
+      ${size}
+    </label>
+  `).join("")}
+</div>
 
             <input
               type="file"
@@ -1894,10 +1946,12 @@
 
         /* LOAD EXISTING SIZES */
 
-        colorRow.querySelector(".variant-sizes").value =
-          (variant.variant_sizes || [])
-            .map(item => item.size)
-            .join(", ");
+        const existingSizes =
+  (variant.variant_sizes || []).map(item => item.size);
+
+colorRow.querySelectorAll(".variant-sizes input").forEach(checkbox => {
+  checkbox.checked = existingSizes.includes(checkbox.value);
+});
 
 
         colorRow
